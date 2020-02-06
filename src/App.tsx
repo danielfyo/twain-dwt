@@ -1,7 +1,8 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import DWT from './WebTwain';
+import DWT from './components/WebTwain';
+import WebBarcode from './components/WebBarcode';
 
 const App = () => {
   return (
@@ -12,6 +13,10 @@ const App = () => {
       </header>
       <div>
         <DWT />
+      </div>
+
+      <div>
+        <WebBarcode title="Lector de códigos de barra" />
       </div>
     </div>
   );
