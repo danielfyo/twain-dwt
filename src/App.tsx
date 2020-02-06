@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { WebTwain } from './WebTwain';
 
 const App = () => {
   return (
@@ -19,8 +20,7 @@ const App = () => {
           Learn React
         </a>
 
-        <img src={
-          logo} className="App-logo" alt="logo" />
+        <img src={logo} className="App-logo" alt="logo" />
         <h2>Dynamic Web TWAIN with React</h2>
         <WebTwain />
       </header>
