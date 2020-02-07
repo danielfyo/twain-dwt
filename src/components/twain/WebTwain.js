@@ -481,7 +481,7 @@ export default class DWT extends React.Component {
 
     searchBarcodeInImage(){
         console.log(document.querySelectorAll('canvas'));
-        ReactDOM.render(<WebBarcode title="Códigos de barras identificados" barcode={document.querySelectorAll('canvas')[2].toDataURL()}/>, document.getElementById('btnBarcode'));
+        ReactDOM.render(<WebBarcode title="Códigos de barras identificados" barcode={document.querySelectorAll('canvas')[3].toDataURL()}/>, document.getElementById('btnBarcode'));
     }
 
     btnLoadImagesOrPDFs_onclick() {
