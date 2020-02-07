@@ -1,7 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import DWT from './components/WebTwain';
+import DWT from './components/twain/WebTwain';
 
 const App = () => {
   return (
@@ -11,7 +11,7 @@ const App = () => {
         <h2>Prueba dwt IoIp</h2>
       </header>
       <div>
-        <DWT />
+        <DWT/>
       </div>
     </div>
   );
