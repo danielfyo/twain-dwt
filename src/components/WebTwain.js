@@ -1,7 +1,12 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+
 import './WebTwain.css';
+import WebBarcode from '../components/WebBarcode';
+
 import Dynamsoft from 'dwt';
 import $ from 'jquery';
+
 
 class UI extends React.Component {
     render() {
@@ -20,6 +25,7 @@ class UI extends React.Component {
                             <li><img src="Images/RemoveAllImages.png" title="Eliminar todas las imagenes" alt="Eliminar todas las imagenes" id="DW_btnRemoveAllImages" onClick={this.props.btnRemoveAllImages_onclick} /></li>
                             <li><img src="Images/ChangeSize.png" title="Cambiar tamaño de imagen" alt="Cambiar tamaño" id="btnChangeImageSize" onClick={this.props.btnChangeImageSize_onclick} /> </li>
                             <li><img src="Images/Crop.png" title="Recortar" alt="Recortar" id="btnCrop" /></li>
+                            <li id="btnBarcode"><img src="Images/barcode.png" title="Código de barras" alt="Cdigo detectado"  /></li>
                         </ul>
                         <div id="ImgSizeEditor" style={{ visibility: "hidden" }}>
                             <ul>
@@ -365,7 +371,7 @@ export default class DWT extends React.Component {
         Dynamsoft.WebTwainEnv.ProductKey = this.productKey;
         Dynamsoft.WebTwainEnv.Trial = true;
         Dynamsoft.WebTwainEnv.ResourcesPath = "https://tst.dynamsoft.com/libs/dwt/15.0";
-        Dynamsoft.WebTwainEnv.Containers = [{ ContainerId: this.containerId, Width: '583px', Height: '513px' }];
+        Dynamsoft.WebTwainEnv.Containers = [{ ContainerId: this.containerId, Width: '583px', Height: '600px' }];
         Dynamsoft.WebTwainEnv.Load();
     }
 
@@ -449,7 +455,10 @@ export default class DWT extends React.Component {
             this.appendMessage("Color: " + this.DWObject.PixelType + "<br />Resolución: " + this.DWObject.Resolution + "<br />");
         this.DWObject.IfDisableSourceAfterAcquire = true;
         this.DWObject.AcquireImage();
+
+        ReactDOM.render(<WebBarcode title="Códigos de barras identificados" barcode={document.querySelectorAll('canvas')[1].toDataURL()}/>, document.getElementById('btnBarcode'));
     }
+
     btnLoadImagesOrPDFs_onclick() {
         var OnPDFSuccess = () => {
             this.appendMessage("Imágen cargada con éxito.<br/>");

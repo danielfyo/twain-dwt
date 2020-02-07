@@ -180,7 +180,7 @@ ul {
     position: relative;
     float: left;
     width: 647px;
-    height: 572px;
+    height: 660px;
     border: 1px solid #ccc;
 }
 
@@ -202,19 +202,18 @@ ul {
 #divEdit .operateGrp li {
     margin: 0;
     width: 60px;
-    height: 57px;
+    height: 60px;
     line-height: 52px;
     border-bottom: solid 1px #ccc;
     text-align: center;
 }
 
 #divEdit .operateGrp li:nth-last-child(2) {
-    height: 58px;
+    height: 60px;
 }
 
 #divEdit .operateGrp li:last-child {
-    height: 56px;
-    border-bottom: none;
+    height: 60px;
 }
 
 #divEdit .operateGrp li>img {
@@ -276,7 +275,7 @@ ul {
 #dwtcontrolContainer {
     float: left;
     width: 585px;
-    height: 515px;
+    height: 600px;
 }
 
 #dwtcontrolContainer .dynamsoft-dwt-container-box>div {
@@ -295,9 +294,9 @@ ul {
     position: absolute;
     left: 60px;
     bottom: 0;
-    padding: 14px 25px 15px 90px;
+    padding: 15px 15px 15px 15px;
     width: 585px;
-    height: 57px;
+    height: 60px;
     background: #f5f5f5;
     border-top: 1px solid #ccc;
     font-size: 14px;
@@ -333,7 +332,7 @@ ul {
 }
 
 #btnGroupBtm .ct-lt #DW_CurrentImage {
-    margin: 0 0 0 -13px;
+    margin: 0 0 0 -9px;
     text-align: right;
 }
 
@@ -480,6 +479,10 @@ select#Resolution {
     width: 15px;
     height: 15px;
     vertical-align: middle;
+}
+
+#divEdit ul {
+    margin-bottom: 0 !important;
 }
 
 #btnScan {
@@ -965,4 +968,9 @@ select#Resolution {
     height: 17px;
     color: #ccc;
     overflow: hidden;
+}
+
+.dynamsoft-dwt-container-box div {
+    height: 600px !important;
+    background-color: #fff;
 }
