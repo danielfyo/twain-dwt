@@ -1,0 +1,69 @@
+.mat-drawer-side
+{
+    background-color: #2A3F54;
+}
+
+.main_container .top_nav {
+    display: block;
+    margin-left: 0px;
+}
+
+.img-circle-square
+{
+    border-radius: 1%;
+}
+
+.toogle
+{
+    float: left;
+    background-color: #2A3F54;
+    color: #fff;
+    border-top-color: #1ABB9C;
+    border-top-width: 1px;
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.57);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.57);
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.57);
+    margin-left: 2px;
+    margin-top: 2px;
+    position: fixed;
+    z-index: 1000;
+}
+
+.sidebar-footer {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
+    bottom: 0;
+    clear: both;
+    display: block;
+    padding: 0px;
+    background: #172D44;
+    border-top: #1ABB9C solid 2px;
+    z-index: 1000 !important;
+    min-height: 40px;
+    color: #fff;
+    text-align: right;
+    left: 0px;
+    position: fixed;
+    box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
+    width: 224px;
+}
+
+.sidebar-footer a:hover {
+    background: #425567
+}
+
+.sidebar-footer a {
+    padding: 7px 0 3px;
+    text-align: center;
+    width: 20%;
+    font-size: 17px;
+    display: block;
+    float: left;
+    background: #172D44;
+    cursor: pointer;
+    color: #f4f4f4;
+}
+
+.menu-izquierdo{
+    z-index: 998;
+}

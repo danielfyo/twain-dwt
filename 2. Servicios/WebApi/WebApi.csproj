@@ -1,0 +1,58 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <UserSecretsId>1ab8f8ec-a544-41a7-bcd0-71c3f6cc61a4</UserSecretsId>
+    <Authors>Daniel F Yepes Ortega</Authors>
+    <Company></Company>
+    <Product>PruebaIoIp</Product>
+    <Description></Description>
+    <Copyright>2020</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Uploads\**" />
+    <Content Remove="Uploads\**" />
+    <EmbeddedResource Remove="Uploads\**" />
+    <None Remove="Uploads\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Seeds\PaisSeedData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="epplus" Version="4.5.3.2" />
+    <PackageReference Include="Microsoft.AspNet.SignalR" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.7" />
+    <PackageReference Include="Microsoft.AspNetCore.App">
+      <PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+      <Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.2" />
+    <PackageReference Include="Microsoft.OpenApi" Version="1.1.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="pdfsharp" Version="1.50.5147" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\3. Aplicacion\Aplicacion.Contratos\Aplicacion.Contratos.csproj" />
+    <ProjectReference Include="..\..\3. Aplicacion\Aplicacion.Core\Aplicacion.Core.csproj" />
+    <ProjectReference Include="..\..\3. Aplicacion\Aplicacion.Implementacion\Aplicacion.Implementacion.csproj" />
+    <ProjectReference Include="..\..\5. Infraestructura\5.1 Datos\Datos.Persistencia.Implemtacion\Datos.Persistencia.Implementacion.csproj" />
+    <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Archivos\Funciones.Archivos.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Seeds\PaisSeedData.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\In\" />
+  </ItemGroup>
+
+</Project>

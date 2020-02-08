@@ -1,0 +1,40 @@
+.main_container .top_nav 
+{
+    margin-left: 0px;
+}
+
+.left_col
+{
+    width:224px !important;
+    padding: 0; 
+}
+
+.nav.child_menu
+{
+    display: block;
+}
+
+.profile_pic 
+{
+    width: 100%;
+    /* float: left; */
+    justify-content: center;
+    text-align: center;
+    width: 224px;
+}
+
+.img-circle .profile_img 
+{
+    padding: 10px;
+}
+
+.img-circle 
+{
+    border-radius: 5%;
+}
+
+.profile_info {
+    padding: 25px 10px 10px;
+    width: 100% !important;
+    float: left;
+}

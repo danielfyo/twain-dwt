@@ -1,0 +1,68 @@
+<div class="search-div mat-elevation-z8">
+  <form class="example-form">
+    <h1 class="mat-display-1">
+      <mat-icon>{{icono}}</mat-icon> {{titulo}}
+    </h1>
+    <button mat-raised-button color="primary" (click)="crear()">
+      <mat-icon>add</mat-icon> Crear
+    </button>
+    <mat-form-field class="search-form-field" appearance="outline" floatLabel="Buscar">
+      <mat-label>Buscar en la tabla de resultados</mat-label>
+      <mat-icon matSuffix>search</mat-icon>
+      <input name="SearchKeyInput" matInput placeholder="Criterios de busqueda..." [(ngModel)]="criterioDeBusqueda"
+        autocomplete="off" (keyup)="filtrarTabla($event.target.value)">
+      <mat-hint>Puede buscar por: divipo, nombre</mat-hint>
+    </mat-form-field>
+    <button mat-raised-button (click)="limpiarBusqueda()" *ngIf="criterioDeBusqueda">
+      <mat-icon>clear_all</mat-icon> Limpiar filtro
+    </button>
+  </form>
+</div>
+
+<div class="table-container mat-elevation-z8">
+  <mat-table #table [dataSource]="listaDataParaTabla" matSort>
+    <ng-container matColumnDef="Nombre">
+      <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+        <span class="mobile-label"> Nombre: </span>
+        {{element.nombre}}
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Estado">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Estado</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <span class="mobile-label"> Estado: </span>
+        Inactivo<mat-slide-toggle (click)="cambiarEstado(row)" [(ngModel)]="row.activo"></mat-slide-toggle>Activo
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="Acciones">
+      <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <div>
+          <button mat-fab color="accent" (click)="editar(row)">
+            <mat-icon>assignment</mat-icon>
+          </button>
+        </div>
+        <div class="clearfix"></div>
+      </mat-cell>
+    </ng-container>
+    <ng-container matColumnDef="loading">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        Cargando ...
+      </mat-footer-cell>
+    </ng-container>
+    <ng-container matColumnDef="noData">
+      <mat-footer-cell *matFooterCellDef colspan="6">
+        No se encontraron resultados.
+      </mat-footer-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="columnasPorMostrar"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: columnasPorMostrar;"></mat-row>
+    <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':listaDataParaTabla!=null}"></mat-footer-row>
+    <mat-footer-row *matFooterRowDef="['noData']"
+      [ngClass]="{'hide':!(listaDataParaTabla!=null && listaDataParaTabla.length==0)}"></mat-footer-row>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[10, 25, 100, 1000, 10000, 100000]" [pageSize]="10" showFirstLastButtons>
+  </mat-paginator>
+</div>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"></ngx-loading>

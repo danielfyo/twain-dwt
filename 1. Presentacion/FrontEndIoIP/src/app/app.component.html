@@ -1,0 +1,105 @@
+<mat-sidenav-container class="container body" (backdropClick)="sidenav.close()" *ngIf="showMaster">
+  <mat-sidenav #sidenav (keydown.escape)="sidenav.close()" disableClose>
+    <div>
+        Componente por hacer
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="container body">
+      <div class="main_container">
+        <mat-drawer-container autosize class="mat-container" style="overflow: hidden">
+          <mat-drawer #drawer mode="side">
+            <app-nav-left>
+            </app-nav-left>
+
+            <div class="sidebar-footer">
+              <a data-toggle="tooltip" data-placement="top" matTooltip="Menu de productos" (click)="sidenav.open()">
+                <mat-icon>group_work</mat-icon>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" matTooltip="App Android"
+                href="#" target="_blank" download>
+                <mat-icon>android</mat-icon>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" matTooltip="App escritorio"
+                href="#" target="_blank" download>
+                <mat-icon>desktop_windows</mat-icon>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" matTooltip="Pantalla completa" href="#"
+                target="_blank">
+                <mat-icon>remove_red_eye</mat-icon>
+              </a>
+              <a data-toggle="tooltip" data-placement="top" matTooltip="Cerrar sesión" href="#">
+                <mat-icon>exit_to_app</mat-icon>
+              </a>
+            </div>
+          </mat-drawer>
+          <div style="overflow: hidden">
+            <!-- top navigation -->
+            <div class="top_nav">
+              <div class="nav_menu">
+                <nav>
+                  <button mat-fab type="button" class="toogle" mat-button (click)="drawer.toggle()">
+                    <mat-icon>menu</mat-icon>
+                  </button>
+
+                  <ul class="nav navbar-nav navbar-right">
+                    <li class="">
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item disabled>
+                          <mat-icon>account_circle</mat-icon>
+                          <span>Mi cuenta</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item disabled>
+                          <mat-icon>build</mat-icon>
+                          <span>Configuracion</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item disabled>
+                          <mat-icon>business</mat-icon>
+                          <span>Mi organización</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item disabled>
+                          <mat-icon>help_outline</mat-icon>
+                          <span>Ayuda</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item disabled>
+                          <mat-icon>contact_support</mat-icon>
+                          <span>Soporte</span>
+                        </button>
+                        <mat-divider></mat-divider>
+                        <button mat-menu-item [routerLink]="['/Logout']">
+                          <mat-icon>power_settings_new</mat-icon>
+                          <span>Cerrar sesión</span>
+                        </button>
+                      </mat-menu>
+                      <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown"
+                        aria-expanded="false" matTooltip="Menú de la cuenta" [matMenuTriggerFor]="menu">
+                        <img src="assets/images/img.jpg" alt="">
+                        <strong>Daniel Yepes</strong>
+                        <button mat-icon-button aria-label="Menú de la cuenta">
+                          <mat-icon>more_vert</mat-icon>
+                        </button>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+            <!-- /top navigation -->
+            <div class="right_col" role="main" style="overflow: visible;">
+              <router-outlet (activate)="onActivate($event)"></router-outlet>
+            </div>
+          </div>
+        </mat-drawer-container>
+      </div>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
+<router-outlet></router-outlet>
+
+<app-footer></app-footer>

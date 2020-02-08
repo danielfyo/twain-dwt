@@ -1,0 +1,80 @@
+<div class="search-div mat-elevation-z8 mat-table">
+  <h1 class="mat-display-1">
+    <mat-icon>{{icono}}</mat-icon> {{titulo}}
+  </h1>
+</div>
+
+<div class="mat-elevation-z8 content">
+  <form (ngSubmit)="onSubmit()" [formGroup]="form">
+    <div class="container-fluid">
+      <div class="row">
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <mat-form-field>
+            <input matInput name="Divipo" [(ngModel)]="nuevoCiudad.divipo" placeholder="Divipo"
+              formControlName="divipoValidacion" ngDefaultControl autocomplete="off">
+            <mat-hint>Numeros sin espacios, entre 1 y 50 caracteres</mat-hint>
+            <mat-error *ngIf="formControls2.divipoValidacion?.errors?.pattern">
+              Por favor ingrese un Divipo válido
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-11 col-xs-12">
+          <mat-form-field>
+            <mat-label>Departamento</mat-label>
+            <mat-select name="DepartamentoId" [(ngModel)]="nuevoCiudad.departamentoId"
+              formControlName="DepartamentoIdValidacion" ngDefaultControl>
+              <mat-option>--</mat-option>
+              <mat-option *ngFor="let departamento of departamentos" [value]="departamento?.departamentoId">
+                {{departamento.nombre}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="formControls2.DepartamentoIdValidacion.errors">
+              Por favor seleccione un Departamento Valido</mat-error>
+            <mat-hint>Departamentos</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <mat-form-field>
+            <input matInput name="Nombre" [(ngModel)]="nuevoCiudad.nombre" placeholder="Nombre"
+              formControlName="nombreValidacion" ngDefaultControl autocomplete="off">
+            <mat-hint>Letras sin espacios, entre 1 y 50 caracteres</mat-hint>
+            <mat-error *ngIf="formControls2.ModuloValidacion?.errors?.pattern">
+              Por favor ingrese un Nombre válido
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+          <mat-form-field>
+            <mat-label>Activo</mat-label>
+            <mat-select name="Activo" [(ngModel)]="nuevoCiudad.activo" placeholder="Activo"
+              formControlName="activoValidacion" ngDefaultControl>
+              <mat-option>--</mat-option>
+              <mat-option *ngFor="let estado of estados" [value]="estado?.estado">
+                {{estado.nombre}}
+              </mat-option>
+            </mat-select>
+            <mat-hint></mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="form-action-buttons">
+        <button color="accent" mat-raised-button (click)="navegarLista()">
+          <mat-icon>close</mat-icon> {{tituloBotonCancelar}}
+        </button>
+        <button color="warn" mat-raised-button (click)="limpiarFormulario()">
+          <mat-icon>clear_all</mat-icon> Limpiar
+        </button>
+        <button color="primary" mat-raised-button type="submit">
+          <mat-icon>check</mat-icon> {{tituloBotonOk}}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '3px' }"></ngx-loading>

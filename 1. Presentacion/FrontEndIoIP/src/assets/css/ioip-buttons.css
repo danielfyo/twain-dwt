@@ -1,0 +1,62 @@
+.mat-raised-button
+{
+  margin: 4px !important;
+  border-radius: 3px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.mat-raised-button.mat-warn
+{
+  color: #fff;
+  background-color: #d9534f;
+  border-color: #d43f3a;
+}
+
+.mat-raised-button.mat-accent
+{
+  color: #fff;
+  background-color: #f0ad4e;
+  border-color: #eea236;
+}
+
+.mat-raised-button.mat-primary
+{
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+}
+
+.mat-raised-button.mat-basic
+{
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.mat-raised-button.mat-link
+{
+  color: #fff;
+  background-color: #5bc0de;
+  border-color: #46b8da;
+}

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Clases\RepositorioBaseComparendos.cs" />
+    <Compile Remove="Clases\RepositorioBaseFotodeteccion.cs" />
+    <Compile Remove="Clases\RepositorioBaseRunt.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\4. Domino\Dominio.Core\Dominio.Core.csproj" />
+    <ProjectReference Include="..\Datos.Persistencia.Core\Datos.Persistencia.Core.csproj" />
+  </ItemGroup>
+
+</Project>
