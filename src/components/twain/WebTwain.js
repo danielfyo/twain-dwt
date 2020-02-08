@@ -7,7 +7,6 @@ import WebBarcode from '../barcode/WebBarcode';
 import Dynamsoft from 'dwt';
 import $ from 'jquery';
 
-
 class UI extends React.Component {
     render() {
         return (
@@ -213,6 +212,7 @@ export default class DWT extends React.Component {
         }
     }
 
+    
     DWObject = null;
     containerId = 'dwtcontrolContainer';
     productKey = 't0141cQMAAJxnh4Yp1hYz6iW67PSArOVbdY/p5u2Vmw8F73QqYY1s84+ZUw30+OUWFnwz5ukkpI5e7UxA2Gg0ctzT/bL3IZEco29mOYT0ZMJk6khg1HtrPoz9MYv8zCVOnWnEhWKjCWOxYdiPwpu9Iu75NpowFhuG/SR6PpOukYTRhLHYEO/G2p+CFe5+AKpw';
@@ -263,6 +263,9 @@ export default class DWT extends React.Component {
                  });
                 this.DWObject.RegisterEvent("OnTopImageInTheViewChanged", (index) => {
                     console.log('OnTopImageInTheViewChanged');
+                    document.querySelectorAll('canvas').forEach(item=>{
+                        console.log(item.toDataURL());
+                    });
                     this.searchBarcodeInImage();
                     this._iLeft = 0;
                     this._iTop = 0;
@@ -899,10 +902,10 @@ export default class DWT extends React.Component {
 
         strHTTPServer = "localhost";
         this.DWObject.IfSSL = false;
-        this.DWObject.HTTPPort = 2016;
+        this.DWObject.HTTPPort = 5000;
 
 
-        strActionPage = "/upload";
+        strActionPage = "/api/Digitalizacion/CargarDocumentoBase64";
         for (i = 0; i < 5; i++) {
             if (document.getElementsByName("ImageType").item(i).checked === true) {
                 strImageType = i;
@@ -916,11 +919,13 @@ export default class DWT extends React.Component {
         var uploadfilename = fileName + "." + document.getElementsByName("ImageType").item(i).value;
 
         var OnSuccess = (httpResponse) => {
+            console.log(httpResponse);
             this.appendMessage('<b>Cagar: </b>');
             this.checkErrorStringWithErrorCode(0, "Corrécto.");
         };
 
         var OnFailure = (errorCode, errorString, httpResponse) => {
+            console.log(httpResponse);
             this.checkErrorStringWithErrorCode(errorCode, errorString, httpResponse);
         };
 
