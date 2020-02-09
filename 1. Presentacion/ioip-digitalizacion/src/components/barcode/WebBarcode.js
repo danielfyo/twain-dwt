@@ -49,12 +49,12 @@ class WebBarcode extends React.Component {
                 tdm: [false, false, false, false, false, false, false, false]
             }
         };
-        console.log('ok');
         this.searchBarcode(props);
     }
 
     searchBarcode(props){
         console.log(this.props.barcode);
+        console.log(this.dataURItoBlob(this.props.barcode));
         if(props.barcode) {
             this.showBarcodeDetails();
             this.onIptChange({ 
