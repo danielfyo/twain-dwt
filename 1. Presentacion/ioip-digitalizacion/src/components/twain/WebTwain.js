@@ -7,14 +7,6 @@ import WebBarcode from '../barcode/WebBarcode';
 import Dynamsoft from 'dwt';
 import $ from 'jquery';
 import axios from 'axios';
-
-/*function _onLinkClick(ev = React.MouseEvent<HTMLElement>, item?: INavLink) {
-    if (item && item.name === 'News') {
-      alert('News link clicked');
-    }
-  }
-  onLinkClick={_onLinkClick}
-  */
   
 class UI extends React.Component {
     render() {
@@ -111,7 +103,7 @@ export default class DWT extends React.Component {
                 this.DWObject.RegisterEvent("OnTopImageInTheViewChanged", (index) => {
                     console.log('OnTopImageInTheViewChanged');
 
-                    this.searchBarcodeInImage();
+                    //this.searchBarcodeInImage();
                     this._iLeft = 0;
                     this._iTop = 0;
                     this._iRight = 0;
