@@ -1,0 +1,14 @@
+.Complete-Logo {
+    float: left;
+    display: -webkit-inline-box;
+    font-weight: 600;
+}
+
+.Menubar {
+    float: right;
+}
+
+.App-header {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+}

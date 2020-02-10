@@ -1,0 +1,65 @@
+[{
+    "desc": "All",
+    "val": 503317503
+},
+{
+    "desc": "1D Barcodes",
+    "val": 1023
+},
+{
+    "desc": "QR Code",
+    "val": 67108864
+},
+{
+    "desc": "PDF417",
+    "val": 33554432
+},
+{
+    "desc": "DATAMATRIX",
+    "val": 134217728
+},
+{
+    "desc": "Aztec Code",
+    "val": 268435456
+},
+{
+    "desc": "CODE_39",
+    "val": 1
+},
+{
+    "desc": "CODE_128",
+    "val": 2
+},
+{
+    "desc": "CODE_93",
+    "val": 4
+},
+{
+    "desc": "CODABAR",
+    "val": 8
+},
+{
+    "desc": "EAN_13",
+    "val": 32
+},
+{
+    "desc": "EAN_8",
+    "val": 64
+},
+{
+    "desc": "UPC_A",
+    "val": 128
+},
+{
+    "desc": "UPC_E",
+    "val": 256
+},
+{
+    "desc": "Interleaved 2 of 5",
+    "val": 16
+},
+{
+    "desc": "Industrial 2 of 5",
+    "val": 512
+}
+]

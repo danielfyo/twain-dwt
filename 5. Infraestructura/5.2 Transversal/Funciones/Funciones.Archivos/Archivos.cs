@@ -99,7 +99,7 @@ namespace Funciones.Archivos
                     Directory.CreateDirectory(filePath);
 
                 if (File.Exists(filePath + name))
-                    filePath = DateTime.Now.ToString("yyyyMMddhhmmss_") + name;
+                    filePath += DateTime.Now.ToString("yyyyMMddhhmmss_") + name;
                 else
                     filePath += name;
 
