@@ -4,6 +4,7 @@ import './App.css';
 
 import PagePreview from './components/page-preview/PagePreview';
 import Menu from './components/menu/Menu';
+import TransactionLog from './components/transaction-log/TransactionLog';
 import DWT from './components/twain/WebTwain';
 
 const dark = {
@@ -68,8 +69,11 @@ const App = () => {
         <div className="ContainerBorderedRight">
           <PagePreview/>
         </div>
-        <div className="">
+        <div className="ContainerBorderedRight">
           <DWT/>
+        </div>
+        <div className="">
+          <TransactionLog/>
         </div>
       </div>
     </div>

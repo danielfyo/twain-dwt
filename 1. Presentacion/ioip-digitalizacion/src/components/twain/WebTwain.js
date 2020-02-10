@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Nav, INavLink } from 'office-ui-fabric-react/lib/Nav';
-
 import './WebTwain.css';
 import WebBarcode from '../barcode/WebBarcode';
 

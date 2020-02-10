@@ -602,61 +602,6 @@ select#Resolution {
     margin-right: 0;
 }
 
-/*=============== DWTcontainerBtm ===============*/
-
-#DWTcontainerBtm {
-    position: relative;
-    float: left;
-    width: 980px
-}
-
-#DWTemessageContainer {
-    float: left;
-    width: 588px;
-    border-top: 0;
-}
-
-#DWTemessageContainer input[type='text'] {
-    padding-left: 3px;
-}
-
-#DWTemessageContainer input[type='button'] {
-    cursor: pointer;
-    margin: 0 3px;
-    outline: none;
-}
-
-#DWTdivMsg {
-    font-size: 14px;
-    color: #444;
-}
-
-#DWTemessage {
-    width: 100%;
-    height: 160px;
-    overflow-y: scroll;
-    background: #fff;
-}
-
-#divNoteMessage {
-    float: right;
-    padding: 10px 15px;
-    margin-top: 34px;
-    width: 315px;
-    height: 160px;
-    font-size: 12px;
-    line-height: 20px;
-    border: 1px solid #ccc;
-    background: #e7f2fd;
-    color: #606060;
-}
-
-#divNoteMessage p {
-    margin: 0;
-    color: #444;
-    font-family: OpenSans-Semibold, Arial, sans-serif, Verdana, Helvetica;
-}
-
 /*=============== dailog ===============*/
 
 .ds-dialog-wrap, .ds-dialog-wrap div {
