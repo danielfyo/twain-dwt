@@ -1,0 +1,46 @@
+.PagePreviewMain {
+    padding-left: 10px;
+    padding-right: 10px;
+    float: left;
+    width: 160px !important;
+    overflow: auto;
+    background-color: #fff;
+}
+
+.RecognizedData{
+    display: flex;
+}
+
+.ms-DocumentCard {
+    margin-top: 10px;
+    min-width: 132px !important;
+    border-color: 1 solid #212529;
+}
+
+.ms-DocumentCardActivity{
+    display: flex;
+    width: 50%;
+    padding: 5px;
+}
+
+.ms-DocumentCardActivity-details {
+    width: calc(100% - 50px);
+    left: 40px;
+}
+
+.ms-DocumentCardPreview,
+.ms-DocumentCard {
+    width: 132px !important;
+}
+
+.ms-DocumentCardTitle {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px;
+    height: 25px;
+}
+
+.ms-DocumentCardPreview,
+.ms-DocumentCardPreview .ms-Image {
+    width: 130px !important;
+}

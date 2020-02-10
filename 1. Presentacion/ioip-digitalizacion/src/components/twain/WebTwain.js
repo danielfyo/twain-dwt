@@ -21,123 +21,9 @@ import axios from 'axios';
 class UI extends React.Component {
     render() {
         return (
-            <div>
-            <Nav
-            selectedKey="key3"
-            selectedAriaLabel="Selected"
-            ariaLabel="Nav basic example"
-            styles={{
-                root: {
-                width: 208,
-                float: 'left',
-                boxSizing: 'border-box',
-                border: '1px solid #eee',
-                overflowY: 'auto'
-                }
-            }}
-            groups={[
-                {
-                links: [
-                    {
-                    name: 'Home',
-                    url: 'http://example.com',
-                    expandAriaLabel: 'Expand Home section',
-                    collapseAriaLabel: 'Collapse Home section',
-                    links: [
-                        {
-                        name: 'Activity',
-                        url: 'http://msn.com',
-                        key: 'key1',
-                        target: '_blank'
-                        },
-                        {
-                        name: 'MSN',
-                        url: 'http://msn.com',
-                        disabled: true,
-                        key: 'key2',
-                        target: '_blank'
-                        }
-                    ],
-                    isExpanded: true
-                    },
-                    {
-                    name: 'Documents',
-                    url: 'http://example.com',
-                    key: 'key3',
-                    isExpanded: true,
-                    target: '_blank'
-                    },
-                    {
-                    name: 'Pages',
-                    url: 'http://msn.com',
-                    key: 'key4',
-                    target: '_blank'
-                    },
-                    {
-                    name: 'Notebook',
-                    url: 'http://msn.com',
-                    key: 'key5',
-                    disabled: true
-                    },
-                    {
-                    name: 'Communication and Media',
-                    url: 'http://msn.com',
-                    key: 'key6',
-                    target: '_blank'
-                    },
-                    {
-                    name: 'News',
-                    url: 'http://cnn.com',
-                    icon: 'News',
-                    key: 'key7',
-                    target: '_blank'
-                    }
-                ]
-                }
-            ]}
-            />
-
+        <div id="webTwainMain">
             <div id="DWTcontainer" className="container">
                 <div id="DWTcontainerTop">
-                    <div id="divEdit">
-                        <ul className="operateGrp">
-                            <li><img src="Images/ShowEditor.png" title="Mostrar editor de imagen" alt="Mostrar Editor" id="btnEditor" onClick={this.props.btnShowImageEditor_onclick} /> </li>
-                            <li><img src="Images/RotateLeft.png" title="Rotar a la izquierda" alt="Rotar a la izquierda" id="btnRotateL" onClick={this.props.btnRotateLeft_onclick} /> </li>
-                            <li><img src="Images/RotateRight.png" title="Rotar a la derecha" alt="Rotate Right" id="btnRotateR" onClick={this.props.btnRotateRight_onclick} /> </li>
-                            <li><img src="Images/Rotate180.png" alt="Rotar 180" title="Rotar 180" onClick={this.props.btnRotate180_onclick} /> </li>
-                            <li><img src="Images/Mirror.png" title="Espejo horizontal" alt="Espejo horizontal" id="btnMirror" onClick={this.props.btnMirror_onclick} /> </li>
-                            <li><img src="Images/Flip.png" title="Espejo vertical" alt="Espejo vertical" id="btnFlip" onClick={this.props.btnFlip_onclick} /> </li>
-                            <li><img src="Images/RemoveSelectedImages.png" title="Eliminar imagen" alt="Eliminar imagen" id="DW_btnRemoveCurrentImage" onClick={this.props.btnRemoveCurrentImage_onclick} /></li>
-                            <li><img src="Images/RemoveAllImages.png" title="Eliminar todas las imagenes" alt="Eliminar todas las imagenes" id="DW_btnRemoveAllImages" onClick={this.props.btnRemoveAllImages_onclick} /></li>
-                            <li><img src="Images/ChangeSize.png" title="Cambiar tamaño de imagen" alt="Cambiar tamaño" id="btnChangeImageSize" onClick={this.props.btnChangeImageSize_onclick} /> </li>
-                            <li><img src="Images/Crop.png" title="Recortar" alt="Recortar" id="btnCrop" /></li>
-                            <li id="btnBarcode"><img src="Images/barcode.png" title="Código de barras" alt="OCR"  /></li>
-                            <li id="btnOcr"><img src="Images/ocr.png" title="OCR" alt="OCR"  /></li>
-                        </ul>
-                        <div id="ImgSizeEditor" style={{ visibility: "hidden" }}>
-                            <ul>
-                                <li>
-                                    <label htmlFor="img_height">Nuevo alto :
-                                        <input type="text" id="img_height" style={{ width: "50%" }} size="10" />
-                                        pixel</label>
-                                </li>
-                                <li>
-                                    <label htmlFor="img_width">Nuevo ancho :&nbsp;
-                                        <input type="text" id="img_width" style={{ width: "50%" }} size="10" />
-                                        pixel</label>
-                                </li>
-                                <li>Metodo de interpolación:
-                                    <select size="1" id="InterpolationMethod">
-
-                                        <option value="1">Vecíno más cercano</option><option value="2">Doble línea</option><option value="3">Bicúbico</option></select>
-                                </li>
-                                <li style={{ textAlign: "center" }}>
-                                    <input type="button" value="  Aceptar " id="btnChangeImageSizeOK" onClick={this.props.btnChangeImageSizeOK_onclick} />
-                                    <input type="button" value=" Cancelar " id="btnCancelChange" onClick={this.props.btnCancelChange_onclick} />
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
                     <div id={this.props.containerId}></div>
                     <div id="btnGroupBtm" className="clearfix">
                         <div className="ct-lt">
@@ -164,132 +50,8 @@ class UI extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div id="ScanWrapper">
-                    <div id="divScanner" className="divinput">
-                        <ul className="PCollapse">
-                            <li>
-                                <div className="divType">
-                                    <div className="mark_arrow expanded"></div>
-                                    Adquirir imágenes desde escáner</div>
-                                <div id="div_ScanImage" className="divTableStyle">
-                                    <ul id="ulScaneImageHIDE">
-                                        <li>
-                                            <label htmlFor="source">
-                                                <p>Seleccione la fuente:</p>
-                                            </label>
-                                            
-                                            <select size="1" id="source" style={{ position: "relative" }} onChange={this.props.source_onchange}>
-                                                <option value="0">Buscando dispositivos compatibles..</option></select>
-                                            <select size="1" id="webcamsource" style={{ position: "relative" }} onChange={this.props.source_onchange}>
-                                                <option value="0">Buscando dispositivos compatibles..</option></select>
-                                        </li>
-                                        <li id="divProductDetail">
-                                            <ul id="divTwainType">
-                                                <li>
-                                                    <label id="lblShowUI" htmlFor="ShowUI">
-                                                        <input type="checkbox" id="ShowUI" />Avanzado&nbsp;
-                                                </label>
-                                                    <label htmlFor="ADF">
-                                                        <input type="checkbox" id="ADF" />Alim. auto.&nbsp;
-                                                </label>
-                                                    <label htmlFor="Duplex">
-                                                        <input type="checkbox" id="Duplex" />Duplex
-                                                </label>
-                                                </li>
-                                                <li>Color:
-                                                <label htmlFor="BW" style={{ marginLeft: "5px" }}>
-                                                        <input type="radio" id="BW" name="PixelType" />B&amp;W
-                                                </label>
-                                                    <label htmlFor="Gray">
-                                                        <input type="radio" id="Gray" name="PixelType" />Gray
-                                                </label>
-                                                    <label htmlFor="RGB">
-                                                        <input type="radio" id="RGB" name="PixelType" />Color
-                                                </label>
-                                                </li>
-                                                <li>
-                                                    <span>Resolución:</span>
-                                                    <select size="1" id="Resolution">
-                                                        <option value="100">100</option>
-                                                        <option value="200">200</option>
-                                                        <option value="300">300</option>
-                                                    </select>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li className="tc">
-                                            <button id="btnScan" onClick={this.props.acquireImage} style={{ color: "rgb(255, 255, 255)", backgroundColor: "rgb(80, 168, 225)", cursor: "pointer" }}>Escanear</button>
-                                        </li>
-                                    </ul>
-                                    <div id="tblLoadImage" style={{ visibility: "hidden" }}>
-                                        <a href="return false" className="ClosetblLoadImage"><img src="Images/icon-ClosetblLoadImage.png" alt="Close tblLoadImage" /></a>
-                                        <p>Por favor instale un dispositivo compatible con TWAIN:</p>
-                                        <p>
-                                            <a target="_blank" rel="noopener noreferrer" href="http://www.twain.org">TWG</a>
-                                        </p>
-                                    </div>
-                                </div>
-                            </li>
-                            <li id="liLoadImage">
-                                <div className="divType">
-                                    <div className="mark_arrow collapsed"></div>
-                                    Cargar imagenes o Pdf</div>
-                                <div id="div_LoadLocalImage" style={{ display: "none" }} className="divTableStyle">
-                                    <ul>
-                                        <li className="tc">
-                                            <button className="btnOrg" onClick={this.props.btnLoadImagesOrPDFs_onclick} >Cargar</button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="divUpload" className="divinput mt30" style={{ position: "relative" }}>
-                        <ul>
-                            <li className="toggle">Guardar documentos</li>
-                            <li>
-                                <p>Nombre de archivo:</p>
-                                <input type="text" size="20" id="txt_fileName" />
-                            </li>
-                            <li style={{ paddingRight: "0" }}>
-                                <label htmlFor="imgTypebmp">
-                                    <input type="radio" value="bmp" name="ImageType" id="imgTypebmp" onClick={this.props.rd_onclick} />
-                                    BMP</label>
-                                <label htmlFor="imgTypejpeg">
-                                    <input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" onClick={this.props.rd_onclick} />
-                                    JPEG</label>
-                                <label htmlFor="imgTypetiff">
-                                    <input type="radio" value="tif" name="ImageType" id="imgTypetiff" onClick={this.props.rdTIFF_onclick} />
-                                    TIFF</label>
-                                <label htmlFor="imgTypepng">
-                                    <input type="radio" value="png" name="ImageType" id="imgTypepng" onClick={this.props.rd_onclick} />
-                                    PNG</label>
-                                <label htmlFor="imgTypepdf">
-                                    <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" onClick={this.props.rdPDF_onclick} />
-                                    PDF</label>
-                            </li>
-                            <li>
-                                <label htmlFor="MultiPageTIFF">
-                                    <input type="checkbox" id="MultiPageTIFF" disabled="" />
-                                    Multi-página TIFF</label>
-                                <label htmlFor="MultiPagePDF">
-                                    <input type="checkbox" id="MultiPagePDF" disabled="" />
-                                    Multi-página PDF</label>
-                            </li>
-                            <li>
-                                <button id="btnSave" className="btnOrg" onClick={() => { this.props.saveUploadImage('local') }} >Descargar</button>
-                                <button id="btnUpload" className="btnOrg" onClick={() => { this.props.saveUploadImage('server') }} >Cargar</button>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div id="DWTcontainerBtm" style={{ textAlign: "left" }} className="clearfix">
-                    <div id="DWTemessageContainer"></div>
-                    <div id="divNoteMessage"> </div>
-                </div>
             </div>
-        </div>
-        );
+        </div>);
     }
 }
 
@@ -300,7 +62,6 @@ export default class DWT extends React.Component {
         }
     }
 
-    
     DWObject = null;
     containerId = 'dwtcontrolContainer';
     productKey = 't0141cQMAAJxnh4Yp1hYz6iW67PSArOVbdY/p5u2Vmw8F73QqYY1s84+ZUw30+OUWFnwz5ukkpI5e7UxA2Gg0ctzT/bL3IZEco29mOYT0ZMJk6khg1HtrPoz9MYv8zCVOnWnEhWKjCWOxYdiPwpu9Iu75NpowFhuG/SR6PpOukYTRhLHYEO/G2p+CFe5+AKpw';
@@ -479,8 +240,9 @@ export default class DWT extends React.Component {
         Dynamsoft.WebTwainEnv.ResourcesPath = "https://tst.dynamsoft.com/libs/dwt/15.0";
         Dynamsoft.WebTwainEnv.Containers = [{ 
             ContainerId: this.containerId, 
-            Width: '583px', 
-            Height: '660px', 
+            Width: '586px', 
+            Height: '660px',
+
         }];
         Dynamsoft.WebTwainEnv.Load();
     }
@@ -850,7 +612,6 @@ export default class DWT extends React.Component {
                 objString += "<p className='backToDemoList'><a className='d-btn bgOrange' href =\"online_demo_list.aspx\">Back</a></p>";
             }
             objString += "<div id='DWTdivMsg' className='clearfix'>";
-            objString += "Log de transacciones: <br/>"
             objString += "<div id='DWTemessage'>";
             objString += "</div></div>";
 

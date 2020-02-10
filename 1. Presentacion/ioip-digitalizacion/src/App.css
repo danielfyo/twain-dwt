@@ -1,5 +1,7 @@
 .App {
   text-align: center;
+  background-color: #f4f4f4;
+  width: 100%;
 }
 
 .App-logo {
@@ -35,4 +37,14 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.MainContainer{
+  width: fit-content;
+  display: inline-flex;
+  border: solid 1px #ccc;
+}
+
+.ContainerBorderedRight {
+  border-right: 1px solid #ccc;
 }

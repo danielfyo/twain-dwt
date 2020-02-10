@@ -1,7 +1,10 @@
 import React from 'react';
+
 import './App.css';
-import DWT from './components/twain/WebTwain';
+
+import PagePreview from './components/page-preview/PagePreview';
 import Menu from './components/menu/Menu';
+import DWT from './components/twain/WebTwain';
 
 const dark = {
   palette: {
@@ -61,8 +64,13 @@ const App = () => {
   return (
     <div className="App">
       <Menu tittle='Digitalización' theme={dark}/>
-      <div>
-        <DWT/>
+      <div className="MainContainer">
+        <div className="ContainerBorderedRight">
+          <PagePreview/>
+        </div>
+        <div className="">
+          <DWT/>
+        </div>
       </div>
     </div>
   );
