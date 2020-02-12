@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" > 
+
+<html>
+  <head>
+    <title>ActiveXDigitalizacion IoIp</title>
+  </head>
+  <body onload="OpenActiveX()">
+
+  <!-- Our activeX object -->
+  <OBJECT id="ActiveXDigitalizacion" name=”ActiveXDigitalizacion" classid="clsid:121C3E0E-DC6E-45dc-952B-A6617F0FAA32" VIEWASTEXT codebase="ActiveXDigitalizacion.cab"></OBJECT> 
+
+  <!-- Attaching to an ActiveX event-->
+<script language="javascript">
+           function ActiveXDigitalizacion::OnClose(redirectionUrl)
+			{
+				alert(redirectionUrl);   <!-- http://otherwebsite.com should be returned-->
+                    //window.location = redirectionUrl;
+           }
+</script>
+
+
+<script language="javascript">
+    //Passing parameters to ActiveX object and starting application
+function OpenActiveX()
+{
+    try
+    {
+        document.ActiveXDigitalizacion.parameters = "Mensaje de confirmación entregado como parametro, remplazar por pdf en base64" //Passing parameter to the ActiveX
+        document.ActiveXDigitalizacion.SignPdf(); //Running method from activeX
+    }
+    catch(Err)
+    {
+        alert(Err.description);
+    }
+}   
+
+
+</script>
+
+  </body>
+</html>

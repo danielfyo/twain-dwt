@@ -11,7 +11,7 @@ namespace FirmarPdf
     {
         static void Main(string[] args)
         {
-            ActiveXioip.ActiveXioip.SignPdf();
+            ActiveXioip.ActiveXDigitalizacion.SignPdf();
         }
     }
 }
