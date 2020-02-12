@@ -31,6 +31,12 @@ namespace ActiveXioip
         public ActiveXDigitalizacion()
         {
             //TODO: implementar lectura de parametros desde archvo de configuración
+            OnClose += ActiveXDigitalizacion_OnClose;
+        }
+
+        private void ActiveXDigitalizacion_OnClose(string redirectUrl)
+        {
+            MessageBox.Show("Operación finalizada."+redirectUrl);
         }
 
         [ComVisible(true)]
@@ -157,7 +163,15 @@ namespace ActiveXioip
                 objStamper.Close();
         }
 
-        public static List<X509.X509Certificate2> GetCertificates(string storeName)
+        [Guid("68BD4E0D-D7BC-4cf6-BEB7-CAB950161E79")]
+        [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
+        public interface IControlEvents
+        {
+            [DispId(0x60020001)]
+            void OnClose(string redirectUrl);
+        }
+
+        private static List<X509.X509Certificate2> GetCertificates(string storeName)
         {
             var store = new X509.X509Store();
             var certificates = new List<X509.X509Certificate2>();
@@ -167,7 +181,7 @@ namespace ActiveXioip
             return certificates;
         }
 
-        public static X509.X509Certificate2 GetCertificate(string serialNumber, List<X509.X509Certificate2> certificateList)
+        private static X509.X509Certificate2 GetCertificate(string serialNumber, List<X509.X509Certificate2> certificateList)
         {
             X509.X509Certificate2 response = null;
             response = certificateList.Where(x => x.SerialNumber.Equals(serialNumber, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
