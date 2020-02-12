@@ -1,9 +1,4 @@
-﻿using ActiveXioip;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Funciones.SocketServer;
 
 namespace FirmarPdf
 {
@@ -11,7 +6,7 @@ namespace FirmarPdf
     {
         static void Main(string[] args)
         {
-            ActiveXioip.ActiveXDigitalizacion.SignPdf();
+            new SocketServer().StartServer(1100);
         }
     }
 }

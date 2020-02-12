@@ -8,9 +8,10 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>FirmarPdf</RootNamespace>
     <AssemblyName>FirmarPdf</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,9 +50,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Activex\ActiveXioip\ActiveXioip.csproj">
-      <Project>{4B2BE32B-47B1-40FC-82E8-7647AD8078C7}</Project>
-      <Name>ActiveXioip</Name>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.SocketServer\SocketServer\Funciones.SocketServer.csproj">
+      <Project>{d246c1b7-367c-4ae0-9f6e-8a3713c33c61}</Project>
+      <Name>Funciones.SocketServer</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

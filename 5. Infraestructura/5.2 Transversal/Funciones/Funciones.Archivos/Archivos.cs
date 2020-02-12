@@ -1,14 +1,7 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.security;
-using Microsoft.AspNetCore.Http;
-using Org.BouncyCastle.X509;
+﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using X509 = System.Security.Cryptography.X509Certificates;
 namespace Funciones.Archivos
 {
     public static class Archivos

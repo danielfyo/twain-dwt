@@ -1,2 +1,0 @@
-"C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe" /tlb /codebase "C:\Users\danie\OneDrive\Documentos\GitHub\ioip-twain-dwt\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Activex\ActiveXioip\bin\Debug\ActiveXioip.dll"
-"C:\Windows\Microsoft.NET\Framework\v4.0.30319\regasm.exe" /unregister "C:\Users\danie\OneDrive\Documentos\GitHub\ioip-twain-dwt\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Activex\ActiveXioip\bin\Debug\ActiveXioip.dll"
