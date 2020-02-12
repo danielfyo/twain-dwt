@@ -1,3 +1,4 @@
+// #region imports
 import React, { Component } from 'react';
 
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
@@ -8,8 +9,9 @@ import { loadTheme } from 'office-ui-fabric-react';
 import logo from '../../logo.svg';
 
 import './Menu.css';
-import { Barcode } from '../../model/Barcode';
 import { Sheet } from '../../model/Sheet';
+
+// #endregion imports
 
 initializeIcons();
 const overflowButtonProps: IButtonProps = { ariaLabel: 'Más opciones' };
@@ -28,9 +30,33 @@ export class Menu extends Component<any, any> {
 
         this.setState({
             appName: this.props.tittle, 
-        }
-        );
+        });
+
+        // #region binding
+        this.addImage = this.addImage.bind(this);
+        this.upload = this.upload.bind(this);
+        this.download = this.download.bind(this);
+        this.uploadFileFromDisk = this.uploadFileFromDisk.bind(this);
+        // #endregion binding
     }
+
+    // #region linkers
+    addImage(){
+        this.props.handleAddImage();
+    }
+
+    download(){
+        this.props.handleDownload();
+    }
+
+    upload(){
+        this.props.handleUpload();
+    }
+
+    uploadFileFromDisk(){
+        this.props.handleUploadFileFromDisk();
+    }
+    // #endregion linkers
 
     getSheets() : Sheet[]{
         return (this.state?.sheets as Sheet[]);
@@ -72,6 +98,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'ImagePixel' },
                                                 split: true,
                                                 ariaLabel: 'Desde escaner',
+                                                onClick: () => {
+                                                    this.addImage();
+                                                },
                                             },
                                             {
                                                 key: 'addFileFromDisk',
@@ -79,6 +108,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'OpenFile' },
                                                 split: true,
                                                 ariaLabel: 'Desde archivo en el disco',
+                                                onClick: () => {
+                                                    this.uploadFileFromDisk();
+                                                },
                                             },
                                             {
                                                 key: 'takePicture',
@@ -244,7 +276,13 @@ export class Menu extends Component<any, any> {
                                     disabled: false,
                                     subMenuProps: {
                                         items: [
-                                            { key: 'downloadBmp', iconProps: { iconName: 'FileImage' }, text: 'BMP' },
+                                            { 
+                                                key: 'downloadBmp',
+                                                onClick: () => {
+                                                    this.download();
+                                                },
+                                                iconProps: { iconName: 'FileImage' }, text: 'BMP' 
+                                            },
                                             { key: 'downloadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
                                             { key: 'downloadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
                                             { key: 'downloadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
@@ -263,7 +301,13 @@ export class Menu extends Component<any, any> {
                                     disabled: false,
                                     subMenuProps: {
                                         items: [
-                                            { key: 'uploadBmp', iconProps: { iconName: 'FileImage' }, text: 'BMP' },
+                                            { 
+                                                key: 'uploadBmp',
+                                                onClick: () => {
+                                                    this.upload();
+                                                },
+                                                iconProps: { iconName: 'FileImage' }, text: 'BMP' 
+                                            },
                                             { key: 'uploadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
                                             { key: 'uploadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
                                             { key: 'uploadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },

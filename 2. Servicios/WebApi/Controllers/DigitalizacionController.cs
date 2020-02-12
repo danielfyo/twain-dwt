@@ -24,6 +24,12 @@ namespace WebApi.Controllers
 
         }
 
+        /*[System.Web.Http.AllowAnonymous]
+        [Microsoft.AspNetCore.Mvc.HttpGet("SignHashPdf")]
+        public async Task<IActionResult> SignHashPdf
+            (
+            ) => Ok(await Archivos.SignPdf());*/
+
         [System.Web.Http.AllowAnonymous]
         [Microsoft.AspNetCore.Mvc.HttpPost("CargarDocumentoPureBase64")]
         public async Task<IActionResult> CargarDocumentoPureBase64

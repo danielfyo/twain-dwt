@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using iTextSharp.text;
+using iTextSharp.text.pdf;
+using iTextSharp.text.pdf.security;
+using Microsoft.AspNetCore.Http;
+using Org.BouncyCastle.X509;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
-
+using X509 = System.Security.Cryptography.X509Certificates;
 namespace Funciones.Archivos
 {
     public static class Archivos
@@ -25,9 +31,8 @@ namespace Funciones.Archivos
 
         public static async Task<byte[]> ByteArrayFromPath(string filePath)
         {
-
             byte[] bytes;
-
+            
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
                 bytes = new byte[fs.Length];
@@ -48,7 +53,7 @@ namespace Funciones.Archivos
 
         public static async Task<byte[]> ProcessIFormFile(IFormFile file, bool crearArchivo, string name)
         {
-            name = (name != null && name != string.Empty ) ? name : file.FileName;
+            name = (name != null && name != string.Empty) ? name : file.FileName;
 
             if (crearArchivo)
             {
@@ -60,7 +65,7 @@ namespace Funciones.Archivos
         }
 
         public static async Task<string> IFromFileToBase64Embedded(IFormFile file, bool crearArchivo, string fileName)
-            => @"<embed width='100%' height='100%' name='plugin' src='data:application/pdf;base64," +
+            => @" < embed width='100%' height='100%' name='plugin' src='data:application/pdf;base64," +
                 await IFromFileToBase64(file, crearArchivo, fileName) +
                 "' type='application/pdf'>";
 
@@ -75,7 +80,7 @@ namespace Funciones.Archivos
                     .Replace("video/", "")
                     .Replace("image/", "")
                     .Replace("application/", "")
-                    .Replace("octet-stream","pdf");
+                    .Replace("octet-stream", "pdf");
 
                 var filePath = "";
 

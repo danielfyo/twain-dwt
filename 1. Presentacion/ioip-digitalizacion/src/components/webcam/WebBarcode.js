@@ -3,7 +3,7 @@ import React from 'react';
 import logo from '../../logo.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal, Spinner, Card } from 'react-bootstrap';
-import DynamsoftBarcode from "./DynamsoftBarcode";
+import Dynamsoft from "./Dynamsoft";
 
 class WebBarcode extends React.Component {
     constructor(props) {
@@ -82,7 +82,7 @@ class WebBarcode extends React.Component {
     }
 
     componentDidMount() {
-        DynamsoftBarcode.BarcodeReader.loadWasm();
+        Dynamsoft.BarcodeReader.loadWasm();
     }
 
     componentWillUnmount() {
@@ -314,7 +314,7 @@ class WebBarcode extends React.Component {
     }
 
     showCurrentSettings = async () => {
-        let reader = this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+        let reader = this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
         let runtimeSettings = await reader.getRuntimeSettings();
         let newState = JSON.parse(JSON.stringify(this.state.mAS));
         let oneValueID = '';
@@ -478,7 +478,7 @@ class WebBarcode extends React.Component {
                     if (typeof dataId === "string") {
                         let params = dataId.split("-");
                         if (params[0] === "SMA") {
-                            let reader = this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+                            let reader = this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
                             let newValue = _input.value.trim();
                             if (params[3] === "EnableFillBinaryVacancy") {
                                 newValue = "0";
@@ -494,7 +494,7 @@ class WebBarcode extends React.Component {
     }
 
     updateRuntimeSettings = async () => {
-        let reader = this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+        let reader = this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
         let runtimeSettings = await reader.getRuntimeSettings();
         let allInputs = document.querySelectorAll('input');
         let allSelects = document.querySelectorAll('select');
@@ -3502,7 +3502,7 @@ class WebBarcode extends React.Component {
             modalTitle: "Configurar",
             bShowModalDialog: true
         });
-        this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+        this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
         this.setState({
             bInitializing: !!!this.reader
         });
@@ -3515,7 +3515,7 @@ class WebBarcode extends React.Component {
             modalTitle: "Configuración",
             bShowModalDialog: true
         });
-        let reader = this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+        let reader = this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
         let runtimeSettings = JSON.stringify(await reader.getRuntimeSettings(), null, 5);
         let runtimeSettings_str = await reader.outputSettingsToString();
         this.setState(state => {
@@ -3604,7 +3604,7 @@ class WebBarcode extends React.Component {
                 let startTime = (new Date()).getTime();
                 let timeElapsed;
                 let results;
-                let reader = this.reader = this.reader || await DynamsoftBarcode.BarcodeReader.createInstance();
+                let reader = this.reader = this.reader || await Dynamsoft.BarcodeReader.createInstance();
                 reader.bSaveOriCanvas = true;
                 let files = input.files;
                 for (let i = 0; i < files.length; ++i) {
