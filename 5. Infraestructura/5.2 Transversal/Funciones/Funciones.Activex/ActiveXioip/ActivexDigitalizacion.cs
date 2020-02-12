@@ -38,7 +38,6 @@ namespace ActiveXioip
         {
             try
             {
-
                 MessageBox.Show(parameters);
                 //var certificates = GetCertificates("Personal");
                 //var certificate = GetCertificate("54b2db8fd73085245db9b627fc4e40f7", certificates);

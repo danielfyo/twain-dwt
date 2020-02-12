@@ -7,8 +7,7 @@ namespace ActiveXioip
     [InterfaceType(ComInterfaceType.InterfaceIsIDispatch)]
     public interface IControlEvents
     {
-        //Add a DispIdAttribute to any members in the source interface to specify the COM DispId.
         [DispId(0x60020001)]
-        void OnClose(string redirectUrl); //This method will be visible from JS
+        void OnClose(string redirectUrl); 
     }
 }
