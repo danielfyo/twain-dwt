@@ -52,29 +52,64 @@ namespace ActiveXioip
                     return;
                 }
 
-                var urlIn = @"C:\Users\danie\OneDrive\Escritorio\prueba.pdf";
-                var urlOut = @"C:\Users\danie\OneDrive\Escritorio\prueba_signed.pdf";
-                var pathAttach = @"C:\Users\danie\OneDrive\Escritorio\prueba_signed_metadata.pdf";
+                var pathIn = @"C:\Users\danie\OneDrive\Escritorio\prueba.pdf";
+                var pathOutSigned = @"C:\Users\danie\OneDrive\Escritorio\prueba_signed_metadata.pdf";
+                var pathAttach = @"C:\Users\danie\OneDrive\Escritorio\ok.pdf";
 
                 var info = new Dictionary<string, string>();
-                info.Add("Title", "Titulo IoIp");
-                info.Add("Subject", "Asunto");
-                info.Add("Keywords", "IoIp, Otros, Metadatos");
-                info.Add("Creator", "IoIp");
-                info.Add("Author", "IoIp");
+                // propiedades extendidas
+                info.Add("Producer", "Producer - IoIp Digitalización");
+                info.Add("Keywords", "Keywords, Otros, Metadatos, IoIp");
+                info.Add("Subject", "Subject - IoIp");
+                info.Add("Creator", "Creator - IoIp");
+                info.Add("Author", "Author - IoIp");
+                info.Add("Title", "Title - IoIp");
+                info.Add("CreateDate", "2008-10-24T16:47:28-04:00");
 
-                using (var pdfManager = new ManagePdfFile(urlIn, urlOut))
+                //Dublin Core
+                info.Add("Contributor", "http://www.ioip.com.co");
+                info.Add("Coverage", "Artist");
+                info.Add("Creator", "Artist");
+                info.Add("Date", "1999-09-01");
+                info.Add("Description", "W3Schools - Free tutorials");
+                info.Add("Identifier", "Artist");
+                info.Add("Language", "es");
+                info.Add("Publisher", "Refsnes Data as");
+                info.Add("Relation", "Artist");
+                info.Add("Rights", "Artist");
+                info.Add("Source", "Artist");
+                info.Add("Relation", "Artist");
+                info.Add("Type", "Web Development");
+
+
+                // propiedades personalizadas
+                info.Add("ModDate", "2006-10-24T16:47:28-04:00");
+                info.Add("Custom", "IoIp");
+                info.Add("Custom1", "IoIp Digitalización");
+                info.Add("DocumentID", "uuid:1aa82404-7080-4651-bfef-1dd39b9b9ed8");
+                info.Add("InstanceID", "uuid:cdda0ca6-7c91-4771-9dc9-796c8fe59350");
+                info.Add("Format", "application/pdf");
+                info.Add("Version", "1");
+                info.Add("ModifyDate", "2006-10-24T16:47:28-04:00");
+                info.Add("MetadataDate", "2006-10-24T16:47:28-04:00");
+                info.Add("CreatorTool", "IoIp Digitalización");
+
+
+                using (var pdfManager = new ManagePdfFile(pathIn, pathOutSigned))
                 {
                     pdfManager.SignPdf(
-                        certificateSerialNumber,
+                        SignRenderingMode.GRAPHIC_AND_DESCRIPTION,
+                        @"C: \Users\danie\OneDrive\Escritorio\sign.png",
+                        "54B2DB8FD73085245DB9B627FC4E40F7",
                         "FIRMA DIGITAL IOIP",
                         "http://www.ioip.com.co",
                         true,
                         false,
                         "http://www.ioip.com.co",
                         info,
-                        pathAttach
-                        );
+                        new string[] { pathAttach },
+                        100, 100, 300, 300,
+                        "Firmado digitalmente por IoIp");
                 }
             }
             catch (Exception e)

@@ -1114,7 +1114,7 @@ export default class DWT extends React.Component {
             if (varNum > 1) {
                 tmpstr = tmpstr.replace('Crop.', 'Crop_gray.');
                 btnCrop.src = tmpstr;
-                btnCrop.onclick = () { };
+                //btnCrop.onclick = () { };
             }
             else {
                 tmpstr = tmpstr.replace('Crop_gray.', 'Crop.');

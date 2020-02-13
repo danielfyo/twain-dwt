@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿//using
+#region using
+using System.Collections.Generic;
 using System.IO;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
@@ -6,134 +8,53 @@ using iTextSharp.text.pdf.security;
 using BcX509 = Org.BouncyCastle.X509;
 using System.Security.Cryptography.X509Certificates;
 using System;
-using XmpCore;
-using XmpCore.Options;
-using XmpCore.Impl;
+using static iTextSharp.text.pdf.PdfSignatureAppearance;
+using System.Linq;
+#endregion using
+
 
 namespace Funciones.Archivos.Pdf
 {
+    // sustitucion de enum de itextsharp para no pedir referencia a itext sharp en el cliente
+    public enum SignRenderingMode
+    {
+        DESCRIPTION = 0,
+        NAME_AND_DESCRIPTION = 1,
+        GRAPHIC_AND_DESCRIPTION = 2,
+        GRAPHIC = 3
+    }
+
+    // implemntacion de idisposable para controlar el cierre de los archivos en memoria
     public class ManagePdfFile : IDisposable
     {
+        // variables globales
+        #region variables globales
+        // almacenamiento en memoria del pdf
         Stream _fs;
+        //ruta de almacenamiento de salida del pdf procesado
         string _target;
+        #endregion variables globales
 
+        // constructor recibe como parametro el documento de entrada y salida (ruta o stringbase64)
         public ManagePdfFile(string source, string target)
         {
             _target = target;
-            _fs = GetStreamFormUrlOrBase64(source);
+            _fs = GetPdfStreamFormUrlOrBase64(source);
         }
 
-        public byte[] GetPDfByteArray() => (_fs as MemoryStream).ToArray();
+        // permite obtener un byte array a partir de el almacenamiento en memoria
+        public byte[] GetPdfByteArray() => (_fs as MemoryStream).ToArray();
 
-        public string GetPDfBase64() => Convert.ToBase64String(GetPDfByteArray());
+        // genera un pdf en base64 a partir de un bytearray
+        public string GetPdfByteArrayFromBase64() => Convert.ToBase64String(GetPdfByteArray());
 
-        private dynamic GetStreamFormUrlOrBase64(string source)
+        // almacena en memoria _fs
+        private dynamic GetPdfStreamFormUrlOrBase64(string source)
             => !source.StartsWith("data") ?
             new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None) as Stream :
             new MemoryStream(Convert.FromBase64String(source));
 
-        public void AddMetadata(Dictionary<string, string> dictionary)
-        {
-            var _pdfReader = new PdfReader(_fs);
-            using (var _pdfStamper = new PdfStamper(_pdfReader, new FileStream(_target, FileMode.OpenOrCreate)))
-            {
-                _pdfStamper.MoreInfo = dictionary;
-            }
-            _pdfReader.Close();
-        }
-        public void AddAtachment(string description, string base64FileToAtach)
-        {
-            var _pdfReader = new PdfReader(_fs);
-            using (var _pdfStamper = new PdfStamper(_pdfReader, new FileStream(_target, FileMode.OpenOrCreate)))
-            using (var _wfs = new FileStream(_target, FileMode.OpenOrCreate))
-            using (var pdfWriter = PdfWriter.GetInstance(new Document(), new MemoryStream(Convert.FromBase64String(base64FileToAtach))))
-            {
-                var pdfSpacification = PdfFileSpecification.FileEmbedded(pdfWriter, @"c:\pdf.pdf", "pdf.pdf", null);
-                _pdfStamper.AddFileAttachment(description, pdfSpacification);
-            }
-        }
-
-        public string SignPdf(
-            string serialNumberCertificate,
-            string Reason,
-            string Location,
-            bool AddVisibleSign,
-            bool AddTimeStamp,
-            string strTSA,
-            Dictionary<string, string> metadata,
-            string fileToAttach
-            )
-        {
-            var objCP = new BcX509.X509CertificateParser();
-            var crlList = new List<ICrlClient>();
-
-            // buscar el certificado
-            var certificate = SearchCertificate(serialNumberCertificate);
-            if (certificate == null)
-                return "No se encontraron certificados para el serial: " + serialNumberCertificate;
-            var objChain = new BcX509.X509Certificate[] { objCP.ReadCertificate(certificate.RawData) };
-
-            //TODO: habilitar la estampa cronologica
-            // agregamos la estampa cronologica
-            ITSAClient tsaClient = null;
-            IOcspClient ocspClient = null;
-
-            if (AddTimeStamp)
-            {
-                ocspClient = new OcspClientBouncyCastle();
-                CertificateUtil.getTSAURL(Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(certificate));
-                tsaClient = new TSAClientBouncyCastle(strTSA);
-            }
-
-            crlList.Add(new CrlClientOnline(objChain));
-            var _pdfReader = new PdfReader(_fs);
-            using (var _wfs = new FileStream(_target, FileMode.OpenOrCreate))
-            using (var objStamper = PdfStamper.CreateSignature(_pdfReader, _wfs, '\0', null, true))
-            {
-                var signatureAppearance = objStamper.SignatureAppearance;
-                signatureAppearance.SignatureRenderingMode = PdfSignatureAppearance.RenderingMode.GRAPHIC_AND_DESCRIPTION;
-                signatureAppearance.Reason = Reason;
-                signatureAppearance.Location = Location;
-                signatureAppearance.SignatureGraphic = Image.GetInstance(@"C:\Users\danie\OneDrive\Escritorio\sign.png");
-
-                signatureAppearance.SetVisibleSignature(
-                    new Rectangle(100, 100, 300, 200),
-                    _pdfReader.NumberOfPages,
-                    "Firma");
-
-                if (AddVisibleSign)
-                    signatureAppearance.SetVisibleSignature(new Rectangle(100, 100, 300, 200), 1, null); //signatureAppearance.SetVisibleSignature(new Rectangle(100, 100, 250, 150), objReader.NumberOfPages, "Signature");
-
-                // Agregar propiedades extendidas
-                objStamper.MoreInfo = metadata;
-
-                //XMP metadatos
-                //IXmpMeta xmp;
-                //using (var stream = File.OpenRead(@"C:\Users\danie\OneDrive\Escritorio\xmpMetadata.xml"))
-                    //xmp = XmpMetaFactory.Parse(stream);
-
-                //foreach (var property in xmp.Properties)
-                //{
-                    //Console.WriteLine($"Path={property.Path} Namespace={property.Namespace} Value={property.Value}");
-                //}
-
-                //var serializeOptions = new SerializeOptions();
-                //serializeOptions.UsePlainXmp = true;
-                //var newMetadata = XmpMetaFactory.SerializeToBuffer(xmp, serializeOptions);
-                //objStamper.XmpMetadata = newMetadata;
-
-
-                // Procesar adjuntos
-                var pfs = PdfFileSpecification.FileEmbedded(objStamper.Writer, fileToAttach, "ok.pdf", null);
-                objStamper.Writer.AddFileAttachment(pfs);
-
-                // Firmar digitalmente
-                var externalSignature = new X509Certificate2Signature(certificate, "SHA-1");
-                MakeSignature.SignDetached(signatureAppearance, externalSignature, objChain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
-            }
-            return "";
-        }
-
+        // busqueda de certificados desde el almacen de windows por seleccion manual y validacion por numero de serial
         private static X509Certificate2 SearchCertificate(string certificateSerialNumber)
         {
             var store = new X509Store();
@@ -148,6 +69,182 @@ namespace Funciones.Archivos.Pdf
             return (cert != null) ? cert[0] : null;
         }
 
+        private dynamic GetImageFormUrlOrBase64(string source)
+        => !source.StartsWith("data") ?
+            Image.GetInstance(new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None)) :
+            Image.GetInstance(new MemoryStream(Convert.FromBase64String(source)));
+
+        // convertir stream en byte[]
+        public static byte[] StreamToByteArray(Stream stream)
+        {
+            long originalPosition = 0;
+
+            if (stream.CanSeek)
+            {
+                originalPosition = stream.Position;
+                stream.Position = 0;
+            }
+
+            try
+            {
+                var readBuffer = new byte[4096];
+
+                int totalBytesRead = 0;
+                int bytesRead;
+
+                while ((bytesRead = stream.Read(readBuffer, totalBytesRead, readBuffer.Length - totalBytesRead)) > 0)
+                {
+                    totalBytesRead += bytesRead;
+
+                    if (totalBytesRead == readBuffer.Length)
+                    {
+                        var nextByte = stream.ReadByte();
+                        if (nextByte != -1)
+                        {
+                            var temp = new byte[readBuffer.Length * 2];
+                            Buffer.BlockCopy(readBuffer, 0, temp, 0, readBuffer.Length);
+                            Buffer.SetByte(temp, totalBytesRead, (byte)nextByte);
+                            readBuffer = temp;
+                            totalBytesRead++;
+                        }
+                    }
+                }
+
+                var buffer = readBuffer;
+                if (readBuffer.Length != totalBytesRead)
+                {
+                    buffer = new byte[totalBytesRead];
+                    Buffer.BlockCopy(readBuffer, 0, buffer, 0, totalBytesRead);
+                }
+                return buffer;
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                {
+                    stream.Position = originalPosition;
+                }
+            }
+        }
+
+        // metodo principal para el procesamiento de pdfs (firma digital adjuntos metadatos)
+        public string SignPdf(
+            SignRenderingMode signRenderingMode,
+            string signImage,
+            string serialNumberCertificate,
+            string reason,
+            string location,
+            bool addVisibleSign,
+            bool addTimeStamp,
+            string urlTimeStampingAuthority,
+            Dictionary<string, string> metadata,
+            string[] fileToAttach,
+            int visibleSignWidth,
+            int visibleSignHeight,
+            int visibleSignXPosition,
+            int visibleSignYPosition,
+            string visibleSignText
+            )
+        {
+            // conversor de certificados
+            var objCP = new BcX509.X509CertificateParser();
+            var crlList = new List<ICrlClient>();
+
+            // buscar el certificado por numero serial
+            var certificate = SearchCertificate(serialNumberCertificate);
+            if (certificate == null)
+                return "No se encontraron certificados para el serial: " + serialNumberCertificate;
+
+            // definicion del certificado operable
+            var objChain = new BcX509.X509Certificate[] { objCP.ReadCertificate(certificate.RawData) };
+            crlList.Add(new CrlClientOnline(objChain));
+
+            //TODO: habilitar la estampa cronologica (Error) (verificar tsa Timestamping Authority)
+            // agregamos la estampa cronologica 
+            #region estampa cronologica
+            ITSAClient tsaClient = null;
+            IOcspClient ocspClient = null;
+            if (addTimeStamp)
+            {
+                ocspClient = new OcspClientBouncyCastle();
+                CertificateUtil.getTSAURL(Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(certificate));
+                tsaClient = new TSAClientBouncyCastle(urlTimeStampingAuthority);
+            }
+            #endregion estampa cronologica
+
+            // cargue del pdf al lector de itextsharp
+            var _pdfReader = new PdfReader(_fs);
+
+            // cargue an memoria del pdf
+            using (var _wfs = new FileStream(_target, FileMode.OpenOrCreate))
+                // creacion de la firma a partir del lector itextsharp y el pdf en memoria
+                using (var objStamper = PdfStamper.CreateSignature(_pdfReader, _wfs, '\0', null, true))
+                {
+                    // Procesar adjuntos
+                    var attachmentIndex = 1;
+                    fileToAttach.ToList().ForEach(
+                        (item) => {
+                            //TODO: verificar si no se va a necesitar
+                            //var pfs = PdfFileSpecification.FileEmbedded(objStamper.Writer, fileToAttach[0], "adjunto_" + attachmentIndex + ".pdf", null, true);
+                            objStamper.Writer.AddFileAttachment("adjunto_" + attachmentIndex + ".pdf", StreamToByteArray(GetPdfStreamFormUrlOrBase64(item) as Stream), "adjunto_" + attachmentIndex + ".pdf", "adjunto_" + attachmentIndex + ".pdf");
+                            //TODO: verificar si no se va a necesitiar
+                            //AddFileAttachment(pfs);
+                            attachmentIndex++;
+                        });
+
+                    // definicion de la apariencia de la firma
+                    var signatureAppearance = objStamper.SignatureAppearance;
+                    // definicion del enum itextsharp a partir del enum parametro local
+                    var mode = Enum.Parse(typeof(RenderingMode), signRenderingMode.ToString());
+                    signatureAppearance.SignatureRenderingMode =  (RenderingMode)mode;
+                    signatureAppearance.Reason = reason;
+                    signatureAppearance.Location = location;
+
+                    // agregar marca visual de firma digital
+                    #region agregar marca visual firma digital
+                    if(addVisibleSign)
+                    {
+                        // definicion de imagen desde ruta o base64
+                        signatureAppearance.SignatureGraphic = GetImageFormUrlOrBase64(signImage);
+                        // definicion de la firma digital visible
+                        signatureAppearance.SetVisibleSignature(
+                            new Rectangle(visibleSignWidth, visibleSignHeight, visibleSignXPosition, visibleSignYPosition),
+                            _pdfReader.NumberOfPages,
+                            visibleSignText);
+
+                    }
+                    #endregion agregar marca visual firma digital
+
+                    // Agregar propiedades extendidas
+                    objStamper.MoreInfo = metadata;
+
+                    //TODO: verificar si no es necesario la utilizacion de XMP manual (actualmente funciona)
+                    #region xmp implementacion manual
+                //XMP metadatos
+                /*IXmpMeta xmp;
+                using (var stream = File.OpenRead(@"C:\Users\danie\OneDrive\Escritorio\xmpMetadata.xml"))
+                    xmp = XmpMetaFactory.Parse(stream);
+
+                foreach (var property in xmp.Properties)
+                {
+                    Console.WriteLine($"Path={property.Path} Namespace={property.Namespace} Value={property.Value}");
+                }
+
+                var serializeOptions = new SerializeOptions();
+                serializeOptions.UsePlainXmp = true;
+                var newMetadata = XmpMetaFactory.SerializeToBuffer(xmp, serializeOptions);
+                objStamper.XmpMetadata = newMetadata;*/
+                #endregion xmp implementacion manual
+                
+                    // Firmar digitalmente
+                    var externalSignature = new X509Certificate2Signature(certificate, "SHA-1");
+                    MakeSignature.SignDetached(signatureAppearance, externalSignature, objChain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
+            }
+            return "";
+        }
+
+        // eliminacion de los objetos en memoria
+        #region disposing
         public void Dispose()
         {
             if (_fs != null)
@@ -161,31 +258,6 @@ namespace Funciones.Archivos.Pdf
         {
             Dispose();
         }
-
-        /*public static void AtachFiles(string Source, string Target, X509Certificate2 Certificate, string Reason, string Location, bool AddVisibleSign, bool AddTimeStamp, string strTSA)
-        {
-            Document PDFD = new iTextSharp. Document(PageSize.LETTER);
-            pdf.PdfWriter writer;
-            writer = pdf.PdfWriter.GetInstance(PDFD, new FileStream(targetpath, FileMode.Create));
-            pdf.PdfFileSpecification pfs = pdf.PdfFileSpecification.FileEmbedded(writer, "C:\\test.xml", "New.xml", null);
-            writer.AddFileAttachment(pfs);
-        }
-
-        public static List<X509.X509Certificate2> GetCertificates(string storeName)
-        {
-            var store = new X509.X509Store();
-            var certificates = new List<X509.X509Certificate2>();
-            store.Open(X509.OpenFlags.ReadOnly);
-            certificates.AddRange(store.Certificates.Cast<X509.X509Certificate2>().ToList());
-            store.Close();
-            return certificates;
-        }
-
-        public static X509Certificate2 GetCertificate(string serialNumber, List<X509.X509Certificate2> certificateList)
-        {
-            X509Certificate2 response = null;
-            response = certificateList.Where(x => x.SerialNumber.Equals(serialNumber, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-            return response;
-        }*/
+        #endregion disposing
     }
 }
