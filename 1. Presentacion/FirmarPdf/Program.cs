@@ -15,11 +15,27 @@ namespace FirmarPdf
                 var pathAttach = @"C:\Users\danie\OneDrive\Escritorio\ok.pdf";
 
                 var info = new Dictionary<string, string>();
-                info.Add("Title", "Titulo IoIp");
-                info.Add("Subject", "Asunto");
-                info.Add("Keywords", "IoIp, Otros, Metadatos");
-                info.Add("Creator", "IoIp");
-                info.Add("Author", "IoIp");
+                // propiedades extendidas
+                info.Add("Producer", "Producer - IoIp Digitalización");
+                info.Add("Keywords", "Keywords, Otros, Metadatos, IoIp");
+                info.Add("Subject", "Subject - IoIp");
+                info.Add("Creator", "Creator - IoIp");
+                info.Add("Author", "Author - IoIp");
+                info.Add("Title", "Title - IoIp");
+                info.Add("CreateDate", "2008-10-24T16:47:28-04:00");
+
+                // propiedades personalizadas
+                info.Add("ModDate", "2006-10-24T16:47:28-04:00");
+                info.Add("Custom", "IoIp");
+                info.Add("Custom1", "IoIp Digitalización");
+                info.Add("DocumentID", "uuid:1aa82404-7080-4651-bfef-1dd39b9b9ed8");
+                info.Add("InstanceID", "uuid:cdda0ca6-7c91-4771-9dc9-796c8fe59350");
+                info.Add("Format", "application/pdf");
+                info.Add("Version", "1");
+                info.Add("ModifyDate", "2006-10-24T16:47:28-04:00");
+                info.Add("MetadataDate", "2006-10-24T16:47:28-04:00");
+                info.Add("CreatorTool", "IoIp Digitalización");
+
 
                 using (var pdfManager = new ManagePdfFile(pathIn, pathOutSigned))
                 {

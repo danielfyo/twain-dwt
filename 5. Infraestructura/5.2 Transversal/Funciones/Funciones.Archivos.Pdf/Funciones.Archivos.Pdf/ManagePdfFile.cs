@@ -67,11 +67,23 @@ namespace Funciones.Archivos.Pdf
             var objCP = new BcX509.X509CertificateParser();
             var crlList = new List<ICrlClient>();
 
+            // buscar el certificado
             var certificate = SearchCertificate(serialNumberCertificate);
             if (certificate == null)
                 return "No se encontraron certificados para el serial: " + serialNumberCertificate;
-
             var objChain = new BcX509.X509Certificate[] { objCP.ReadCertificate(certificate.RawData) };
+
+            //TODO: habilitar la estampa cronologica
+            // agregamos la estampa cronologica
+            ITSAClient tsaClient = null;
+            IOcspClient ocspClient = null;
+
+            if (AddTimeStamp)
+            {
+                ocspClient = new OcspClientBouncyCastle();
+                CertificateUtil.getTSAURL(Org.BouncyCastle.Security.DotNetUtilities.FromX509Certificate(certificate));
+                tsaClient = new TSAClientBouncyCastle(strTSA);
+            }
 
             crlList.Add(new CrlClientOnline(objChain));
             var _pdfReader = new PdfReader(_fs);
@@ -92,38 +104,28 @@ namespace Funciones.Archivos.Pdf
                 if (AddVisibleSign)
                     signatureAppearance.SetVisibleSignature(new Rectangle(100, 100, 300, 200), 1, null); //signatureAppearance.SetVisibleSignature(new Rectangle(100, 100, 250, 150), objReader.NumberOfPages, "Signature");
 
-                ITSAClient tsaClient = null;
-                IOcspClient ocspClient = null;
-
-                if (AddTimeStamp)
-                {
-                    ocspClient = new OcspClientBouncyCastle();
-                    tsaClient = new TSAClientBouncyCastle(strTSA);
-                }
-
-
                 // Agregar propiedades extendidas
                 objStamper.MoreInfo = metadata;
+
+                //XMP metadatos
+                //IXmpMeta xmp;
+                //using (var stream = File.OpenRead(@"C:\Users\danie\OneDrive\Escritorio\xmpMetadata.xml"))
+                    //xmp = XmpMetaFactory.Parse(stream);
+
+                //foreach (var property in xmp.Properties)
+                //{
+                    //Console.WriteLine($"Path={property.Path} Namespace={property.Namespace} Value={property.Value}");
+                //}
+
+                //var serializeOptions = new SerializeOptions();
+                //serializeOptions.UsePlainXmp = true;
+                //var newMetadata = XmpMetaFactory.SerializeToBuffer(xmp, serializeOptions);
+                //objStamper.XmpMetadata = newMetadata;
+
 
                 // Procesar adjuntos
                 var pfs = PdfFileSpecification.FileEmbedded(objStamper.Writer, fileToAttach, "ok.pdf", null);
                 objStamper.Writer.AddFileAttachment(pfs);
-
-                //XMP metadatos
-                IXmpMeta xmp;
-                using (var stream = File.OpenRead(@"C:\Users\danie\OneDrive\Escritorio\xmpMetadata.xml"))
-                    xmp = XmpMetaFactory.Parse(stream);
-
-                foreach (var property in xmp.Properties)
-                {
-                    Console.WriteLine($"Path={property.Path} Namespace={property.Namespace} Value={property.Value}");
-                }
-
-                //metaitem.InsertArrayItem();
-                var serializeOptions = new SerializeOptions();
-                serializeOptions.UsePlainXmp = true;
-                var newMetadata = XmpMetaFactory.SerializeToBuffer(xmp, serializeOptions);
-                objStamper.XmpMetadata = newMetadata;
 
                 // Firmar digitalmente
                 var externalSignature = new X509Certificate2Signature(certificate, "SHA-1");
