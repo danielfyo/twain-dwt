@@ -1,10 +1,8 @@
 ﻿using Funciones.Archivos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 
@@ -28,7 +26,7 @@ namespace WebApi.Controllers
         [Microsoft.AspNetCore.Mvc.HttpGet("SignHashPdf")]
         public async Task<IActionResult> SignHashPdf
             (
-            ) => Ok(await Archivos.SignPdf());*/
+            ) => Ok(await ManagePdf());*/
 
         [System.Web.Http.AllowAnonymous]
         [Microsoft.AspNetCore.Mvc.HttpPost("CargarDocumentoPureBase64")]

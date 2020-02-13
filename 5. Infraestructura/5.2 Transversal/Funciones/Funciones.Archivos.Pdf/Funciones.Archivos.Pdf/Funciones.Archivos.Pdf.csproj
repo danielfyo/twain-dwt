@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B2BE32B-47B1-40FC-82E8-7647AD8078C7}</ProjectGuid>
+    <ProjectGuid>{0E7C9AB9-A870-4B86-9B74-D0CF21BEEC53}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ActiveXioip</RootNamespace>
-    <AssemblyName>ActiveXioip</AssemblyName>
+    <RootNamespace>Funciones.Archivos.Pdf</RootNamespace>
+    <AssemblyName>Funciones.Archivos.Pdf</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -22,7 +22,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,32 +37,23 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="XmpCore, Version=6.1.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\..\packages\XmpCore.6.1.10\lib\net35\XmpCore.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActiveXDigitalizacion.cs" />
+    <Compile Include="ManagePdfFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Funciones.Archivos.Pdf\Funciones.Archivos.Pdf\Funciones.Archivos.Pdf.csproj">
-      <Project>{0e7c9ab9-a870-4b86-9b74-d0cf21beec53}</Project>
-      <Name>Funciones.Archivos.Pdf</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Funciones.SocketServer\SocketServer\Funciones.SocketServer.csproj">
-      <Project>{d246c1b7-367c-4ae0-9f6e-8a3713c33c61}</Project>
-      <Name>Funciones.SocketServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

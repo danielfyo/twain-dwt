@@ -53,6 +53,14 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Activex\ActiveXioip\ActiveXioip.csproj">
+      <Project>{4B2BE32B-47B1-40FC-82E8-7647AD8078C7}</Project>
+      <Name>ActiveXioip</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.Archivos.Pdf\Funciones.Archivos.Pdf\Funciones.Archivos.Pdf.csproj">
+      <Project>{0E7C9AB9-A870-4B86-9B74-D0CF21BEEC53}</Project>
+      <Name>Funciones.Archivos.Pdf</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\5. Infraestructura\5.2 Transversal\Funciones\Funciones.SocketServer\SocketServer\Funciones.SocketServer.csproj">
       <Project>{d246c1b7-367c-4ae0-9f6e-8a3713c33c61}</Project>
       <Name>Funciones.SocketServer</Name>

@@ -2,6 +2,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+
+
 namespace Funciones.Archivos
 {
     public static class Archivos
@@ -13,7 +15,7 @@ namespace Funciones.Archivos
         private const string _rootPathVideo = _documentsPath + @"video\";
         private const string _rootPathImage = _documentsPath + @"image\";
 
-        public static async Task<byte[]> IFromFileToByteArray(IFormFile file)
+        public static byte[] IFromFileToByteArray(IFormFile file)
         {
             using (var ms = new MemoryStream())
             {
@@ -22,13 +24,11 @@ namespace Funciones.Archivos
             }
         }
 
-        public static async Task<byte[]> ByteArrayFromPath(string filePath)
+        public static byte[] ByteArrayFromPath(string filePath)
         {
-            byte[] bytes;
-            
             using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
             {
-                bytes = new byte[fs.Length];
+                var bytes = new byte[fs.Length];
                 int numBytesToRead = (int)fs.Length;
                 int numBytesRead = 0;
                 while (numBytesToRead > 0)
@@ -40,8 +40,8 @@ namespace Funciones.Archivos
                     numBytesRead += n;
                     numBytesToRead -= n;
                 }
+                return bytes;
             }
-            return bytes;
         }
 
         public static async Task<byte[]> ProcessIFormFile(IFormFile file, bool crearArchivo, string name)
@@ -51,10 +51,10 @@ namespace Funciones.Archivos
             if (crearArchivo)
             {
                 var newFilePath = await SaveFileFromIFromFile(file, null, name);
-                return await ByteArrayFromPath(newFilePath);
+                return ByteArrayFromPath(newFilePath);
             }
             else
-                return await IFromFileToByteArray(file);
+                return IFromFileToByteArray(file);
         }
 
         public static async Task<string> IFromFileToBase64Embedded(IFormFile file, bool crearArchivo, string fileName)
