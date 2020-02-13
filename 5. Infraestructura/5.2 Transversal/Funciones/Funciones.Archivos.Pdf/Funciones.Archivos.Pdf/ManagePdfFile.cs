@@ -50,9 +50,15 @@ namespace Funciones.Archivos.Pdf
 
         // almacena en memoria _fs
         private dynamic GetPdfStreamFormUrlOrBase64(string source)
-            => !source.StartsWith("data") ?
-            new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None) as Stream :
-            new MemoryStream(Convert.FromBase64String(source));
+        {
+            if (!source.StartsWith("data:"))
+                return new FileStream(source, FileMode.Open, FileAccess.ReadWrite, FileShare.None) as Stream;
+            else
+            {
+                var parameters = source.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                return new MemoryStream(Convert.FromBase64String(parameters[1]));
+            }
+        }
 
         // busqueda de certificados desde el almacen de windows por seleccion manual y validacion por numero de serial
         private static X509Certificate2 SearchCertificate(string certificateSerialNumber)
@@ -185,10 +191,33 @@ namespace Funciones.Archivos.Pdf
                     fileToAttach.ToList().ForEach(
                         (item) => {
                             //TODO: verificar si no se va a necesitar
-                            //var pfs = PdfFileSpecification.FileEmbedded(objStamper.Writer, fileToAttach[0], "adjunto_" + attachmentIndex + ".pdf", null, true);
-                            objStamper.Writer.AddFileAttachment("adjunto_" + attachmentIndex + ".pdf", StreamToByteArray(GetPdfStreamFormUrlOrBase64(item) as Stream), "adjunto_" + attachmentIndex + ".pdf", "adjunto_" + attachmentIndex + ".pdf");
-                            //TODO: verificar si no se va a necesitiar
-                            //AddFileAttachment(pfs);
+                            if (!item.StartsWith("data:"))
+                            {
+                                var pfs = PdfFileSpecification.FileEmbedded(objStamper.Writer, fileToAttach[0], "adjunto_" + attachmentIndex + ".pdf", null, true);
+                                objStamper.Writer.AddFileAttachment("Adjunto número: " + attachmentIndex, pfs);
+                            }
+                            else
+                            {
+                                try 
+                                {
+                                    var x = StreamToByteArray(GetPdfStreamFormUrlOrBase64(item));
+                                    var pfs = PdfFileSpecification.FileEmbedded(
+                                        objStamper.Writer,
+                                        "adjunto_" + attachmentIndex + ".pdf",
+                                        "adjunto_" + attachmentIndex + ".pdf",
+                                        x,
+                                        true,
+                                        "application/pdf",
+                                        null
+                                        );
+                                    objStamper.Writer.AddFileAttachment("Adjunto número: " + attachmentIndex, pfs);
+                                    //.AddFileAttachment("adjunto número: " + attachmentIndex, x, "adjunto_" + attachmentIndex + ".pdf", "adjunto " + attachmentIndex);
+                                }
+                                catch (Exception exce)
+                                {
+                                    Console.WriteLine(exce.StackTrace);
+                                }
+                            }
                             attachmentIndex++;
                         });
 
@@ -218,10 +247,15 @@ namespace Funciones.Archivos.Pdf
                     // Agregar propiedades extendidas
                     objStamper.MoreInfo = metadata;
 
-                    //TODO: verificar si no es necesario la utilizacion de XMP manual (actualmente funciona)
-                    #region xmp implementacion manual
+                //TODO: verificar si no es necesario la utilizacion de XMP manual (actualmente funciona)
+                #region xmp implementacion manual
+                
+                /* objStamper.Writer.CreateXmpMetadata();
+                var xmp = objStamper.Writer.XmpMetadata;
+
+
                 //XMP metadatos
-                /*IXmpMeta xmp;
+                IXmpMeta xmp;
                 using (var stream = File.OpenRead(@"C:\Users\danie\OneDrive\Escritorio\xmpMetadata.xml"))
                     xmp = XmpMetaFactory.Parse(stream);
 
@@ -235,9 +269,9 @@ namespace Funciones.Archivos.Pdf
                 var newMetadata = XmpMetaFactory.SerializeToBuffer(xmp, serializeOptions);
                 objStamper.XmpMetadata = newMetadata;*/
                 #endregion xmp implementacion manual
-                
-                    // Firmar digitalmente
-                    var externalSignature = new X509Certificate2Signature(certificate, "SHA-1");
+
+                // Firmar digitalmente
+                var externalSignature = new X509Certificate2Signature(certificate, "SHA-1");
                     MakeSignature.SignDetached(signatureAppearance, externalSignature, objChain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
             }
             return "";
