@@ -177,10 +177,10 @@ export default class DWT extends React.Component {
         this.state = {
         }
 
-        this.initializeDwt();
+        //this.initializeDwt();
     }
 
-    SetIfWebcamPlayVideo(bShow) {
+    /*SetIfWebcamPlayVideo(bShow) {
         if (bShow) {
             DWObject.Addon.Webcam.StopVideo();
             DWObject.Addon.Webcam.PlayVideo(DWObject, 80, () => { });
@@ -226,22 +226,23 @@ export default class DWT extends React.Component {
                 DWObject.Addon.Webcam.CaptureImage(funCaptureImage, funCaptureImage);
             }
         }
-    }
+    }*/
     
     initializeDwt() {
         DynamsoftWebCam.WebTwainEnv.Load();
         DynamsoftWebCam.WebTwainEnv.RegisterEvent('OnWebTwainReady', ()=>{
 			this.DWWebCamObject = Dynamsoft.WebTwainEnv.GetWebTwain('dwtcontrolContainer'); // Get the Dynamic Web TWAIN object that is embeded in the div with id 'dwtcontrolContainer'
-			if (this.DWWebCamObject) {
+            
+            if (this.DWWebCamObject) {
 			    this.DWWebCamObject.Width = 504;
 			    this.DWWebCamObject.Height = 600;
 
 			    document.getElementById('source').options.length = 0;
 
-	            var arySource = this.DWWebCamObject.Addon.Webcam.GetSourceList();
+	            /*var arySource = this.DWWebCamObject.Addon.Webcam.GetSourceList();
 	            for (var i = 0; i < arySource.length; i++)
 	                document.getElementById("webcamsource").options.add(new Option(arySource[i], arySource[i]), i + webCamStartingIndex); // Get Webcam Source names and put them in a drop-down box
-
+*/
 	        }
 
 	        document.getElementById('source').onchange = () => {
@@ -255,7 +256,7 @@ export default class DWT extends React.Component {
 	            else {
 	                this.DWWebCamObject.Addon.Webcam.SelectSource(document.getElementById("source").options[document.getElementById("source").selectedIndex].value);
 
-	                SetIfWebcamPlayVideo(true);
+	                //SetIfWebcamPlayVideo(true);
 
 	                document.getElementById('btn-grab').value = 'Acquire From a Webcam';
 	                document.getElementById("btn-switch").style.display = '';

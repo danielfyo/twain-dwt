@@ -9,35 +9,44 @@ namespace Funciones.SocketServer
     public class SocketServer
     {
         public ManualResetEvent allDone;
-
-        public SocketServer()
+        private readonly Func<string, bool> _parentDelegateFuntion;
+        Socket _listener;
+        public SocketServer(Func<string, bool> parentDelegateFuntion)
         {
+            _parentDelegateFuntion = parentDelegateFuntion;
             allDone = new ManualResetEvent(false);
+        }
+
+        public void StopServer()
+        {
+            _listener.Disconnect(false);
+            _listener.Close();
+            _listener.Dispose();
         }
 
         public void StartServer(int port)
         {
             var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
             var ipAddress = ipHostInfo.AddressList[1];
-            var localEndPoint = new IPEndPoint(ipAddress, port);
+            var localEndPoint = new IPEndPoint(IPAddress.Any, port);
 
             
-            var listener = new Socket(ipAddress.AddressFamily,
+            _listener = new Socket(ipAddress.AddressFamily,
                 SocketType.Stream, ProtocolType.Tcp);
 
             try
             {
-                listener.Bind(localEndPoint);
-                listener.Listen(100);
+                _listener.Bind(localEndPoint);
+                _listener.Listen(100);
 
                 while (true)
                 {
                     allDone.Reset();
 
                     Console.WriteLine("Esperando conexión...");
-                    listener.BeginAccept(
+                    _listener.BeginAccept(
                         new AsyncCallback(AcceptCallback),
-                        listener);
+                        _listener);
 
                     allDone.WaitOne();
                 }
@@ -48,7 +57,7 @@ namespace Funciones.SocketServer
                 Console.WriteLine(e.ToString());
             }
 
-            Console.WriteLine("\nPress ENTER to continue...");
+            Console.WriteLine("\nPresione enter para continuar...");
             Console.Read();
 
         }
@@ -68,7 +77,7 @@ namespace Funciones.SocketServer
 
         public void ReadCallback(IAsyncResult ar)
         {
-            var content = String.Empty;
+            var content = string.Empty;
 
             var state = (StateObject)ar.AsyncState;
             var handler = state.workSocket;
@@ -80,11 +89,12 @@ namespace Funciones.SocketServer
                 state.sb.Append(Encoding.ASCII.GetString(
                     state.buffer, 0, bytesRead));
 
-                content = state.sb.ToString();
+                content += state.sb.ToString();
                 if (content.IndexOf("<EOF>") > -1)
                 {
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                         content.Length, content);
+                    var result = _parentDelegateFuntion(content);
                     Send(handler, content);
                 }
                 else
@@ -114,7 +124,6 @@ namespace Funciones.SocketServer
 
                 handler.Shutdown(SocketShutdown.Both);
                 handler.Close();
-
             }
             catch (Exception e)
             { 
