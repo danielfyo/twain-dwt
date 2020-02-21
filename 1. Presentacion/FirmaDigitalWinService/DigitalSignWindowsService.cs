@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
@@ -17,6 +18,10 @@ namespace FirmaDigitalWinService
         private EventLog _eventLog;
         private SocketServer _socketServer;
         private BackgroundWorker _bw;
+
+        private BackgroundWorker _bg;
+        private string _jsonPathToProccess;
+        
         #endregion variables globales
 
         // constructor
@@ -25,6 +30,20 @@ namespace FirmaDigitalWinService
             InitializeComponent();
             InitializeEventLog();
             InitializeBackgroudWorker();
+
+            _bg = new BackgroundWorker
+            {
+                WorkerReportsProgress = true
+            };
+            //_bg.ProgressChanged += _bg_ProgressChanged;
+            _bg.DoWork += _bg_DoWork;
+            _bg.WorkerSupportsCancellation = true;
+            //_bg.RunWorkerCompleted += _bg_RunWorkerCompleted;
+        }
+
+        private void _bg_DoWork(object sender, DoWorkEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         #region initializer
@@ -63,24 +82,30 @@ namespace FirmaDigitalWinService
             return true;
         }
 
-        public bool ReciveBufferData(string json)
+        public bool ReciveBufferData(string json, Socket socket)
         {
             try
             {
                 LogTransaction("Procesando petición... ");
                 WriteToFile(json);
 
-                var jsonObject = JsonConvert
-                    .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>(json.Replace("<EOF>", ""));
-
                 var id = Guid.NewGuid();
                 var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(json);
 
-                using (var swriter = new StreamWriter(@"C:\Windows\SysWOW64\IoIp\" + id + ".json"))
+
+                _jsonPathToProccess = id + ".json";
+
+                using (var swriter = new StreamWriter(@"C:\Windows\SysWOW64\IoIp\" + _jsonPathToProccess))
                     swriter.Write(stringBuilder.ToString());
 
-                var pdfOut = SignPdf(jsonObject, id + ".json");
+                var jsonObject = JsonConvert
+                    .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>
+                    (json.Replace("<EOF>", ""));
+
+
+                var pdfOut = SignPdf(_jsonPathToProccess, jsonObject);
+
                 return SendBufferData(pdfOut);
             }
             catch (Exception exce)
@@ -108,17 +133,49 @@ namespace FirmaDigitalWinService
             }
         }
 
-        public string SignPdf(Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto jsonToProcess, string path)
+        private void ProcessPath(string _jsonPathToProccess)
         {
+            var path = @"C:\Windows\SysWOW64\IoIp\" + _jsonPathToProccess.Replace("-p", "").Trim();
+            //WriteToFile(path);
+            var jsonToProcess = File.ReadAllText(path);
+            //WriteToFile("Procesando peticion:");
+            //WriteToFile(jsonToProcess);
+            var jsonObject = JsonConvert
+                .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>
+                (jsonToProcess.Replace("<EOF>", ""));
+
+            SignPdf(path, jsonObject);
+        }
+
+        public string SignPdf(string path, Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto jsonObject)
+        {
+
+            /*try
+            {
+                LogTransaction("Iniciando proceso de firmado");
+                using (var pdfManager = new ManagePdfFile())
+                {
+                    var response = pdfManager.SignPdf(
+                        SignRenderingMode.GRAPHIC_AND_DESCRIPTION,
+                        jsonObject,
+                        path
+                        );
+
+                    LogTransaction("respuesta: " + response);
+                    return response;
+                }
+            }
+            catch (Exception exce)
+            {
+                LogTransaction(exce.Message);
+                LogTransaction(exce.StackTrace);
+                return exce.StackTrace;
+            }*/
+
             try
             {
                 LogTransaction("Iniciando proceso de firmado de archivo pdf");
-                LogTransaction("\\\\localhost FirmarPdf.exe " + path);
-                var pass = "dFyOl450Yt!\\";
-                pass += "\"";
-                var password = new System.Security.SecureString();
-                password.AppendChar('D');
-                
+                var arguments = "\\\\localhost -i WinFormsFirmarPdf.exe " + path;
                 var startInfo = new ProcessStartInfo
                 {
                     CreateNoWindow = false,
@@ -128,11 +185,12 @@ namespace FirmaDigitalWinService
                     //UserName = ".\\danie",
                     //Domain = ".\\",
                     //Password = password,
-                    Arguments = "\\\\localhost -i FirmarPdf " + path
+                    Arguments = arguments
+                    //"\\\\localhost -i FirmarPdf " + path
                 };
 
-
-                LogTransaction("Ejecutando: " + startInfo.FileName + " " + startInfo.Arguments);
+                Process.Start(startInfo);
+                LogTransaction("Ejecutando: " + "psexec " + arguments);
 
                 try
                 {
@@ -140,7 +198,7 @@ namespace FirmaDigitalWinService
                     // Call WaitForExit and then the using statement will close.
                     using (var exeProcess = Process.Start(startInfo))
                     {
-                        exeProcess.();
+                        exeProcess.WaitForExit();
                         LogTransaction("Proceso finalizado: " + startInfo.FileName + " " + startInfo.Arguments);
                     }
                 }
@@ -151,10 +209,6 @@ namespace FirmaDigitalWinService
                 }
 
                 return "";
-                /*pdfManager.SignPdf(
-                    SignRenderingMode.GRAPHIC_AND_DESCRIPTION,
-                    path
-                    );*/
             }
             catch (Exception exce)
             {

@@ -39,14 +39,13 @@ namespace FirmaDigitalWinService
             // 
             this.serviceProcessInstaller1.Password = null;
             this.serviceProcessInstaller1.Username = null;
-            this.serviceProcessInstaller1.Account = ServiceAccount.User;
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "IoIpDigitalSignWinService";
-            this.serviceInstaller1.DisplayName = "DigitalSign.Service";
             this.serviceInstaller1.Description = "IoIp Digital Sign Windows Service";
-            this.serviceInstaller1.StartType = ServiceStartMode.Automatic;
+            this.serviceInstaller1.DisplayName = "DigitalSign.Service";
+            this.serviceInstaller1.ServiceName = "DigitalSignService";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 

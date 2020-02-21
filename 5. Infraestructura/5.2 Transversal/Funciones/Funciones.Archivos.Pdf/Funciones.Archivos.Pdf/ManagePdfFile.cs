@@ -13,6 +13,7 @@ using System.Linq;
 using FirmarPdf.Dtos.PdfSign;
 using PdfSignRequestDto.Dtos.PdfSign;
 using Newtonsoft.Json;
+using System.Diagnostics;
 //using System.Security.Cryptography;
 #endregion using
 
@@ -152,14 +153,17 @@ namespace Funciones.Archivos.Pdf
         }
 
         // metodo principal para el procesamiento de pdfs (firma digital adjuntos metadatos)
-        public string SignPdf(SignRenderingMode signRenderingMode, string path)
+        public string SignPdf(
+            SignRenderingMode signRenderingMode, 
+            Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto jsonToProcess,
+            string path)
         {
             try
             {
-                var json = File.ReadAllText(path);
+                //var json = File.ReadAllText(path);
 
-                var jsonToProcess = JsonConvert
-                    .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>(json.Replace("<EOF>", ""));
+                //var jsonToProcess = JsonConvert
+                    //.DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>(json.Replace("<EOF>", ""));
 
                 _target = jsonToProcess.outPath;
                 _fs = GetPdfStreamFormUrlOrBase64(jsonToProcess.dataUriBase64PdfToSign);
@@ -288,7 +292,9 @@ namespace Funciones.Archivos.Pdf
                         var externalSignature = new X509Certificate2Signature(certificate, jsonToProcess.certificateHashAlgorithm);
                         MakeSignature.SignDetached(signatureAppearance, externalSignature, objChain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
                     }
-                    System.IO.File.WriteAllBytes(path.Replace("json","pdf"), _wfs.ToArray());
+                    var pdfFileTocreate = jsonToProcess.outPath.Replace("json", "pdf");
+                    System.IO.File.WriteAllBytes(pdfFileTocreate, _wfs.ToArray());
+                    Process.Start(pdfFileTocreate);
                     return Convert.ToBase64String(_wfs.ToArray());
                 }
             }

@@ -9,9 +9,9 @@ namespace Funciones.SocketServer
     public class SocketServer
     {
         public ManualResetEvent allDone;
-        private readonly Func<string, bool> _parentDelegateFuntion;
+        private readonly Func<string, Socket, bool> _parentDelegateFuntion;
         Socket _listener;
-        public SocketServer(Func<string, bool> parentDelegateFuntion)
+        public SocketServer(Func<string, Socket, bool> parentDelegateFuntion)
         {
             _parentDelegateFuntion = parentDelegateFuntion;
             allDone = new ManualResetEvent(false);
@@ -101,8 +101,8 @@ namespace Funciones.SocketServer
                 {
                     Console.WriteLine("Read {0} bytes from socket. \n Data : {1}",
                         content.Length, content);
-                    var result = _parentDelegateFuntion(content);
-                    Send(handler, content);
+                    var result = _parentDelegateFuntion(content, handler);
+                    //Send(handler, content);
                 }
                 else
                 {
@@ -112,7 +112,7 @@ namespace Funciones.SocketServer
             }
         }
 
-        private void Send(Socket handler, String data)
+        public void Send(Socket handler, String data)
         {
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
