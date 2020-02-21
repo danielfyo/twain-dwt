@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.ServiceName = "IoIpDIgitalSignWinService";
+            this.ServiceName = "IoIpDigitalSignWinService";
         }
 
         #endregion

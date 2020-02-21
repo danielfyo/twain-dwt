@@ -5,29 +5,38 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
-using System.Timers;
 
 namespace FirmaDigitalWinService
 {
     public partial class DigitalSignWindowsService : ServiceBase
     {
         #region variables globales
-        private readonly Timer _timer;
-        private readonly EventLog _eventLog;
+        private EventLog _eventLog;
         private SocketServer _socketServer;
         private BackgroundWorker _bw;
         #endregion variables globales
+
+        // constructor
         public DigitalSignWindowsService()
         {
-            _timer = new Timer();
             InitializeComponent();
+            InitializeEventLog();
+            InitializeBackgroudWorker();
+        }
+
+        #region initializer
+        private void InitializeBackgroudWorker()
+        {
             _bw = new BackgroundWorker();
-            _bw.DoWork += _bw_DoWork;
+            _bw.DoWork += Bw_DoWork;
             _bw.WorkerSupportsCancellation = true;
+        }
+
+        private void InitializeEventLog()
+        {
             _eventLog = new EventLog();
             if (!EventLog.SourceExists("IoIp"))
             {
@@ -36,153 +45,113 @@ namespace FirmaDigitalWinService
             _eventLog.Source = "IoIp";
             _eventLog.Log = "DigitalSignServiceLog";
         }
+        #endregion initializer
 
-        private void _bw_DoWork(object sender, DoWorkEventArgs e)
+        #region private logic
+        private void LogTransaction(string msg)
+        {
+            var logMsg = "<<<" + msg + " >>> | " + DateTime.Now + " | " + Environment.NewLine;
+            WriteToFile(logMsg);
+            _eventLog.WriteEntry(logMsg);
+        }
+
+        public bool SendBufferData(string response)
+        {
+            LogTransaction("Respondiendo petición...");
+            //TODO: implementar logica de envio de respuesta
+            LogTransaction("Respuesta enviada");
+            return true;
+        }
+
+        public bool ReciveBufferData(string json)
         {
             try
             {
-                var port = 9000;
-                //TODO: mover a backgroud worker async
-
-                var ipHostInfo = Dns.GetHostEntry(Dns.GetHostName());
-                var ipAddress = ipHostInfo.AddressList[1];
-                WriteToFile("Iniciando por la ip: " + ipAddress + " puerto: " + port + " a las:" + DateTime.Now);
-
-                _socketServer = new SocketServer(ReciveBufferData);
-                _socketServer.StartServer(port);
-            }catch(Exception exce)
-            {
-                WriteToFile(exce.StackTrace);
-                WriteToFile(exce.Message);
-            }
-        }
-
-        [DllImport("advapi32.dll", SetLastError = true)]
-        private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
-
-        #region override method
-        protected override void OnStart(string[] args)
-        {
-            // Update the service state to Start Pending.
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 100000;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-            var logMessage = "Iniciando iniciado a las: " + DateTime.Now;
-            WriteToFile(logMessage);
-            //_eventLog.WriteEntry(logMessage);
-            //_timer.Elapsed += new ElapsedEventHandler(OnElapsedTime);
-            //_timer.Interval = 10000; 
-            //_timer.Enabled = true;
-
-            _bw.RunWorkerAsync();
-
-            // Update the service state to Running.
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);            
-        }
-
-        protected override void OnStop()
-        {
-            // Update the service state to Stop Pending.
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOP_PENDING;
-            serviceStatus.dwWaitHint = 100000;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-
-            var logMessage = "Deteniendo a las: " + DateTime.Now;
-            WriteToFile(logMessage);
-            //_eventLog.WriteEntry(logMessage);
-            //_timer.Stop();
-            _socketServer.StopServer();
-            WriteToFile("Servicio detenido a las:" +DateTime.Now);
-            // Update the service state to Stopped.
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
-        }
-
-        protected override void OnContinue()
-        {
-            var logMessage = "Servicio reanudado a las: " + DateTime.Now;
-            WriteToFile(logMessage);
-            _eventLog.WriteEntry(logMessage);
-            _timer.Stop();
-        }
-        #endregion override method
-        private void OnElapsedTime(object source, ElapsedEventArgs e)
-        {
-            var logMessage = "Servicio ejecutado a la: " + DateTime.Now;
-            WriteToFile(logMessage);
-            _eventLog.WriteEntry(logMessage);
-        }
-
-        public static bool ReciveBufferData(string json)
-        {
-            try
-            {
-                WriteToFile("Processando petición a las: " + DateTime.Now);
+                LogTransaction("Procesando petición... ");
                 WriteToFile(json);
+
                 var jsonObject = JsonConvert
                     .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>(json.Replace("<EOF>", ""));
 
                 var id = Guid.NewGuid();
-                StringBuilder stringBuilder = new StringBuilder();
+                var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(json);
-                using (StreamWriter swriter = new StreamWriter(@"C:\Users\danie\OneDrive\Documentos\GitHub\ioip-twain-dwt\1. Presentacion\FirmarPdf\bin\Debug\" + id + ".json"))
-                {
-                    swriter.Write(stringBuilder.ToString());
-                }
-                var pdfOut = SignPdf(jsonObject, id + ".json");
 
-                WriteToFile("Respondiendo petición a las: " + DateTime.Now);
-                WriteToFile(pdfOut);
-                return true;
+                using (var swriter = new StreamWriter(@"C:\Windows\SysWOW64\IoIp\" + id + ".json"))
+                    swriter.Write(stringBuilder.ToString());
+
+                var pdfOut = SignPdf(jsonObject, id + ".json");
+                return SendBufferData(pdfOut);
             }
             catch (Exception exce)
             {
-                WriteToFile(exce.StackTrace);
-                WriteToFile(exce.Message);
+                LogTransaction(exce.StackTrace);
+                LogTransaction(exce.Message);
                 return false;
             }
         }
 
-        public static bool SendBufferData(string response)
-        {
-            return true;
-        }
-
-        public static string SignPdf(Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto jsonToProcess, string path)
+        private void Bw_DoWork(object sender, DoWorkEventArgs e)
         {
             try
             {
-                WriteToFile("Iniciando proceso de firmado de archivo pdf a las: "+DateTime.Now);
-                
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.CreateNoWindow = false;
-                startInfo.UseShellExecute = false;
-                startInfo.FileName = "\"C:\\Users\\danie\\OneDrive\\Documentos\\GitHub\\ioip-twain-dwt\\1. Presentacion\\FirmarPdf\\bin\\Debug\\FirmarPdf.exe\"";
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.Arguments = path;
+                //TODO: obtener puerto de configure.ini
+                var port = 8000;
+                LogTransaction("Iniciando socket server por el puerto: " + port);
+                _socketServer = new SocketServer(ReciveBufferData);
+                _socketServer.StartServer(port);
+            }
+            catch(Exception exce)
+            {
+                LogTransaction(exce.StackTrace);
+                LogTransaction(exce.Message);
+            }
+        }
 
-                WriteToFile("Ejecutando: " + startInfo.FileName + " " + startInfo.Arguments);
+        public string SignPdf(Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto jsonToProcess, string path)
+        {
+            try
+            {
+                LogTransaction("Iniciando proceso de firmado de archivo pdf");
+                LogTransaction("\\\\localhost FirmarPdf.exe " + path);
+                var pass = "dFyOl450Yt!\\";
+                pass += "\"";
+                var password = new System.Security.SecureString();
+                password.AppendChar('D');
+                
+                var startInfo = new ProcessStartInfo
+                {
+                    CreateNoWindow = false,
+                    UseShellExecute = false,
+                    FileName = "psexec",//@"c:\windows\system32\FirmarPdf.exe",
+                    WindowStyle = ProcessWindowStyle.Normal,
+                    //UserName = ".\\danie",
+                    //Domain = ".\\",
+                    //Password = password,
+                    Arguments = "\\\\localhost -i FirmarPdf " + path
+                };
+
+
+                LogTransaction("Ejecutando: " + startInfo.FileName + " " + startInfo.Arguments);
 
                 try
                 {
                     // Start the process with the info we specified.
                     // Call WaitForExit and then the using statement will close.
-                    using (Process exeProcess = Process.Start(startInfo))
+                    using (var exeProcess = Process.Start(startInfo))
                     {
-                        exeProcess.WaitForExit();
-                        WriteToFile("Proceso finalizado: " + startInfo.FileName + " " + startInfo.Arguments);
+                        exeProcess.();
+                        LogTransaction("Proceso finalizado: " + startInfo.FileName + " " + startInfo.Arguments);
                     }
                 }
-                catch
+                catch(Exception exce)
                 {
-                    // Log error.
+                    LogTransaction(exce.StackTrace);
+                    LogTransaction(exce.Message);
                 }
 
-                return "";/*pdfManager.SignPdf(
+                return "";
+                /*pdfManager.SignPdf(
                     SignRenderingMode.GRAPHIC_AND_DESCRIPTION,
                     path
                     );*/
@@ -191,7 +160,7 @@ namespace FirmaDigitalWinService
             {
                 WriteToFile(exce.StackTrace);
                 WriteToFile(exce.Message);
-                return exce.StackTrace + " <-> " + exce.InnerException + "<-> "+exce.Message;
+                return exce.StackTrace + " <-> " + exce.InnerException + "<-> " + exce.Message;
             }
         }
 
@@ -200,20 +169,79 @@ namespace FirmaDigitalWinService
             var path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
-            
+
             var filepath = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
-            
+
             if (!File.Exists(filepath))
-                using (StreamWriter sw = File.CreateText(filepath))
+                using (var sw = File.CreateText(filepath))
                 {
                     sw.WriteLine(Message);
                 }
             else
-                using (StreamWriter sw = File.AppendText(filepath))
+                using (var sw = File.AppendText(filepath))
                 {
                     sw.WriteLine(Message);
                 }
         }
+        #endregion private logic
+
+        #region override method
+        protected override void OnStart(string[] args)
+        {
+            LogTransaction("Iniciando iniciado...");
+            
+            // Update the service state to Start Pending.
+            ServiceStatus serviceStatus = new ServiceStatus
+            {
+                dwCurrentState = ServiceState.SERVICE_START_PENDING,
+                dwWaitHint = 100000
+            };
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            // iniciar el proceso asíncrono
+            _bw.RunWorkerAsync();
+
+            // Update the service state to Running.
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+        }
+
+        protected override void OnStop()
+        {
+            LogTransaction("Deteniendo servicio ...");
+
+            // Update the service state to Stop Pending.
+            ServiceStatus serviceStatus = new ServiceStatus
+            {
+                dwCurrentState = ServiceState.SERVICE_STOP_PENDING,
+                dwWaitHint = 100000
+            };
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+
+            try
+            {
+                _socketServer.StopServer();
+            }
+            catch (Exception exce)
+            {
+                LogTransaction(exce.StackTrace);
+                LogTransaction(exce.Message);
+            }
+            
+            LogTransaction("Servicio detenido. " + DateTime.Now);
+
+            // Update the service state to Stopped.
+            serviceStatus.dwCurrentState = ServiceState.SERVICE_STOPPED;
+            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+        }
+
+        protected override void OnContinue()
+            => LogTransaction("Servicio reanudado");
+        #endregion override method
+
+        #region interactive service
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
 
         public enum ServiceState
         {
@@ -236,6 +264,7 @@ namespace FirmaDigitalWinService
             public int dwServiceSpecificExitCode;
             public int dwCheckPoint;
             public int dwWaitHint;
-        };  
+        };
+        #endregion interactive service
     }
 }

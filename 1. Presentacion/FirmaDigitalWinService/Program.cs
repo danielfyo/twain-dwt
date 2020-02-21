@@ -1,9 +1,5 @@
-﻿    using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FirmaDigitalWinService
 {
@@ -14,12 +10,15 @@ namespace FirmaDigitalWinService
         /// </summary>
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            if (!Environment.UserInteractive)
             {
+                ServiceBase[] ServicesToRun;
+                ServicesToRun = new ServiceBase[]
+                {
                 new DigitalSignWindowsService()
-            };
-            ServiceBase.Run(ServicesToRun);
+                };
+                ServiceBase.Run(ServicesToRun);
+            }
         }
     }
 }

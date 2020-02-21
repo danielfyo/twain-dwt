@@ -1,40 +1,26 @@
-﻿using System.Collections;
-using System.Diagnostics;
+﻿using System.Configuration.Install;
+using System.ServiceProcess;
 
 namespace FirmaDigitalWinService
 {
-    public partial class ProjectInstaller : System.Configuration.Install.Installer
+    public partial class ProjectInstaller : Installer
     {
         public ProjectInstaller()
         {
-            InitializeComponent();    
-        }
+            ServiceProcessInstaller pi = new ServiceProcessInstaller();
+            ServiceInstaller si = new ServiceInstaller();
 
-        protected override void OnBeforeInstall(IDictionary savedState)
-        {
-            base.OnBeforeInstall(savedState);
+            //Launching into another session like this requires the service
+            //account to have the SE_TCB_NAME (Act as part of the operating 
+            //system) privilege. By default only the loacl system account 
+            //has this privilege.
+            pi.Account = ServiceAccount.LocalSystem;
+            si.ServiceName = "DigitalSignService";
+            si.Description = "Launches interactive sessions processes to sign a pdf file.";
+            si.DisplayName = "IoIp Digital sign service";
 
-            string username = GetContextParameter("user").Trim();
-            string password = GetContextParameter("password").Trim();
-
-            if (username != "")
-                this.serviceProcessInstaller1.Username = username;
-            if (password != "")
-                this.serviceProcessInstaller1.Password = password;
-        }
-
-        public string GetContextParameter(string key)
-        {
-            string sValue = "";
-            try
-            {
-                sValue = this.Context.Parameters[key].ToString();
-            }
-            catch
-            {
-                sValue = "";
-            }
-            return sValue;
+            this.Installers.AddRange(new Installer[] { pi, si });
+            //InitializeComponent();    
         }
     }
 }

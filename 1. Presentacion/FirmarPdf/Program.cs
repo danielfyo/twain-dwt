@@ -2,7 +2,9 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace FirmarPdf
 {
@@ -30,7 +32,6 @@ namespace FirmarPdf
         {
             try
             {
-                
                 var id = Guid.NewGuid();
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine(jsonToProcess);
@@ -57,36 +58,52 @@ namespace FirmarPdf
 
         public static void WriteToFile(string Message)
         {
-            var path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            Console.WriteLine("<<< "+Message+" >>>");
+            return;
+            try
+            {
+                var path = @"C:\Windows\SysWOW64\IoIp";
+                Console.WriteLine(path);
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
 
-            var filepath = AppDomain.CurrentDomain.BaseDirectory + "\\Logs\\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
-
-            if (!File.Exists(filepath))
-                using (StreamWriter sw = File.CreateText(filepath))
-                {
-                    sw.WriteLine(Message);
-                }
-            else
-                using (StreamWriter sw = File.AppendText(filepath))
-                {
-                    sw.WriteLine(Message);
-                }
+                var filepath = path + @"\Logs\ServiceLog_" + DateTime.Now.Date.ToShortDateString().Replace('/', '_') + ".txt";
+                Console.WriteLine(filepath);
+                if (!File.Exists(filepath))
+                    using (StreamWriter sw = File.CreateText(filepath))
+                    {
+                        sw.WriteLine(Message);
+                    }
+                else
+                    using (StreamWriter sw = File.AppendText(filepath))
+                    {
+                        sw.WriteLine(Message);
+                    }
+            }
+            catch (Exception exce)
+            {
+                Console.WriteLine(exce.StackTrace);
+                Console.WriteLine(exce.Message);
+            }
         }
 
         static void Main(string[] args)
         {
             try
             {
-                WriteToFile(args[0]);
-                Console.WriteLine(args[0]);
-                var path = @"C:\Users\danie\OneDrive\Documentos\GitHub\ioip-twain-dwt\1. Presentacion\FirmarPdf\bin\Debug\" + args[0];
+                WriteToFile(args.Length+"");
+                args.ToList().ForEach(item =>
+                 {
+                     WriteToFile(item);
+                 });
+                Thread.Sleep(5000);
+                var path = @"C:\Windows\SysWOW64\IoIp\" + args[0].Replace("-p", "").Trim();
+                WriteToFile(path);
                 var jsonToProcess = File.ReadAllText(path);
+                WriteToFile(jsonToProcess);
                 var jsonObject = JsonConvert
                 .DeserializeObject<Funciones.Archivos.Pdf.Dtos.PdfSign.PdfSignRequestDto>(jsonToProcess.Replace("<EOF>", ""));
 
-                
                 using (var pdfManager = new ManagePdfFile())
                 {
                     WriteToFile("iniciando firmado");

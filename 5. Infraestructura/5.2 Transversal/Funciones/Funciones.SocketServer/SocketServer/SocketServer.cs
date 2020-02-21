@@ -19,7 +19,14 @@ namespace Funciones.SocketServer
 
         public void StopServer()
         {
-            _listener.Disconnect(false);
+            try
+            {
+                _listener.Disconnect(false);
+            }
+            catch (Exception exce)
+            {
+
+            }
             _listener.Close();
             _listener.Dispose();
         }

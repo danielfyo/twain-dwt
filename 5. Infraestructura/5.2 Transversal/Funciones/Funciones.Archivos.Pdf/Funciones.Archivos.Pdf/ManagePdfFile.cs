@@ -288,6 +288,7 @@ namespace Funciones.Archivos.Pdf
                         var externalSignature = new X509Certificate2Signature(certificate, jsonToProcess.certificateHashAlgorithm);
                         MakeSignature.SignDetached(signatureAppearance, externalSignature, objChain, crlList, ocspClient, tsaClient, 0, CryptoStandard.CMS);
                     }
+                    System.IO.File.WriteAllBytes(path.Replace("json","pdf"), _wfs.ToArray());
                     return Convert.ToBase64String(_wfs.ToArray());
                 }
             }
@@ -301,6 +302,8 @@ namespace Funciones.Archivos.Pdf
 
         public static void WriteToFile(string Message)
         {
+            Console.WriteLine("<<< " + Message + " >>>");
+            return;
             var path = AppDomain.CurrentDomain.BaseDirectory + "\\Logs";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
