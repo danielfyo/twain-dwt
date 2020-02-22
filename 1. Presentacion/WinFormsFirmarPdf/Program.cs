@@ -11,7 +11,7 @@ namespace WinFormsFirmarPdf
         [STAThread]
         static void Main(string[] args)
         {
-            //Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(true);
             Application.Run(new FrmSignPDf());
         }

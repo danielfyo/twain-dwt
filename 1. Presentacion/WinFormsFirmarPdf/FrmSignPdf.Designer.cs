@@ -28,9 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.btnSign = new System.Windows.Forms.Button();
             this.btnView = new System.Windows.Forms.Button();
             this.rtbTransactionLog = new System.Windows.Forms.RichTextBox();
+            this._nofityIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this._contextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this._contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnSign
@@ -60,6 +70,59 @@
             this.rtbTransactionLog.TabIndex = 2;
             this.rtbTransactionLog.Text = "";
             // 
+            // _nofityIcon
+            // 
+            this._nofityIcon.Text = "notifyIcon1";
+            this._nofityIcon.Visible = true;
+            // 
+            // _contextMenu
+            // 
+            this._contextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this._contextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5});
+            this._contextMenu.Name = "_contextMenu";
+            this._contextMenu.Size = new System.Drawing.Size(190, 124);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem1.Text = "Ayuda";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem2.Text = "Visualizar";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem3.Text = "Consultar puerto";
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem4.Text = "Reiniciar servicio";
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem5.Text = "Cerrar";
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // FrmSignPDf
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -70,7 +133,10 @@
             this.Controls.Add(this.btnSign);
             this.Name = "FrmSignPDf";
             this.Text = "IoIp Firma Digital";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmSignPDf_FormClosing);
             this.Load += new System.EventHandler(this.FrmSignPDf_Load);
+            this.Resize += new System.EventHandler(this.FrmSignPDf_Resize);
+            this._contextMenu.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -80,6 +146,14 @@
         private System.Windows.Forms.Button btnSign;
         private System.Windows.Forms.Button btnView;
         private System.Windows.Forms.RichTextBox rtbTransactionLog;
+        private System.Windows.Forms.NotifyIcon _nofityIcon;
+        private System.Windows.Forms.ContextMenuStrip _contextMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 
