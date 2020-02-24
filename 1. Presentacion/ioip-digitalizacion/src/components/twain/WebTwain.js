@@ -9,25 +9,49 @@ import DynamsoftWebCam from '../webcam/DynamsoftWebCam';
 // #endregion imports
 
 class UI extends React.Component {
+    
     render() {
         return (
         <div id="webTwainMain">
             <div id="DWTcontainer" className="container">
                 <div id="DWTcontainerTop">
+                    <div id="ImgSizeEditor"  className={(!this.props.stateProp.showResizer) ? 'hidden' : ''}>
+                        <ul>
+                            <li>
+                                <label for="img_height">Nuevo alto:
+                                    <input type="text" id="img_height" size="10"/>
+                                    px</label>
+                            </li>
+                            <li>
+                                <label for="img_width">Nuevo ancho :&nbsp;
+                                    <input type="text" id="img_width" size="10"/>
+                                    px</label>
+                            </li>
+                            <li>Método de interpolación:
+                                <select size="1" id="InterpolationMethod">
+                                    <option value=""></option>
+                                </select>
+                            </li>
+                            <li>
+                                <input type="button" value="REDIMENSIONAR" id="btnChangeImageSizeOK" onClick={this.resizeByCoordinates}/>
+                                <input type="button" value="   CANCELAR  " id="btnCancelChange" onClick={this.cancelResizeImage}/>
+                            </li>
+                        </ul>
+                    </div>
                     <div id={this.props.containerId}></div>
                     <div id="btnGroupBtm" className="clearfix">
                         <div className="ct-lt">
-                        <button id="DW_btnFirstImage" onClick={this.props.btnFirstImage_onclick}> |&lt; </button>
+                        <button id="DW_btnFirstImage" onClick={this.props.goToFirstImage}> |&lt; </button>
                             &nbsp;
-                        <button id="DW_btnPreImage" onClick={this.props.btnPreImage_onclick}> &lt; </button>
+                        <button id="DW_btnPreImage" onClick={this.props.goToPrevoiusImage}> &lt; </button>
                             &nbsp;&nbsp; Página: &nbsp;
                         <input type="text" size="2" id="DW_CurrentImage" readOnly="readonly" />
                             &nbsp; de &nbsp;
                         <input type="text" size="2" id="DW_TotalImage" readOnly="readonly" />
                             &nbsp;&nbsp;
-                        <button id="DW_btnNextImage" onClick={this.props.btnNextImage_onclick}> &gt; </button>
+                        <button id="DW_btnNextImage" onClick={this.props.goToNextImage}> &gt; </button>
                             &nbsp;
-                        <button id="DW_btnLastImage" onClick={this.props.btnLastImage_onclick}> &gt;| </button>
+                        <button id="DW_btnLastImage" onClick={this.props.goToLastImage}> &gt;| </button>
                         </div>
                         <div className="ct-rt">Modo de visualizaión:
                         <select size="1" id="DW_PreviewMode" onChange={this.props.setlPreviewMode}>
@@ -85,6 +109,7 @@ class UI extends React.Component {
                                             <li>
                                                 <span>Resolución:</span>
                                                 <select size="1" id="Resolution">
+                                                    <option value="100">50</option>
                                                     <option value="100">100</option>
                                                     <option value="200">200</option>
                                                     <option value="300">300</option>
@@ -173,58 +198,9 @@ export default class DWT extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        }
-
-        //this.initializeDwt();
+            showResizer: false
+        };
     }
-
-    /*SetIfWebcamPlayVideo(bShow) {
-        if (bShow) {
-            DWObject.Addon.Webcam.StopVideo();
-            DWObject.Addon.Webcam.PlayVideo(DWObject, 80, () => { });
-            isVideoOn = true;
-            document.getElementById("btn-grab").style.backgroundColor = "";
-            document.getElementById("btn-grab").disabled = "";
-            document.getElementById("btn-switch").value = "Hide Video";
-        }
-        else {
-            DWObject.Addon.Webcam.StopVideo();
-            isVideoOn = false;
-            document.getElementById("btn-grab").style.backgroundColor = "#aaa";
-            document.getElementById("btn-grab").disabled = "disabled";
-            document.getElementById("btn-switch").value = "Show Video";
-        }
-    }
-
-    SwitchViews() {
-        if (isVideoOn == false) {
-            // continue the video
-            SetIfWebcamPlayVideo(true);
-        } else {
-            // stop the video
-            SetIfWebcamPlayVideo(false);
-        }
-    }
-
-    CaptureImage() {
-        if (DWObject) {
-            if (document.getElementById('source').selectedIndex < webCamStartingIndex) {
-                DWObject.IfShowUI = true;
-                DWObject.IfDisableSourceAfterAcquire = true;
-                DWObject.SelectSourceByIndex(document.getElementById('source').selectedIndex);
-                DWObject.CloseSource();
-                DWObject.OpenSource();
-                DWObject.AcquireImage();
-            }
-            else {
-
-                var funCaptureImage = () => {
-                    SetIfWebcamPlayVideo(false);
-                };
-                DWObject.Addon.Webcam.CaptureImage(funCaptureImage, funCaptureImage);
-            }
-        }
-    }*/
     
     initializeDwt() {
         DynamsoftWebCam.WebTwainEnv.Load();
@@ -645,11 +621,9 @@ export default class DWT extends React.Component {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
-        switch (document.getElementById("ImgSizeEditor").style.visibility) {
-            case "visible": document.getElementById("ImgSizeEditor").style.visibility = "hidden"; break;
-            case "hidden": document.getElementById("ImgSizeEditor").style.visibility = "visible"; break;
-            default: break;
-        }
+        this.setState({
+            showResizer: true 
+        });
    
         var iWidth = this.DWObject.GetImageWidth(this.DWObject.CurrentImageIndexInBuffer);
         if (iWidth !== -1)
@@ -659,11 +633,13 @@ export default class DWT extends React.Component {
             document.getElementById("img_height").value = iHeight;
     }
 
-    btnCancelChange_onclick() {
-        document.getElementById("ImgSizeEditor").style.visibility = "hidden";
+    cancelResizeImage() {
+        this.setState({
+            showResizer: false 
+        });
     }
 
-    btnChangeImageSizeOK_onclick() {
+    resizeByCoordinates() {
         document.getElementById("img_height").className = "";
         document.getElementById("img_width").className = "";
         if (!this.re.test(document.getElementById("img_height").value)) {
@@ -719,6 +695,7 @@ export default class DWT extends React.Component {
     render() {
         return (
             <UI
+                stateProp = {this.state}
                 containerId={this.containerId}
                 // Adquire images
                 acquireImage={() => this.acquireImage()}
@@ -735,24 +712,25 @@ export default class DWT extends React.Component {
                 // Delete pages
                 removeCurrentImage={() => this.removeCurrentImage()}
                 removeAllImages={() => this.removeAllImages()}
+                
                 // Resize
                 cropImage={() => this.cropImage()}
                 resizeImage={() => this.resizeImage()}
                 
+                // Resize actions
+                cancelResizeImage={() => this.cancelResizeImage()}
+                resizeByCoordinates={() => this.resizeByCoordinates()}
+                
+                // pages navigation
+                goToFirstImage={() => this.goToFirstImage()}
+                goToPreviousImageWheel={() => this.goToPreviousImageWheel()}
+                goToPrevoiusImage={() => this.goToPrevoiusImage()}
+                gotoNextImageWheel={() => this.gotoNextImageWheel()}
+                goToNextImage={() => this.goToNextImage()}
+                goToLastImage={() => this.goToLastImage()}
+
                 saveUploadImage={(_type) => this.saveUploadImage(_type)}
                 
-                
-
-
-                btnCancelChange_onclick={() => this.btnCancelChange_onclick()}
-                btnChangeImageSizeOK_onclick={() => this.btnChangeImageSizeOK_onclick()}
-                
-                btnFirstImage_onclick={() => this.btnFirstImage_onclick()}
-                btnPreImage_wheel={() => this.btnPreImage_wheel()}
-                btnNextImage_wheel={() => this.btnNextImage_wheel()}
-                btnPreImage_onclick={() => this.btnPreImage_onclick()}
-                btnNextImage_onclick={() => this.btnNextImage_onclick()}
-                btnLastImage_onclick={() => this.btnLastImage_onclick()}
                 setlPreviewMode={() => this.setlPreviewMode()}
                 rdTIFF_onclick={() => this.rdTIFF_onclick()}
                 rdPDF_onclick={() => this.rdPDF_onclick()}
@@ -864,11 +842,13 @@ export default class DWT extends React.Component {
         if (_chkMultiPageTIFF)
             _chkMultiPageTIFF.disabled = true;
         var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
-        if (_chkMultiPagePDF)
-            _chkMultiPagePDF.disabled = true;
+        if (_chkMultiPagePDF) {
+            _chkMultiPagePDF.disabled = false;
+            _chkMultiPagePDF.checked = true;
+        }
     }
 
-       saveUploadImage(type) {
+    saveUploadImage(type) {
         if (type === 'local') {
             this.btnSave_onclick();
         } else if (type === 'server') {
@@ -1032,7 +1012,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnFirstImage_onclick() {
+    goToFirstImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1040,17 +1020,17 @@ export default class DWT extends React.Component {
         this.updatePageInfo();
     }
 
-    btnPreImage_wheel() {
+    goToPreviousImageWheel() {
         if (this.DWObject.HowManyImagesInBuffer !== 0)
-            this.btnPreImage_onclick()
+            this.goToPrevoiusImage()
     }
 
-    btnNextImage_wheel() {
+    gotoNextImageWheel() {
         if (this.DWObject.HowManyImagesInBuffer !== 0)
-            this.btnNextImage_onclick()
+            this.goToNextImage()
     }
 
-    btnPreImage_onclick() {
+    goToPrevoiusImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1060,7 +1040,8 @@ export default class DWT extends React.Component {
         this.DWObject.CurrentImageIndexInBuffer = this.DWObject.CurrentImageIndexInBuffer - 1;
         this.updatePageInfo();
     }
-    btnNextImage_onclick() {
+
+    goToNextImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1072,7 +1053,7 @@ export default class DWT extends React.Component {
     }
 
 
-    btnLastImage_onclick() {
+    goToLastImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1094,7 +1075,6 @@ export default class DWT extends React.Component {
             this.updatePageInfo();
         }
     }
-
 
     removeAllImages() {
         if (!this.checkIfImagesInBuffer()) {
@@ -1137,7 +1117,7 @@ export default class DWT extends React.Component {
     rdTIFF_onclick() {
         var _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
         _chkMultiPageTIFF.disabled = false;
-        _chkMultiPageTIFF.checked = false;
+        _chkMultiPageTIFF.checked = true;
 
         var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
         _chkMultiPagePDF.checked = false;

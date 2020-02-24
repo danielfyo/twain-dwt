@@ -321,7 +321,7 @@ export class Menu extends Component<any, any> {
                                                 split: true,
                                                 ariaLabel: '',
                                                 onClick: () => {
-                                                    this.handleRemoveCurrentImage();
+                                                    this.handleResizeImage();
                                                 },
                                             },
                                             {
@@ -331,7 +331,7 @@ export class Menu extends Component<any, any> {
                                                 split: true,
                                                 ariaLabel: '',
                                                 onClick: () => {
-                                                    this.handleResizeImage();
+                                                    this.handleCropImage();
                                                 },
                                             },
                                         ]

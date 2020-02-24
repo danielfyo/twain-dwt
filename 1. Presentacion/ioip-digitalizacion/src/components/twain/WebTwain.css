@@ -925,3 +925,7 @@ select#Resolution {
 .dynamsoft-dwt-container-box {
     width: 586px !important;
 }
+
+.hidden{
+    display: none;
+}
