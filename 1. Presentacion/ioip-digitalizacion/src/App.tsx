@@ -134,6 +134,14 @@ export default class App extends React.Component<any, any> {
   handleResizeImage = () => {
     this.dwtReference.resizeImage();
   }
+
+  handleSaveBpm = () => {
+    this.dwtReference.saveBpmImage();
+  }
+
+  handleSaveJpeg = () => {
+    this.dwtReference.saveJpegImage();
+  }
   // #endregion Eventos de conexión administrada entre componentes
 
   render() {
@@ -155,6 +163,8 @@ export default class App extends React.Component<any, any> {
           handleRemoveAllImages={this.handleRemoveAllImages}
           handleCropImage={this.handleCropImage}
           handleResizeImage={this.handleResizeImage}
+          handleSaveBpm={this.handleSaveBpm}
+          handleSaveJpeg={this.handleSaveJpeg}
         />
 
         <div className="MainContainer">

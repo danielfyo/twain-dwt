@@ -108,16 +108,15 @@ class UI extends React.Component {
                                             </li>
                                             <li>
                                                 <span>Resolución:</span>
-                                                <select size="1" id="Resolution">
-                                                    <option value="100">50</option>
-                                                    <option value="100">100</option>
-                                                    <option value="200">200</option>
-                                                    <option value="300">300</option>
-                                                    <option value="300">300</option>
-                                                    <option value="400">400</option>
-                                                    <option value="500">500</option>
-                                                    <option value="600">600</option>
+                                                <select size="1" id="Resolution">   
                                                     <option value="700">700</option>
+                                                    <option value="600">600</option>
+                                                    <option value="500">500</option>
+                                                    <option value="400">400</option>
+                                                    <option value="300">300</option>
+                                                    <option value="200">200</option>
+                                                    <option value="100">100</option>
+                                                    <option value="100">50</option>
                                                 </select>
                                             </li>
                                         </ul>
@@ -127,7 +126,7 @@ class UI extends React.Component {
                                     <a href="return false" className="ClosetblLoadImage"><img src="Images/icon-ClosetblLoadImage.png" alt="Close tblLoadImage" /></a>
                                     <p>Por favor instale un dispositivo compatible con TWAIN:</p>
                                     <p>
-                                        <a target="_blank" rel="noopener noreferrer" href="http://www.twain.org">TWG</a>
+                                        <a target="_blank" rel="noopener noreferrer" href="http://www.twain.org">Referencia TWG </a>
                                     </p>
                                 </div>
                             </div>
@@ -846,7 +845,39 @@ export default class DWT extends React.Component {
             _chkMultiPagePDF.disabled = false;
             _chkMultiPagePDF.checked = true;
         }
+        var _chkShowUI = document.getElementById("ShowUI");
+        if (_chkShowUI) {
+            _chkShowUI.disabled = false;
+            _chkShowUI.checked = true;
+        }
+        var _chkADF = document.getElementById("ADF");
+        if (_chkADF) {
+            _chkADF.disabled = false;
+            _chkADF.checked = true;
+        }
+        var _chkDuplex = document.getElementById("Duplex");
+        if (_chkDuplex) {
+            _chkDuplex.disabled = false;
+            _chkDuplex.checked = true;
+        }
     }
+
+    saveBpmImage(){
+        var _chkimgTypebmp = document.getElementById("imgTypebmp");
+        if (_chkimgTypebmp) {
+            _chkimgTypebmp.checked = true;
+        }
+        this.btnSave_onclick();
+    }
+
+    saveJpegImage(){
+        var _chkimgTypejpeg = document.getElementById("imgTypejpeg");
+        if (_chkimgTypejpeg) {
+            _chkimgTypejpeg.checked = true;
+        }
+        this.btnSave_onclick();
+    }
+
 
     saveUploadImage(type) {
         if (type === 'local') {
@@ -1051,7 +1082,6 @@ export default class DWT extends React.Component {
         this.DWObject.CurrentImageIndexInBuffer = this.DWObject.CurrentImageIndexInBuffer + 1;
         this.updatePageInfo();
     }
-
 
     goToLastImage() {
         if (!this.checkIfImagesInBuffer()) {

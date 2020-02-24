@@ -129,6 +129,14 @@ export class Menu extends Component<any, any> {
     handleResizeImage() {
         this.props.handleResizeImage();
     }
+
+    handleSaveBpm() {
+        this.props.handleSaveBpm();
+    }
+
+    handleSaveJpeg() {
+        this.props.handleSaveJpeg();
+    }
     // #endregion linkers
 
     getSheets(): Sheet[] {
@@ -381,12 +389,20 @@ export class Menu extends Component<any, any> {
                                         items: [
                                             {
                                                 key: 'downloadBmp',
-                                                onClick: () => {
-                                                    this.download();
+                                                iconProps: { iconName: 'FileImage' },
+                                                 text: 'BMP',
+                                                 onClick: () => {
+                                                    this.handleSaveBpm();
                                                 },
-                                                iconProps: { iconName: 'FileImage' }, text: 'BMP'
                                             },
-                                            { key: 'downloadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
+                                            { 
+                                                key: 'downloadJpeg', 
+                                                iconProps: { iconName: 'FileImage' }, 
+                                                text: 'JPEG' ,
+                                                onClick: () => {
+                                                    this.handleSaveJpeg();
+                                                },
+                                            },
                                             { key: 'downloadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
                                             { key: 'downloadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
                                             { key: 'downloadTiffAll', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },

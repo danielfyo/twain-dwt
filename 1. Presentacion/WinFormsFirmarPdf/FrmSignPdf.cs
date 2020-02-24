@@ -129,10 +129,12 @@ namespace WinFormsFirmarPdf
 
         private void InitializeFileWatcher()
         {
-            FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = @"C:\Windows\SysWOW64\IoIp\";
-            watcher.NotifyFilter = NotifyFilters.LastWrite;
-            watcher.Filter = "*.json";
+            FileSystemWatcher watcher = new FileSystemWatcher
+            {
+                Path = @"C:\Windows\SysWOW64\IoIp\",
+                NotifyFilter = NotifyFilters.LastWrite,
+                Filter = "*.json"
+            };
             watcher.Changed += new FileSystemEventHandler(Watcher_Changed);
             watcher.EnableRaisingEvents = true;
         }
