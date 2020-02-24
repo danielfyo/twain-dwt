@@ -40,6 +40,7 @@
             this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.btnClearLog = new System.Windows.Forms.Button();
             this._contextMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,7 +67,8 @@
             // 
             this.rtbTransactionLog.Location = new System.Drawing.Point(12, 77);
             this.rtbTransactionLog.Name = "rtbTransactionLog";
-            this.rtbTransactionLog.Size = new System.Drawing.Size(749, 295);
+            this.rtbTransactionLog.ReadOnly = true;
+            this.rtbTransactionLog.Size = new System.Drawing.Size(776, 295);
             this.rtbTransactionLog.TabIndex = 2;
             this.rtbTransactionLog.Text = "";
             // 
@@ -90,31 +92,31 @@
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(189, 24);
             this.toolStripMenuItem1.Text = "Ayuda";
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(189, 24);
             this.toolStripMenuItem2.Text = "Visualizar";
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(189, 24);
             this.toolStripMenuItem3.Text = "Consultar puerto";
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(189, 24);
             this.toolStripMenuItem4.Text = "Reiniciar servicio";
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(210, 24);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(189, 24);
             this.toolStripMenuItem5.Text = "Cerrar";
             // 
             // contextMenuStrip1
@@ -123,11 +125,22 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
+            // btnClearLog
+            // 
+            this.btnClearLog.Location = new System.Drawing.Point(310, 8);
+            this.btnClearLog.Name = "btnClearLog";
+            this.btnClearLog.Size = new System.Drawing.Size(143, 60);
+            this.btnClearLog.TabIndex = 5;
+            this.btnClearLog.Text = "&Limpiar log";
+            this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
+            // 
             // FrmSignPDf
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnClearLog);
             this.Controls.Add(this.rtbTransactionLog);
             this.Controls.Add(this.btnView);
             this.Controls.Add(this.btnSign);
@@ -154,6 +167,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.Button btnClearLog;
     }
 }
 

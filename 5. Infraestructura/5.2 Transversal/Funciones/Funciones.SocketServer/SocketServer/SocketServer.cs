@@ -71,15 +71,22 @@ namespace Funciones.SocketServer
 
         public void AcceptCallback(IAsyncResult ar)
         {
-            allDone.Set();
+            try
+            {
+                allDone.Set();
 
-            var listener = (Socket)ar.AsyncState;
-            var handler = listener.EndAccept(ar);
+                var listener = (Socket)ar.AsyncState;
+                var handler = listener.EndAccept(ar);
 
-            var state = new StateObject();
-            state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+                var state = new StateObject();
+                state.workSocket = handler;
+                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
+            }
+            catch (Exception exce)
+            {
+
+            }
         }
 
         public void ReadCallback(IAsyncResult ar)

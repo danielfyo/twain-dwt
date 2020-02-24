@@ -94,8 +94,48 @@ export default class App extends React.Component<any, any> {
   handleUploadFileFromDisk = () => {
     this.dwtReference.uploadFileFromDisk();
   }
+
+  handleEditImage = () => {
+    this.dwtReference.editSelectetImage();
+  }
+
+  handleRotateLeft = () => {
+    this.dwtReference.rotateLeft();
+  }
+
+  handleRotateRight = () => {
+    this.dwtReference.rotateRight();
+  }
+
+  handleRotate180 = () => {
+    this.dwtReference.rotate180();
+  }
+
+  handleVerticalMirror = () => {
+    this.dwtReference.verticalMirror();
+  }
+
+  handleHorizontalMirror = () => {
+    this.dwtReference.horizontalMirror();
+  }
+
+  handleRemoveCurrentImage = () => {
+    this.dwtReference.removeCurrentImage();
+  }
+
+  handleRemoveAllImages = () => {
+    this.dwtReference.removeAllImages();
+  }
+
+  handleCropImage = () => {
+    this.dwtReference.cropImage();
+  }
+
+  handleResizeImage = () => {
+    this.dwtReference.resizeImage();
+  }
   // #endregion Eventos de conexión administrada entre componentes
-  
+
   render() {
     return (<>
       <div className="App">
@@ -104,7 +144,17 @@ export default class App extends React.Component<any, any> {
           handleAddImage={this.handleAddImage}
           handleDownload={this.handleDownload}
           handleUpload={this.handleUpload}
-          han={this.handleUploadFileFromDisk}
+          handleUploadFileFromDisk={this.handleUploadFileFromDisk}
+          handleEditImage={this.handleEditImage}
+          handleRotateLeft={this.handleRotateLeft}
+          handleRotateRight={this.handleRotateRight}
+          handleRotate180={this.handleRotate180}
+          handleVerticalMirror={this.handleVerticalMirror}
+          handleHorizontalMirror={this.handleHorizontalMirror}
+          handleRemoveCurrentImage={this.handleRemoveCurrentImage}
+          handleRemoveAllImages={this.handleRemoveAllImages}
+          handleCropImage={this.handleCropImage}
+          handleResizeImage={this.handleResizeImage}
         />
 
         <div className="MainContainer">

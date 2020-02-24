@@ -57,9 +57,7 @@ class UI extends React.Component {
                                         </label>
                                         <select size="1" id="source" style={{ position: "relative" }} onChange={this.props.source_onchange}>
                                             <option value="0">Buscando dispositivos compatibles..</option></select>
-                                        <select size="1" id="webcamsource" style={{ position: "relative" }} onChange={this.props.source_onchange}>
-                                            <option value="0">Buscando dispositivos compatibles..</option></select>
-                                    </li>
+                                                              </li>
                                     <li id="divProductDetail">
                                         <ul id="divTwainType">
                                             <li>
@@ -159,7 +157,7 @@ export default class DWT extends React.Component {
     DWObject = null;
     DWWebCamObject = null;
     containerId = 'dwtcontrolContainer';
-    productKey = 't0141cQMAAJxnh4Yp1hYz6iW67PSArOVbdY/p5u2Vmw8F73QqYY1s84+ZUw30+OUWFnwz5ukkpI5e7UxA2Gg0ctzT/bL3IZEco29mOYT0ZMJk6khg1HtrPoz9MYv8zCVOnWnEhWKjCWOxYdiPwpu9Iu75NpowFhuG/SR6PpOukYTRhLHYEO/G2p+CFe5+AKpw';
+    productKey = 't0140cQMAAE8LWxVAHxlESW7JnSwHi4Gr4r8Df5baQ3boMjBgBMs//zRwatGJL1nxpE28FANXQu6g5e+JrEeOe47+lYwiv8iO4Z3pu9BZTJhMHw0Mvb9eu7E/puvPXOr0WSu+KDZMGIuNhHkIb/aGOPNpmDAWGwnzJDIfRddowjBhLDaCe2NaWy3NPlCFrqA=';
     _strTempStr = '';
     re = /^\d+$/;
     strre = /^[\s\w]+$/;
@@ -238,11 +236,6 @@ export default class DWT extends React.Component {
 			    this.DWWebCamObject.Height = 600;
 
 			    document.getElementById('source').options.length = 0;
-
-	            /*var arySource = this.DWWebCamObject.Addon.Webcam.GetSourceList();
-	            for (var i = 0; i < arySource.length; i++)
-	                document.getElementById("webcamsource").options.add(new Option(arySource[i], arySource[i]), i + webCamStartingIndex); // Get Webcam Source names and put them in a drop-down box
-*/
 	        }
 
 	        document.getElementById('source').onchange = () => {
@@ -335,13 +328,6 @@ export default class DWT extends React.Component {
                         twainsource.options.add(new Option(this.DWObject.GetSourceNameItems(i), i));
                     }
                 }
-
-                /*if (webcamsource) {
-                    webcamsource.options.length = 0;
-                    for (var i = 0; i < this.DWTWebCamSourceCount; i++) {
-                        webcamsource.options.add(new Option(this.DWObject.Addon.Webcam.GetSourceNameItems(i), i));
-                    }
-                }*/
 
                 var liNoScanner = document.getElementById("pNoScanner");
 
@@ -570,14 +556,14 @@ export default class DWT extends React.Component {
 
     // #endregion Metodos operativos DWT
 
-    btnShowImageEditor_onclick() {
+    editSelectetImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
         this.DWObject.ShowImageEditor();
     }
 
-    btnRotateRight_onclick() {
+    rotateRight() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -588,7 +574,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnRotateLeft_onclick() {
+    rotateLeft() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -599,7 +585,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnRotate180_onclick() {
+    rotate180() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -610,7 +596,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnMirror_onclick() {
+    horizontalMirror() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -621,7 +607,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnFlip_onclick() {
+    verticalMirror() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -632,7 +618,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnCrop_onclick() {
+    cropImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -655,7 +641,7 @@ export default class DWT extends React.Component {
         }
     }
 
-    btnChangeImageSize_onclick() {
+    resizeImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -734,27 +720,39 @@ export default class DWT extends React.Component {
         return (
             <UI
                 containerId={this.containerId}
+                // Adquire images
                 acquireImage={() => this.acquireImage()}
                 uploadFileFromDisk={() => this.uploadFileFromDisk()}
-                btnShowImageEditor_onclick={() => this.btnShowImageEditor_onclick()}
-                btnRotateLeft_onclick={() => this.btnRotateLeft_onclick()}
-                btnRotateRight_onclick={() => this.btnRotateRight_onclick()}
-                btnRotate180_onclick={() => this.btnRotate180_onclick()}
-                btnMirror_onclick={() => this.btnMirror_onclick()}
-                btnFlip_onclick={() => this.btnFlip_onclick()}
-                btnCrop_onclick={() => this.btnCrop_onclick()}
-                btnChangeImageSize_onclick={() => this.btnChangeImageSize_onclick()}
+                // Edit
+                editSelectetImage={() => this.editSelectetImage()}
+                // Rotate
+                rotateLeft={() => this.rotateLeft()}
+                rotateRight={() => this.rotateRight()}
+                rotate180={() => this.rotate180()}
+                // Mirror
+                horizontalMirror={() => this.horizontalMirror()}
+                verticalMirror={() => this.verticalMirror()}
+                // Delete pages
+                removeCurrentImage={() => this.removeCurrentImage()}
+                removeAllImages={() => this.removeAllImages()}
+                // Resize
+                cropImage={() => this.cropImage()}
+                resizeImage={() => this.resizeImage()}
+                
+                saveUploadImage={(_type) => this.saveUploadImage(_type)}
+                
+                
+
+
                 btnCancelChange_onclick={() => this.btnCancelChange_onclick()}
                 btnChangeImageSizeOK_onclick={() => this.btnChangeImageSizeOK_onclick()}
-                saveUploadImage={(_type) => this.saveUploadImage(_type)}
+                
                 btnFirstImage_onclick={() => this.btnFirstImage_onclick()}
                 btnPreImage_wheel={() => this.btnPreImage_wheel()}
                 btnNextImage_wheel={() => this.btnNextImage_wheel()}
                 btnPreImage_onclick={() => this.btnPreImage_onclick()}
                 btnNextImage_onclick={() => this.btnNextImage_onclick()}
                 btnLastImage_onclick={() => this.btnLastImage_onclick()}
-                btnRemoveCurrentImage_onclick={() => this.btnRemoveCurrentImage_onclick()}
-                btnRemoveAllImages_onclick={() => this.btnRemoveAllImages_onclick()}
                 setlPreviewMode={() => this.setlPreviewMode()}
                 rdTIFF_onclick={() => this.rdTIFF_onclick()}
                 rdPDF_onclick={() => this.rdPDF_onclick()}
@@ -1082,7 +1080,7 @@ export default class DWT extends React.Component {
         this.updatePageInfo();
     }
 
-    btnRemoveCurrentImage_onclick() {
+    removeCurrentImage() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1098,7 +1096,7 @@ export default class DWT extends React.Component {
     }
 
 
-    btnRemoveAllImages_onclick() {
+    removeAllImages() {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
@@ -1120,7 +1118,7 @@ export default class DWT extends React.Component {
             else {
                 tmpstr = tmpstr.replace('Crop_gray.', 'Crop.');
                 btnCrop.src = tmpstr;
-                btnCrop.onclick = () => { this.btnCrop_onclick(); };
+                btnCrop.onclick = () => { this.cropImage(); };
             }
         }
 

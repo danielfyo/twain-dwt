@@ -5,7 +5,7 @@ import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
 import { IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { loadTheme } from 'office-ui-fabric-react';
-
+import * as socketio from "socket.io-client";
 import logo from '../../logo.svg';
 
 import './Menu.css';
@@ -20,6 +20,39 @@ export class Menu extends Component<any, any> {
     constructor(props: any) {
         super(props);
 
+        const socket = socketio.connect("192.168.0.37:8888");
+
+        socket.on('connect', (msg: any) => {
+            console.log("connect:" + msg)
+        });
+        socket.on('event', (msg: any) => {
+            console.log(msg)
+        });
+        socket.on('disconnect', (msg: any) => {
+            console.log(msg)
+        });
+        socket.on('message', (msg: any) => {
+            console.log(msg)
+        });
+
+        socket.on('callback', (msg: any) => {
+            console.log(msg)
+        });
+
+        console.log('abriendo puerto');
+        socket.open();
+        console.log('enviando');
+        //socket.send('GET');
+        //socket.send('/');
+        //socket.send('HTTP/1.1');
+        console.log('emitiendo');
+        //socket.emit('hello', 'helloworld');
+        console.log('cerrando');
+        socket.close(); 
+        console.log('desconectando');
+        socket.disconnect();
+        console.log('desconectado');
+
         let currentTheme = this.props.theme;
         loadTheme(currentTheme);
 
@@ -29,7 +62,7 @@ export class Menu extends Component<any, any> {
         }
 
         this.setState({
-            appName: this.props.tittle, 
+            appName: this.props.tittle,
         });
 
         // #region binding
@@ -41,39 +74,79 @@ export class Menu extends Component<any, any> {
     }
 
     // #region linkers
-    addImage(){
+    addImage() {
         this.props.handleAddImage();
     }
 
-    download(){
+    download() {
         this.props.handleDownload();
     }
 
-    upload(){
+    upload() {
         this.props.handleUpload();
     }
 
-    uploadFileFromDisk(){
+    uploadFileFromDisk() {
         this.props.handleUploadFileFromDisk();
+    }
+
+    handleEditImage() {
+        this.props.handleEditImage();
+    }
+
+    handleRotateLeft() {
+        this.props.handleRotateLeft();
+    }
+
+    handleRotateRight() {
+        this.props.handleRotateRight();
+    }
+
+    handleRotate180() {
+        this.props.handleRotate180();
+    }
+
+    handleVerticalMirror() {
+        this.props.handleVerticalMirror();
+    }
+
+    handleHorizontalMirror() {
+        this.props.handleHorizontalMirror();
+    }
+
+    handleRemoveCurrentImage() {
+        this.props.handleRemoveCurrentImage();
+    }
+
+    handleRemoveAllImages() {
+        this.props.handleRemoveAllImages();
+    }
+
+    handleCropImage() {
+        this.props.handleCropImage();
+    }
+
+    handleResizeImage() {
+        this.props.handleResizeImage();
     }
     // #endregion linkers
 
-    getSheets() : Sheet[]{
+    getSheets(): Sheet[] {
         return (this.state?.sheets as Sheet[]);
     }
-    
-    getBarcodesLengt() : number {
-        const barcodesLenght = this.getSheets()?.filter(sheet=> sheet.barcodes);
+
+    getBarcodesLengt(): number {
+        const barcodesLenght = this.getSheets()?.filter(sheet => sheet.barcodes);
         return (barcodesLenght) ? barcodesLenght.length : 0;
     }
 
-    getOcrRecognizedLength() : number {
-        const ocrLenght = this.getSheets()?.filter(sheet=> sheet.paragraphFromOcr);
+    getOcrRecognizedLength(): number {
+        const ocrLenght = this.getSheets()?.filter(sheet => sheet.paragraphFromOcr);
         return (ocrLenght) ? ocrLenght.length : 0;
     }
 
     render() {
-        
+
         return (<>
             <header className="App-header">
                 <div className="Complete-Logo">
@@ -128,6 +201,9 @@ export class Menu extends Component<any, any> {
                                     iconProps: { iconName: 'EditPhoto' },
                                     split: true,
                                     ariaLabel: 'Editar',
+                                    onClick: () => {
+                                        this.handleEditImage();
+                                    },
                                 },
                                 {
                                     key: 'rotate',
@@ -137,26 +213,35 @@ export class Menu extends Component<any, any> {
                                     ariaLabel: 'Rotar',
                                     subMenuProps: {
                                         items: [{
-                                                key: 'rotateLeftItem',
-                                                text: 'Rotar a la izquierda',
-                                                iconProps: { iconName: 'Rotate90CounterClockwise' },
-                                                split: true,
-                                                ariaLabel: '',
+                                            key: 'rotateLeftItem',
+                                            text: 'Rotar a la izquierda',
+                                            iconProps: { iconName: 'Rotate90CounterClockwise' },
+                                            split: true,
+                                            ariaLabel: '',
+                                            onClick: () => {
+                                                this.handleRotateLeft();
                                             },
-                                            {
-                                                key: 'rotateRightItem',
-                                                text: 'Rotar a la derecha',
-                                                iconProps: { iconName: 'Rotate90Clockwise' },
-                                                split: true,
-                                                ariaLabel: '',
+                                        },
+                                        {
+                                            key: 'rotateRightItem',
+                                            text: 'Rotar a la derecha',
+                                            iconProps: { iconName: 'Rotate90Clockwise' },
+                                            split: true,
+                                            ariaLabel: '',
+                                            onClick: () => {
+                                                this.handleRotateRight();
                                             },
-                                            {
-                                                key: 'rotateItem',
-                                                text: 'Rotar 180°',
-                                                iconProps: { iconName: 'Rotate' },
-                                                split: true,
-                                                ariaLabel: '',
-                                            }]
+                                        },
+                                        {
+                                            key: 'rotateItem',
+                                            text: 'Rotar 180°',
+                                            iconProps: { iconName: 'Rotate' },
+                                            split: true,
+                                            ariaLabel: '',
+                                            onClick: () => {
+                                                this.handleRotate180();
+                                            },
+                                        }]
                                     }
                                 },
                                 {
@@ -173,6 +258,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'AlignHorizontalCenter' },
                                                 split: true,
                                                 ariaLabel: '',
+                                                onClick: () => {
+                                                    this.handleHorizontalMirror();
+                                                },
                                             },
                                             {
                                                 key: 'verticalMirrorItem',
@@ -180,6 +268,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'AlignVerticalCenter' },
                                                 split: true,
                                                 ariaLabel: '',
+                                                onClick: () => {
+                                                    this.handleVerticalMirror();
+                                                },
                                             }
                                         ]
                                     }
@@ -190,7 +281,7 @@ export class Menu extends Component<any, any> {
                                     iconProps: { iconName: 'Delete' },
                                     split: true,
                                     ariaLabel: 'Borrar',
-                                    subMenuProps:{
+                                    subMenuProps: {
                                         items: [
                                             {
                                                 key: 'deleteOneItem',
@@ -198,6 +289,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'Delete' },
                                                 split: true,
                                                 ariaLabel: '',
+                                                onClick: () => {
+                                                    this.handleRemoveCurrentImage();
+                                                },
                                             },
                                             {
                                                 key: 'deleteAllItem',
@@ -205,6 +299,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'DeleteTable' },
                                                 split: true,
                                                 ariaLabel: '',
+                                                onClick: () => {
+                                                    this.handleRemoveAllImages();
+                                                },
                                             }
                                         ]
                                     }
@@ -223,6 +320,9 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'SizeLegacy' },
                                                 split: true,
                                                 ariaLabel: '',
+                                                onClick: () => {
+                                                    this.handleRemoveCurrentImage();
+                                                },
                                             },
                                             {
                                                 key: 'trimItem',
@@ -230,14 +330,17 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'Trim' },
                                                 split: true,
                                                 ariaLabel: '',
-                                            }, 
+                                                onClick: () => {
+                                                    this.handleResizeImage();
+                                                },
+                                            },
                                         ]
                                     }
-                                },  
+                                },
                                 {
                                     key: 'decodeBarcodeItem',
-                                    text: 'Cod. barras (' + this.getBarcodesLengt()  + ')',
-                                    iconProps: { 
+                                    text: 'Cod. barras (' + this.getBarcodesLengt() + ')',
+                                    iconProps: {
                                         //iconName: 'GenericScanFilled'
                                         iconName: 'QRCode'
                                     },
@@ -253,8 +356,8 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'decodeOcrItem',
-                                    text: 'Ocr (' + this.getOcrRecognizedLength()  + ')',
-                                    iconProps: { 
+                                    text: 'Ocr (' + this.getOcrRecognizedLength() + ')',
+                                    iconProps: {
                                         iconName: 'TextOverflow'
                                     },
                                     split: true,
@@ -276,19 +379,19 @@ export class Menu extends Component<any, any> {
                                     disabled: false,
                                     subMenuProps: {
                                         items: [
-                                            { 
+                                            {
                                                 key: 'downloadBmp',
                                                 onClick: () => {
                                                     this.download();
                                                 },
-                                                iconProps: { iconName: 'FileImage' }, text: 'BMP' 
+                                                iconProps: { iconName: 'FileImage' }, text: 'BMP'
                                             },
                                             { key: 'downloadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
                                             { key: 'downloadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
                                             { key: 'downloadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
-                                            { key: 'downloadTiffAll',  iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
-                                            { key: 'downloadPdfCurrent',  iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
-                                            { key: 'downloadPdfAll',  iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
+                                            { key: 'downloadTiffAll', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
+                                            { key: 'downloadPdfCurrent', iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
+                                            { key: 'downloadPdfAll', iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
                                         ]
                                     }
                                 },
@@ -301,19 +404,19 @@ export class Menu extends Component<any, any> {
                                     disabled: false,
                                     subMenuProps: {
                                         items: [
-                                            { 
+                                            {
                                                 key: 'uploadBmp',
                                                 onClick: () => {
                                                     this.upload();
                                                 },
-                                                iconProps: { iconName: 'FileImage' }, text: 'BMP' 
+                                                iconProps: { iconName: 'FileImage' }, text: 'BMP'
                                             },
                                             { key: 'uploadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
                                             { key: 'uploadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
                                             { key: 'uploadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
-                                            { key: 'uploadTiffAll',  iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
-                                            { key: 'uploadPdfCurrent',  iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
-                                            { key: 'uploadPdfAll',  iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
+                                            { key: 'uploadTiffAll', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
+                                            { key: 'uploadPdfCurrent', iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
+                                            { key: 'uploadPdfAll', iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
                                         ]
                                     }
                                 }

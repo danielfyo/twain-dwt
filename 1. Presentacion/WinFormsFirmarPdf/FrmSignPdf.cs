@@ -29,6 +29,7 @@ namespace WinFormsFirmarPdf
             InitializeEventLog();
             InitializeBackgroudWorker();
             InitializeNotifyIcon();
+            InitializeFileWatcher();
         }
 
         #region form events
@@ -85,6 +86,11 @@ namespace WinFormsFirmarPdf
 
         }
 
+        private void btnClearLog_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                rtbTransactionLog.Clear();
+        }
         #endregion form events
 
         #region initializer
@@ -324,5 +330,6 @@ namespace WinFormsFirmarPdf
         }
 
         #endregion private logic
+
     }
 }
