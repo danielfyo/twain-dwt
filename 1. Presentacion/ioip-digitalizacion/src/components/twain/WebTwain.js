@@ -15,6 +15,7 @@ class UI extends React.Component {
         <div id="webTwainMain">
             <div id="DWTcontainer" className="container">
                 <div id="DWTcontainerTop">
+                    
                     <div id="ImgSizeEditor"  className={(!this.props.stateProp.showResizer) ? 'hidden' : ''}>
                         <ul>
                             <li>
@@ -38,7 +39,9 @@ class UI extends React.Component {
                             </li>
                         </ul>
                     </div>
+                    
                     <div id={this.props.containerId}></div>
+                    
                     <div id="btnGroupBtm" className="clearfix">
                         <div className="ct-lt">
                         <button id="DW_btnFirstImage" onClick={this.props.goToFirstImage}> |&lt; </button>
@@ -63,113 +66,6 @@ class UI extends React.Component {
                             </select>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div id="ScanWrapper">
-                <div id="divScanner" className="divinput">
-                    <ul className="PCollapse">
-                        <li>
-                            <div className="divType">
-                                <div className="mark_arrow expanded"></div>
-                                Adquirir imágenes desde escáner</div>
-                            <div id="div_ScanImage" className="divTableStyle">
-                                <ul id="ulScaneImageHIDE">
-                                    <li>
-                                        <label htmlFor="source">
-                                            <p>Seleccione la fuente:</p>
-                                        </label>
-                                        <select size="1" id="source" style={{ position: "relative" }} onChange={this.props.source_onchange}>
-                                            <option value="0">Buscando dispositivos compatibles..</option></select>
-                                                              </li>
-                                    <li id="divProductDetail">
-                                        <ul id="divTwainType">
-                                            <li>
-                                                <label id="lblShowUI" htmlFor="ShowUI">
-                                                    <input type="checkbox" id="ShowUI" />Avanzado
-                                            </label>
-                                                <label htmlFor="ADF">
-                                                    <input type="checkbox" id="ADF" />Alim. auto.
-                                            </label>
-                                                <label htmlFor="Duplex">
-                                                    <input type="checkbox" id="Duplex" />Dob. cara
-                                            </label>
-                                            </li>
-                                            <li>Color:
-                                            <label htmlFor="BW" style={{ marginLeft: "5px" }}>
-                                                    <input type="radio" id="BW" name="PixelType" />B y N
-                                            </label>
-                                                <label htmlFor="Gray">
-                                                    <input type="radio" id="Gray" name="PixelType" />Esc. Grises
-                                            </label>
-                                                <label htmlFor="RGB">
-                                                    <input type="radio" id="RGB" name="PixelType" />Color
-                                            </label>
-                                            </li>
-                                            <li>
-                                                <span>Resolución:</span>
-                                                <select size="1" id="Resolution">   
-                                                    <option value="700">700</option>
-                                                    <option value="600">600</option>
-                                                    <option value="500">500</option>
-                                                    <option value="400">400</option>
-                                                    <option value="300">300</option>
-                                                    <option value="200">200</option>
-                                                    <option value="100">100</option>
-                                                    <option value="100">50</option>
-                                                </select>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                                <div id="tblLoadImage" style={{ visibility: "hidden" }}>
-                                    <a href="return false" className="ClosetblLoadImage"><img src="Images/icon-ClosetblLoadImage.png" alt="Close tblLoadImage" /></a>
-                                    <p>Por favor instale un dispositivo compatible con TWAIN:</p>
-                                    <p>
-                                        <a target="_blank" rel="noopener noreferrer" href="http://www.twain.org">Referencia TWG </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div id="divUpload" className="divinput mt30" style={{ position: "relative" }}>
-                    <ul>
-                        <li className="toggle">Guardar documentos</li>
-                        <li>
-                            <p>Nombre de archivo:</p>
-                            <input type="text" size="20" id="txt_fileName" />
-                        </li>
-                        <li style={{ paddingRight: "0" }}>
-                            <label htmlFor="imgTypebmp">
-                                <input type="radio" value="bmp" name="ImageType" id="imgTypebmp" onClick={this.props.rd_onclick} />
-                                BMP</label>
-                            <label htmlFor="imgTypejpeg">
-                                <input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" onClick={this.props.rd_onclick} />
-                                JPEG</label>
-                            <label htmlFor="imgTypetiff">
-                                <input type="radio" value="tif" name="ImageType" id="imgTypetiff" onClick={this.props.rdTIFF_onclick} />
-                                TIFF</label>
-                            <label htmlFor="imgTypepng">
-                                <input type="radio" value="png" name="ImageType" id="imgTypepng" onClick={this.props.rd_onclick} />
-                                PNG</label>
-                            <label htmlFor="imgTypepdf">
-                                <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" onClick={this.props.rdPDF_onclick} />
-                                PDF</label>
-                        </li>
-                        <li>
-                            <label htmlFor="MultiPageTIFF">
-                                <input type="checkbox" id="MultiPageTIFF" disabled="" />
-                                Multi-página TIFF</label>
-                            <label htmlFor="MultiPagePDF">
-                                <input type="checkbox" id="MultiPagePDF" disabled="" />
-                                Multi-página PDF</label>
-                        </li>
-                        <li>
-                            <button id="btnSave" className="btnOrg" onClick={() => { this.props.saveUploadImage('local') }} >Descargar</button>
-                            <button id="btnUpload" className="btnOrg" onClick={() => { this.props.saveUploadImage('server') }} >Cargar</button>
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>);
@@ -878,6 +774,35 @@ export default class DWT extends React.Component {
         this.btnSave_onclick();
     }
 
+    savePngImage(){
+        var _chkimgTypepng = document.getElementById("imgTypepng");
+        if (_chkimgTypepng) {
+            _chkimgTypepng.checked = true;
+        }
+        this.btnSave_onclick();
+    }
+
+    saveJpegTiff(complete){
+        var _chkimgTypetiff = document.getElementById("imgTypetiff");
+        
+        if (_chkimgTypetiff) {
+            _chkimgTypetiff.checked = true;
+            document.getElementById("MultiPageTIFF").checked = complete;
+        }
+        
+        this.btnSave_onclick();
+    }
+
+    savePdf(complete){
+        var _chkimgTypepdf = document.getElementById("imgTypepdf");
+        
+        if (_chkimgTypepdf) {
+            _chkimgTypepdf.checked = true;
+            document.getElementById("MultiPagePDF").checked = complete;
+        }
+        
+        this.btnSave_onclick();
+    }
 
     saveUploadImage(type) {
         if (type === 'local') {

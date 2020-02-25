@@ -1,6 +1,7 @@
 .Complete-Logo {
     float: left;
-    display: -webkit-inline-box;
+    /*display: -webkit-inline-box;*/
+    display: contents;
     font-weight: 600;
 }
 
@@ -10,5 +11,7 @@
 
 .App-header {
     flex-direction: row !important;
-    justify-content: flex-start !important;
+    /*justify-content: flex-start !important;
+    min-height: 3vh;*/
+    height: 50px !important;
 }

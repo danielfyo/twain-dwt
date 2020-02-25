@@ -6,7 +6,7 @@ import { IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { loadTheme } from 'office-ui-fabric-react';
 import * as socketio from "socket.io-client";
-import logo from '../../logo.svg';
+import logo from '../../logo.png';
 
 import './Menu.css';
 import { Sheet } from '../../model/Sheet';
@@ -14,13 +14,14 @@ import { Sheet } from '../../model/Sheet';
 // #endregion imports
 
 initializeIcons();
-const overflowButtonProps: IButtonProps = { ariaLabel: 'Más opciones' };
 
 export class Menu extends Component<any, any> {
     constructor(props: any) {
         super(props);
-
-        const socket = socketio.connect("192.168.0.37:8888");
+        this.state = {
+            panelScan: props.isOpen
+        }
+        /*const socket = socketio.connect("192.168.0.37:8888");
 
         socket.on('connect', (msg: any) => {
             console.log("connect:" + msg)
@@ -52,7 +53,7 @@ export class Menu extends Component<any, any> {
         console.log('desconectando');
         socket.disconnect();
         console.log('desconectado');
-
+*/
         let currentTheme = this.props.theme;
         loadTheme(currentTheme);
 
@@ -137,6 +138,22 @@ export class Menu extends Component<any, any> {
     handleSaveJpeg() {
         this.props.handleSaveJpeg();
     }
+
+    handleSavePng() {
+        this.props.handleSavePng();
+    }
+
+    handleSaveTiff(complete: boolean) {
+        this.props.handleSaveTiff(complete);
+    }
+
+    handleSavePdf(complete: boolean) {
+        this.props.handleSavePdf(complete);
+    }
+
+    handleSetPanelScanState(panelScan: any){
+        this.props.handleSetPanelScanState(panelScan);
+    }
     // #endregion linkers
 
     getSheets(): Sheet[] {
@@ -163,6 +180,7 @@ export class Menu extends Component<any, any> {
                 </div>
                 <div className="Menubar">
                     <CommandBar
+                    isSearchBoxVisible={ false }
                         items={
                             [
                                 {
@@ -180,7 +198,10 @@ export class Menu extends Component<any, any> {
                                                 split: true,
                                                 ariaLabel: 'Desde escaner',
                                                 onClick: () => {
-                                                    this.addImage();
+                                                    this.handleSetPanelScanState({panelScan: {
+                                                        isOpen: true
+                                                    }});
+                                                    //this.addImage();
                                                 },
                                             },
                                             {
@@ -403,43 +424,70 @@ export class Menu extends Component<any, any> {
                                                     this.handleSaveJpeg();
                                                 },
                                             },
-                                            { key: 'downloadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
-                                            { key: 'downloadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
-                                            { key: 'downloadTiffAll', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
-                                            { key: 'downloadPdfCurrent', iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
-                                            { key: 'downloadPdfAll', iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
+                                            { 
+                                                key: 'downloadPng', 
+                                                iconProps: { iconName: 'FileImage' }, 
+                                                text: 'PNG' ,
+                                                onClick: () => {
+                                                    this.handleSavePng();
+                                                },
+                                            },
+                                            { 
+                                                key: 'downloadTiffCurrent', 
+                                                iconProps: { iconName: 'FileTemplate' }, 
+                                                text: 'TIFF, Página',
+                                                onClick: () => {
+                                                    this.handleSaveTiff(false);
+                                                },
+                                            },
+                                            { 
+                                                key: 'downloadTiffAll', 
+                                                iconProps: { iconName: 'FileTemplate' }, 
+                                                text: 'TIFF, Todo',
+                                                onClick: () => {
+                                                    this.handleSaveTiff(true);
+                                                },
+                                            },
+                                            { 
+                                                key: 'downloadPdfCurrent', 
+                                                iconProps: { iconName: 'PDF' }, 
+                                                text: 'PDF, Página',
+                                                onClick: () => {
+                                                    this.handleSavePdf(false);
+                                                },
+                                            },
+                                            { 
+                                                key: 'downloadPdfAll', 
+                                                iconProps: { iconName: 'PDF' }, 
+                                                text: 'PDF, Todo',
+                                                onClick: () => {
+                                                    this.handleSavePdf(true);
+                                                },
+                                            },
                                         ]
                                     }
                                 },
                                 {
-                                    key: 'uploadFile',
-                                    text: 'Cargar',
-                                    ariaLabel: 'Cargar',
-                                    iconProps: { iconName: 'Upload' },
+                                    key: 'processPdf',
+                                    text: 'Procesar',
+                                    ariaLabel: 'Procesar',
+                                    iconProps: { iconName: 'PDF' },
                                     iconOnly: true,
                                     disabled: false,
                                     subMenuProps: {
                                         items: [
                                             {
-                                                key: 'uploadBmp',
+                                                key: 'signPdf',
                                                 onClick: () => {
                                                     this.upload();
                                                 },
-                                                iconProps: { iconName: 'FileImage' }, text: 'BMP'
+                                                iconProps: { iconName: 'InsertSignatureLine' }, text: 'Firma digital'
                                             },
-                                            { key: 'uploadJpeg', iconProps: { iconName: 'FileImage' }, text: 'JPEG' },
-                                            { key: 'uploadPng', iconProps: { iconName: 'FileImage' }, text: 'PNG' },
-                                            { key: 'uploadTiffCurrent', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Página' },
-                                            { key: 'uploadTiffAll', iconProps: { iconName: 'FileTemplate' }, text: 'TIFF, Todo' },
-                                            { key: 'uploadPdfCurrent', iconProps: { iconName: 'PDF' }, text: 'PDF, Página' },
-                                            { key: 'uploadPdfAll', iconProps: { iconName: 'PDF' }, text: 'PDF, Todo' },
                                         ]
                                     }
                                 }
                             ]
                         }
-                        overflowButtonProps={overflowButtonProps}
-                        ariaLabel="Use las felchas izquierda y derecha para navegar po rl menu"
                     />
                 </div>
 

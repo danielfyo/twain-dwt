@@ -1,12 +1,14 @@
 // #region imports
-import React from 'react';
+import React, { Component } from 'react';
 
 import './App.css';
 
 import PagePreview from './components/page-preview/PagePreview';
 import Menu from './components/menu/Menu';
+import ConfirmationPanel from './components/confirmation-panel/ConfirmationPanel';
 import TransactionLog from './components/transaction-log/TransactionLog';
 import DWT from './components/twain/WebTwain';
+
 // #endregion imports
 
 // #region estilos
@@ -65,13 +67,21 @@ const light = {
   }
 };
 // #endregion estilos
-export default class App extends React.Component<any, any> {
-
+export default class App extends Component<any, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      panelScan: {
+        isOpen: false
+      }
+    }
+  }
   // #region variables globales
   transactionLogReference: any;
   dwtReference: any;
   menuReference: any;
   pagePreviewReference: any;
+  panelScanState: any;
   // #endregion variables globales
 
   // #region Eventos de conexión administrada entre componentes
@@ -142,13 +152,33 @@ export default class App extends React.Component<any, any> {
   handleSaveJpeg = () => {
     this.dwtReference.saveJpegImage();
   }
+
+  handleSavePng = () => {
+    this.dwtReference.savePngImage();
+  }
+
+  handleSaveTiff = (complete: boolean) => {
+    this.dwtReference.saveTiff(complete);
+  }
+
+  handleSavePdf = (complete: boolean) => {
+    this.dwtReference.savePdf(complete);
+  }
+
+  handleSetPanelScanState = (panelScanIn: any) =>{
+    this.panelScanState.setPanelScanState(panelScanIn);
+  }
   // #endregion Eventos de conexión administrada entre componentes
 
   render() {
     return (<>
       <div className="App">
-        <Menu tittle='Digitalización' 
-          theme={dark} 
+        <ConfirmationPanel
+          ref={element => { this.panelScanState = element }}
+          handleSetPanelScanState={this.handleSetPanelScanState}
+        />
+        <Menu tittle='IoIp'
+          theme={dark}
           handleAddImage={this.handleAddImage}
           handleDownload={this.handleDownload}
           handleUpload={this.handleUpload}
@@ -165,30 +195,31 @@ export default class App extends React.Component<any, any> {
           handleResizeImage={this.handleResizeImage}
           handleSaveBpm={this.handleSaveBpm}
           handleSaveJpeg={this.handleSaveJpeg}
+          handleSavePng={this.handleSavePng}
+          handleSaveTiff={this.handleSaveTiff}
+          handleSavePdf={this.handleSavePdf}
+          handleSetPanelScanState={this.handleSetPanelScanState}
         />
 
         <div className="MainContainer">
           <div className="ContainerBorderedRight">
-            <PagePreview 
-              ref={element => { this.pagePreviewReference = element}}
+            <PagePreview
+              ref={element => { this.pagePreviewReference = element }}
             />
           </div>
           <div className="ContainerBorderedRight">
             <DWT
-              handleAddImage = { this.handleAddImage } 
-              ref={element => {this.dwtReference = element}}
+              handleAddImage={this.handleAddImage}
+              ref={element => { this.dwtReference = element }}
             />
           </div>
           <div className="">
-            <TransactionLog 
-              ref={element => {this.transactionLogReference = element}}
+            <TransactionLog
+              ref={element => { this.transactionLogReference = element }}
             />
           </div>
         </div>
       </div>
-    </>
-    )
-  };
+    </>)
+  }
 }
-
-
