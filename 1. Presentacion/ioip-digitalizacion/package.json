@@ -3,27 +3,27 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/react": "^9.4.0",
+    "@testing-library/react": "^9.4.1",
     "@types/express": "^4.17.2",
-    "@types/jquery": "^3.3.32",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
+    "@types/jquery": "^3.3.33",
     "@types/socket.io": "^2.1.4",
     "@types/socket.io-client": "^1.4.32",
-    "@uifabric/icons": "^7.3.5",
+    "@uifabric/icons": "^7.3.13",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "cra-template-typescript": "1.0.1",
-    "dynamsoft-javascript-barcode": "^7.3.0-v0",
+    "dynamsoft-javascript-barcode": "^7.3.0-v2",
     "express": "^4.17.1",
     "jquery": "^3.4.1",
-    "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
-    "react-dom": "^16.12.0",
-    "react-native-tcp": "^3.3.2",
-    "react-scripts": "3.3.1",
+    "react": "15.4.2",
+    "react-dom": "15.4.2",
+    "react-scripts": "^3.4.0",
     "socket.io": "^2.3.0",
-    "socket.io-client": "^2.3.0"
+    "socket.io-client": "^2.3.0",
+    "@types/react": "^15.4.2",
+    "@types/react-dom": "^15.4.2",
+    "office-ui-fabric-react": "^5.135.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -50,6 +50,6 @@
     "awesome-typescript-loader": "^5.2.1",
     "react-native-fetch-blob": "^0.10.8",
     "socket.io-react": "^1.2.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.8.2"
   }
 }

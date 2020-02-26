@@ -48,3 +48,7 @@
 .ContainerBorderedRight {
   border-right: 1px solid #ccc;
 }
+
+.ms-CommandBar {
+ background-color: #282c34 !important;
+}

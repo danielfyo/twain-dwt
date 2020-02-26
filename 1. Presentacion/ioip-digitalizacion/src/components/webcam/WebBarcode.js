@@ -93,7 +93,7 @@ class WebBarcode extends React.Component {
 
     render() {
         return (
-            <>
+            <div>
             {(() => {
             if (this.state.bShowModalDialogBarcode) {
                     return (
@@ -150,7 +150,7 @@ class WebBarcode extends React.Component {
                     )}
                 })()}
             <img src="Images/escaner.png" onClick={this.showBarcodeDetails} title="Código de barras" alt="Código detectado" id="btnBarcodeDetails" /> (2)
-            </>
+            </div>
         );
     }
 

@@ -1,12 +1,12 @@
 // #region imports
-import React, { Component } from 'react';
+import React from 'react';
 
 import './App.css';
 
-import PagePreview from './components/page-preview/PagePreview';
-import Menu from './components/menu/Menu';
-import ConfirmationPanel from './components/confirmation-panel/ConfirmationPanel';
-import TransactionLog from './components/transaction-log/TransactionLog';
+import { PagePreview } from './components/page-preview/PagePreview';
+import { Menu } from './components/menu/Menu';
+import { ConfirmationPanel } from './components/confirmation-panel/ConfirmationPanel';
+import { TransactionLog } from './components/transaction-log/TransactionLog';
 import DWT from './components/twain/WebTwain';
 
 // #endregion imports
@@ -67,7 +67,7 @@ const light = {
   }
 };
 // #endregion estilos
-export default class App extends Component<any, any> {
+export class App extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -171,7 +171,7 @@ export default class App extends Component<any, any> {
   // #endregion Eventos de conexión administrada entre componentes
 
   render() {
-    return (<>
+    return (
       <div className="App">
         <ConfirmationPanel
           ref={element => { this.panelScanState = element }}
@@ -219,7 +219,7 @@ export default class App extends Component<any, any> {
             />
           </div>
         </div>
-      </div>
-    </>)
+      </div>)
   }
 }
+export default App;

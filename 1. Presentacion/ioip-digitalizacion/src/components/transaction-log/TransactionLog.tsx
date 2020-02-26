@@ -36,12 +36,11 @@ export class TransactionLog extends Component<any, any> {
     }
 
     render() {
-        return (<>
+        return (
             <div id="DWTcontainerBtm" style={{ textAlign: "left" }} className="clearfix">
                 <div id="DWTemessageContainer"></div>
                 <div id="divNoteMessage"> </div>
-            </div>
-        </>)
+            </div>)
     }
 }
 

@@ -172,7 +172,7 @@ export class Menu extends Component<any, any> {
 
     render() {
 
-        return (<>
+        return (<div>
             <header className="App-header">
                 <div className="Complete-Logo">
                     <img src={logo} className="App-logo" alt="logo" />
@@ -185,7 +185,7 @@ export class Menu extends Component<any, any> {
                             [
                                 {
                                     key: 'add',
-                                    text: 'Agregar',
+                                    name: 'Agregar',
                                     iconProps: { iconName: 'Add' },
                                     split: true,
                                     ariaLabel: 'Agregar',
@@ -193,7 +193,7 @@ export class Menu extends Component<any, any> {
                                         items: [
                                             {
                                                 key: 'scanFile',
-                                                text: 'Desde escaner',
+                                                name: 'Desde escaner',
                                                 iconProps: { iconName: 'ImagePixel' },
                                                 split: true,
                                                 ariaLabel: 'Desde escaner',
@@ -206,7 +206,7 @@ export class Menu extends Component<any, any> {
                                             },
                                             {
                                                 key: 'addFileFromDisk',
-                                                text: 'Desde archivo',
+                                                name: 'Desde archivo',
                                                 iconProps: { iconName: 'OpenFile' },
                                                 split: true,
                                                 ariaLabel: 'Desde archivo en el disco',
@@ -216,7 +216,7 @@ export class Menu extends Component<any, any> {
                                             },
                                             {
                                                 key: 'takePicture',
-                                                text: 'Desde cámara',
+                                                name: 'Desde cámara',
                                                 iconProps: { iconName: 'Camera' },
                                                 split: true,
                                                 ariaLabel: 'Desde camara',
@@ -226,7 +226,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'editItem',
-                                    text: 'Editar',
+                                    name: 'Editar',
                                     iconProps: { iconName: 'EditPhoto' },
                                     split: true,
                                     ariaLabel: 'Editar',
@@ -236,14 +236,14 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'rotate',
-                                    text: 'Rotar',
+                                    name: 'Rotar',
                                     iconProps: { iconName: 'Rotate' },
                                     split: true,
                                     ariaLabel: 'Rotar',
                                     subMenuProps: {
                                         items: [{
                                             key: 'rotateLeftItem',
-                                            text: 'Rotar a la izquierda',
+                                            name: 'Rotar a la izquierda',
                                             iconProps: { iconName: 'Rotate90CounterClockwise' },
                                             split: true,
                                             ariaLabel: '',
@@ -253,7 +253,7 @@ export class Menu extends Component<any, any> {
                                         },
                                         {
                                             key: 'rotateRightItem',
-                                            text: 'Rotar a la derecha',
+                                            name: 'Rotar a la derecha',
                                             iconProps: { iconName: 'Rotate90Clockwise' },
                                             split: true,
                                             ariaLabel: '',
@@ -263,7 +263,7 @@ export class Menu extends Component<any, any> {
                                         },
                                         {
                                             key: 'rotateItem',
-                                            text: 'Rotar 180°',
+                                            name: 'Rotar 180°',
                                             iconProps: { iconName: 'Rotate' },
                                             split: true,
                                             ariaLabel: '',
@@ -275,7 +275,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'mirror',
-                                    text: 'Espejo.',
+                                    name: 'Espejo.',
                                     iconProps: { iconName: 'AlignHorizontalCenter' },
                                     split: true,
                                     ariaLabel: 'Espejo',
@@ -283,7 +283,7 @@ export class Menu extends Component<any, any> {
                                         items: [
                                             {
                                                 key: 'horizontalMirrorItem',
-                                                text: 'Espejo horizontal',
+                                                name: 'Espejo horizontal',
                                                 iconProps: { iconName: 'AlignHorizontalCenter' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -293,7 +293,7 @@ export class Menu extends Component<any, any> {
                                             },
                                             {
                                                 key: 'verticalMirrorItem',
-                                                text: 'Espejo vertical',
+                                                name: 'Espejo vertical',
                                                 iconProps: { iconName: 'AlignVerticalCenter' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -306,7 +306,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'delete',
-                                    text: 'Borrar página',
+                                    name: 'Borrar página',
                                     iconProps: { iconName: 'Delete' },
                                     split: true,
                                     ariaLabel: 'Borrar',
@@ -314,7 +314,7 @@ export class Menu extends Component<any, any> {
                                         items: [
                                             {
                                                 key: 'deleteOneItem',
-                                                text: 'Borrar página',
+                                                name: 'Borrar página',
                                                 iconProps: { iconName: 'Delete' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -324,7 +324,7 @@ export class Menu extends Component<any, any> {
                                             },
                                             {
                                                 key: 'deleteAllItem',
-                                                text: 'Borrar todas las páginas',
+                                                name: 'Borrar todas las páginas',
                                                 iconProps: { iconName: 'DeleteTable' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -337,7 +337,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'resize',
-                                    text: 'Cambiar tamaño',
+                                    name: 'Cambiar tamaño',
                                     iconProps: { iconName: 'SizeLegacy' },
                                     split: true,
                                     ariaLabel: '',
@@ -345,7 +345,7 @@ export class Menu extends Component<any, any> {
                                         items: [
                                             {
                                                 key: 'resizeItem',
-                                                text: 'Redimensionar',
+                                                name: 'Redimensionar',
                                                 iconProps: { iconName: 'SizeLegacy' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -355,7 +355,7 @@ export class Menu extends Component<any, any> {
                                             },
                                             {
                                                 key: 'trimItem',
-                                                text: 'Recortar',
+                                                name: 'Recortar',
                                                 iconProps: { iconName: 'Trim' },
                                                 split: true,
                                                 ariaLabel: '',
@@ -368,7 +368,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'decodeBarcodeItem',
-                                    text: 'Cod. barras (' + this.getBarcodesLengt() + ')',
+                                    name: 'Cod. barras (' + this.getBarcodesLengt() + ')',
                                     iconProps: {
                                         //iconName: 'GenericScanFilled'
                                         iconName: 'QRCode'
@@ -378,14 +378,14 @@ export class Menu extends Component<any, any> {
                                     href: 'https://dev.office.com/fabric',
                                     subMenuProps: {
                                         items: [
-                                            { key: 'item1', text: 'Item One' },
-                                            { key: 'item2', text: 'Item Two' }
+                                            { key: 'item1', name: 'Item One' },
+                                            { key: 'item2', name: 'Item Two' }
                                         ]
                                     }
                                 },
                                 {
                                     key: 'decodeOcrItem',
-                                    text: 'Ocr (' + this.getOcrRecognizedLength() + ')',
+                                    name: 'Ocr (' + this.getOcrRecognizedLength() + ')',
                                     iconProps: {
                                         iconName: 'TextOverflow'
                                     },
@@ -394,14 +394,14 @@ export class Menu extends Component<any, any> {
                                     href: 'https://dev.office.com/fabric',
                                     subMenuProps: {
                                         items: [
-                                            { key: 'item1', text: 'Item One' },
-                                            { key: 'item2', text: 'Item Two' }
+                                            { key: 'item1', name: 'Item One' },
+                                            { key: 'item2', name: 'Item Two' }
                                         ]
                                     }
                                 },
                                 {
                                     key: 'downloadFile',
-                                    text: 'Descargar',
+                                    name: 'Descargar',
                                     ariaLabel: 'Descargar',
                                     iconProps: { iconName: 'Download' },
                                     iconOnly: true,
@@ -411,7 +411,7 @@ export class Menu extends Component<any, any> {
                                             {
                                                 key: 'downloadBmp',
                                                 iconProps: { iconName: 'FileImage' },
-                                                 text: 'BMP',
+                                                 name: 'BMP',
                                                  onClick: () => {
                                                     this.handleSaveBpm();
                                                 },
@@ -419,7 +419,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadJpeg', 
                                                 iconProps: { iconName: 'FileImage' }, 
-                                                text: 'JPEG' ,
+                                                name: 'JPEG' ,
                                                 onClick: () => {
                                                     this.handleSaveJpeg();
                                                 },
@@ -427,7 +427,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadPng', 
                                                 iconProps: { iconName: 'FileImage' }, 
-                                                text: 'PNG' ,
+                                                name: 'PNG' ,
                                                 onClick: () => {
                                                     this.handleSavePng();
                                                 },
@@ -435,7 +435,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadTiffCurrent', 
                                                 iconProps: { iconName: 'FileTemplate' }, 
-                                                text: 'TIFF, Página',
+                                                name: 'TIFF, Página',
                                                 onClick: () => {
                                                     this.handleSaveTiff(false);
                                                 },
@@ -443,7 +443,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadTiffAll', 
                                                 iconProps: { iconName: 'FileTemplate' }, 
-                                                text: 'TIFF, Todo',
+                                                name: 'TIFF, Todo',
                                                 onClick: () => {
                                                     this.handleSaveTiff(true);
                                                 },
@@ -451,7 +451,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadPdfCurrent', 
                                                 iconProps: { iconName: 'PDF' }, 
-                                                text: 'PDF, Página',
+                                                name: 'PDF, Página',
                                                 onClick: () => {
                                                     this.handleSavePdf(false);
                                                 },
@@ -459,7 +459,7 @@ export class Menu extends Component<any, any> {
                                             { 
                                                 key: 'downloadPdfAll', 
                                                 iconProps: { iconName: 'PDF' }, 
-                                                text: 'PDF, Todo',
+                                                name: 'PDF, Todo',
                                                 onClick: () => {
                                                     this.handleSavePdf(true);
                                                 },
@@ -469,7 +469,7 @@ export class Menu extends Component<any, any> {
                                 },
                                 {
                                     key: 'processPdf',
-                                    text: 'Procesar',
+                                    name: 'Procesar',
                                     ariaLabel: 'Procesar',
                                     iconProps: { iconName: 'PDF' },
                                     iconOnly: true,
@@ -481,7 +481,7 @@ export class Menu extends Component<any, any> {
                                                 onClick: () => {
                                                     this.upload();
                                                 },
-                                                iconProps: { iconName: 'InsertSignatureLine' }, text: 'Firma digital'
+                                                iconProps: { iconName: 'InsertSignatureLine' }, name: 'Firma digital'
                                             },
                                         ]
                                     }
@@ -492,7 +492,7 @@ export class Menu extends Component<any, any> {
                 </div>
 
             </header>
-        </>)
+        </div>)
     }
 }
 

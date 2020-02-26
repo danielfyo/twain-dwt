@@ -1,5 +1,6 @@
 import React , { Component } from 'react';
 import { Panel } from 'office-ui-fabric-react/lib/Panel';
+import { DefaultButton, PrimaryButton } from 'office-ui-fabric-react/lib';
 
 export class ConfirmationPanel extends Component<any, any> {
 
@@ -25,6 +26,28 @@ export class ConfirmationPanel extends Component<any, any> {
           hasCloseButton={true}
           closeButtonAriaLabel="Cerrar"
           headerText={this.state.panelScan.panelTitle}
+          onRenderFooterContent={()=>
+            <div className='ms-Grid-row'>
+            <div className='ms-Grid-col'>
+              <DefaultButton
+                iconProps={{ iconName: 'Back' }}
+                onClick={() => this.setState(
+                  {
+                    estructurarHechosPanel:
+                    {
+                      ...this.state.estructurarHechosPanel,
+                      show: false
+                    }
+                  })
+                }>Volver</DefaultButton>
+              &nbsp;&nbsp;
+              <PrimaryButton
+                iconProps={{ iconName: 'Accept' }}
+                onClick={()=>{console.log('ok');}}>Aceptar</PrimaryButton>
+
+            </div>
+          </div>
+          }
         >
           <p>{this.state.panelScan.panelDescription}</p>
 
