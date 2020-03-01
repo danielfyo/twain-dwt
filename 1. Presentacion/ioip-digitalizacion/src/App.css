@@ -16,14 +16,18 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 5vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: #282c34;
+  flex-direction: row !important;
+  /*justify-content: flex-start !important;
+  min-height: 3vh;*/
+  height: 50px !important;
+  border-bottom: 1px solid #282c34;
 }
 
 .App-link {
@@ -49,6 +53,6 @@
   border-right: 1px solid #ccc;
 }
 
-.ms-CommandBar {
- background-color: #282c34 !important;
+.Complete-Logo h3{
+  margin-left: 10px;
 }

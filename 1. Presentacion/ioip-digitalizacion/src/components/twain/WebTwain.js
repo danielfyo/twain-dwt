@@ -3,9 +3,8 @@ import React from 'react';
 
 import './WebTwain.css';
 
-import Dynamsoft from 'dwt';
+import Dynamsoft, {EnumDWT_ImageType} from 'dwt';
 import $ from 'jquery';  
-import DynamsoftWebCam from '../webcam/DynamsoftWebCam';
 // #endregion imports
 
 class UI extends React.Component {
@@ -19,12 +18,12 @@ class UI extends React.Component {
                     <div id="ImgSizeEditor"  className={(!this.props.stateProp.showResizer) ? 'hidden' : ''}>
                         <ul>
                             <li>
-                                <label for="img_height">Nuevo alto:
+                                <label>Nuevo alto:
                                     <input type="text" id="img_height" size="10"/>
                                     px</label>
                             </li>
                             <li>
-                                <label for="img_width">Nuevo ancho :&nbsp;
+                                <label >Nuevo ancho :&nbsp;
                                     <input type="text" id="img_width" size="10"/>
                                     px</label>
                             </li>
@@ -73,9 +72,10 @@ class UI extends React.Component {
 }
 
 export default class DWT extends React.Component {
+    
     // #region veriables globales
     DWObject = null;
-    DWWebCamObject = null;
+    DWObjectLargeViewer = null;
     containerId = 'dwtcontrolContainer';
     productKey = 't0140cQMAAE8LWxVAHxlESW7JnSwHi4Gr4r8Df5baQ3boMjBgBMs//zRwatGJL1nxpE28FANXQu6g5e+JrEeOe47+lYwiv8iO4Z3pu9BZTJhMHw0Mvb9eu7E/puvPXOr0WSu+KDZMGIuNhHkIb/aGOPNpmDAWGwnzJDIfRddowjBhLDaCe2NaWy3NPlCFrqA=';
     _strTempStr = '';
@@ -97,88 +97,55 @@ export default class DWT extends React.Component {
         };
     }
     
-    initializeDwt() {
-        DynamsoftWebCam.WebTwainEnv.Load();
-        DynamsoftWebCam.WebTwainEnv.RegisterEvent('OnWebTwainReady', ()=>{
-			this.DWWebCamObject = Dynamsoft.WebTwainEnv.GetWebTwain('dwtcontrolContainer'); // Get the Dynamic Web TWAIN object that is embeded in the div with id 'dwtcontrolContainer'
-            
-            if (this.DWWebCamObject) {
-			    this.DWWebCamObject.Width = 504;
-			    this.DWWebCamObject.Height = 600;
-
-			    document.getElementById('source').options.length = 0;
-	        }
-
-	        document.getElementById('source').onchange = () => {
-	            if (document.getElementById('source').selectedIndex < 0) {
-	                this.DWWebCamObject.Addon.Webcam.StopVideo();
-	                this.isVideoOn = false;
-	                document.getElementById("btn-grab").style.backgroundColor = "";
-	                document.getElementById('btn-grab').value = 'Acquire From a Scanner';
-	                document.getElementById("btn-switch").style.display = 'none';
-	            }
-	            else {
-	                this.DWWebCamObject.Addon.Webcam.SelectSource(document.getElementById("source").options[document.getElementById("source").selectedIndex].value);
-
-	                //SetIfWebcamPlayVideo(true);
-
-	                document.getElementById('btn-grab').value = 'Acquire From a Webcam';
-	                document.getElementById("btn-switch").style.display = '';
-	            }
-	            document.getElementById("btn-grab").disabled = "";
-	        }
-
-	        document.getElementById('source').onchange();
-		});
+    addImageToPreview(image) {
+        this.props.handleAddImageToPreview(image);
     }
-    
+
     componentDidMount() {
 
         Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', () => {
-
             this.DWObject = Dynamsoft.WebTwainEnv.GetWebTwain(this.containerId);
             
             if (this.DWObject) {
                 this.DWObject.RegisterEvent("OnPostTransfer", () => {
-                    console.log('OnPostTransfer');
+                    this.DWObject.SelectedImagesCount = 1;
+                    this.DWObject.SetSelectedImageIndex(0, 0);
+                    this.DWObject.GetSelectedImagesSize(EnumDWT_ImageType.IT_JPG);
+                    var image = this.DWObject.SaveSelectedImagesToBase64Binary();
+                    this.addImageToPreview(this.completeDataUri(image));
                     this.updatePageInfo();
                 });
                 this.DWObject.RegisterEvent("OnPostLoad", () => {
-                    console.log('OnPostLoad');
                     this.updatePageInfo();
                 });
                 this.DWObject.RegisterEvent("OnPostAllTransfers", () => {
-                    console.log('OnPostAllTransfers');
                     this.DWObject.CloseSource();
                     this.updatePageInfo();
                     this.checkErrorString();
                 });
                 this.DWObject.RegisterEvent('OnImageAreaSelected', (index, left, top, right, bottom) => {
-                    console.log('OnImageAreaSelected');
+
                     this._iLeft = left;
                     this._iTop = top;
                     this._iRight = right;
                     this._iBottom = bottom;
                 });
                 this.DWObject.RegisterEvent('OnImageAreaDeselected', (index) => {
-                    console.log('OnImageAreaDeselected');
+
                     this._iLeft = 0;
                     this._iTop = 0;
                     this._iRight = 0;
                     this._iBottom = 0;
                 });
                 this.DWObject.RegisterEvent("OnGetFilePath", (bSave, count, index, path, name) => {
-                    console.log('OnGetFilePath');                    
+               
                  });
                 this.DWObject.RegisterEvent("OnTopImageInTheViewChanged", (index) => {
-                    console.log('OnTopImageInTheViewChanged');
-
-                    //this.searchBarcodeInImage();
                     this._iLeft = 0;
                     this._iTop = 0;
                     this._iRight = 0;
                     this._iBottom = 0;
-                    this.DWObject.CurrentImageIndexInBuffer = index;
+                    
                     this.updatePageInfo();
                 });
                 this.DWObject.RegisterEvent("OnMouseClick", () => {
@@ -188,8 +155,7 @@ export default class DWT extends React.Component {
                 });
 
                 
-                var twainsource = document.getElementById("source");
-                
+                var twainsource = this.props.handleGetSelectionIndex();
                 
                 this.DWTSourceCount = this.DWObject.SourceCount;
                 
@@ -293,7 +259,6 @@ export default class DWT extends React.Component {
     }
 
     loadDWT() {
-        console.log('cargando libreria DWT...');
         Dynamsoft.WebTwainEnv.ProductKey = this.productKey;
         Dynamsoft.WebTwainEnv.Trial = true;
         Dynamsoft.WebTwainEnv.ResourcesPath = "https://tst.dynamsoft.com/libs/dwt/15.0";
@@ -305,7 +270,6 @@ export default class DWT extends React.Component {
         }];
 
         Dynamsoft.WebTwainEnv.Load();
-        console.log('libreria DWT principal cargada...');
     }
 
     appendMessage(strMessage) {
@@ -347,12 +311,11 @@ export default class DWT extends React.Component {
     }
 
     // #region Metodos operativos DWT
-    acquireImage() {
-        var cIndex = document.getElementById("source").selectedIndex;
-        if (cIndex < 0)
+    acquireImage(index) {
+        if (index < 0)
             return;
 
-        this.DWObject.SelectSourceByIndex(cIndex);
+        this.DWObject.SelectSourceByIndex(index);
         this.DWObject.CloseSource();
         this.DWObject.OpenSource();
         this.DWObject.IfShowUI = document.getElementById("ShowUI").checked;
@@ -392,11 +355,15 @@ export default class DWT extends React.Component {
 
     }
     
+    completeDataUri(base64String){
+        return 'data:image/png;base64,' + base64String;
+    }
+
     imageEncode (arrayBuffer) {
         return 'data:image/png;base64,' + btoa(unescape(encodeURIComponent(arrayBuffer))) + '';
     }
 
-    searchBarcodeInImage(){        
+    searchBarcodeInImage() {        
         // TODO: implementar
     }
     
@@ -408,6 +375,7 @@ export default class DWT extends React.Component {
 
         var OnPDFFailure = (errorCode, errorString) => {
             this.checkErrorStringWithErrorCode(errorCode, errorString);
+            this.appendMessage(errorString + ".<br/>");
         };
 
         this.DWObject.IfShowFileDialog = true;
@@ -593,7 +561,7 @@ export default class DWT extends React.Component {
                 stateProp = {this.state}
                 containerId={this.containerId}
                 // Adquire images
-                acquireImage={() => this.acquireImage()}
+                acquireImage={(index) => this.acquireImage(index)}
                 uploadFileFromDisk={() => this.uploadFileFromDisk()}
                 // Edit
                 editSelectetImage={() => this.editSelectetImage()}

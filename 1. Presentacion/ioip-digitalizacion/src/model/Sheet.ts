@@ -1,5 +1,5 @@
 import { Barcode } from './Barcode';
-export class Sheet {
+export class SheetDto {
     constructor() {
         this.sheetId = undefined;
         this.sheetBase64 = undefined;

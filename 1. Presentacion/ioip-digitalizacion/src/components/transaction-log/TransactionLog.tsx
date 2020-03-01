@@ -7,15 +7,10 @@ export class TransactionLog extends Component<any, any> {
         super(props);
 
         this.state = {
-            appName: '',
             sheets: undefined,
-            strTransactionLog: ''
-        }
-
-        this.setState({
             appName: this.props.tittle,
             strTransactionLog: ''
-        });
+        }
 
         this.appendMessage.bind(this.appendMessage);
     }
@@ -35,7 +30,7 @@ export class TransactionLog extends Component<any, any> {
         });
     }
 
-    render() {
+    public render(): JSX.Element {
         return (
             <div id="DWTcontainerBtm" style={{ textAlign: "left" }} className="clearfix">
                 <div id="DWTemessageContainer"></div>

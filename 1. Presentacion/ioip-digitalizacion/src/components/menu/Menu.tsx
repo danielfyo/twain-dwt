@@ -1,16 +1,13 @@
 // #region imports
 import React, { Component } from 'react';
-
 import { CommandBar } from 'office-ui-fabric-react/lib/CommandBar';
-import { IButtonProps } from 'office-ui-fabric-react/lib/Button';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { loadTheme } from 'office-ui-fabric-react';
-import * as socketio from "socket.io-client";
+//import { loadTheme } from 'office-ui-fabric-react';
+//import * as socketio from "socket.io-client";
 import logo from '../../logo.png';
 
 import './Menu.css';
-import { Sheet } from '../../model/Sheet';
-
+import { SheetDto } from '../../model/Sheet';
 // #endregion imports
 
 initializeIcons();
@@ -19,7 +16,8 @@ export class Menu extends Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-            panelScan: props.isOpen
+            panelScan: props.isOpen,
+            appName: this.props.tittle,
         }
         /*const socket = socketio.connect("192.168.0.37:8888");
 
@@ -54,17 +52,13 @@ export class Menu extends Component<any, any> {
         socket.disconnect();
         console.log('desconectado');
 */
-        let currentTheme = this.props.theme;
-        loadTheme(currentTheme);
+        //let currentTheme = this.props.theme;
+        //loadTheme(currentTheme);
 
         this.state = {
             appName: '',
             sheets: undefined
         }
-
-        this.setState({
-            appName: this.props.tittle,
-        });
 
         // #region binding
         this.addImage = this.addImage.bind(this);
@@ -151,13 +145,13 @@ export class Menu extends Component<any, any> {
         this.props.handleSavePdf(complete);
     }
 
-    handleSetPanelScanState(panelScan: any){
+    handleSetPanelScanState(panelScan: any) {
         this.props.handleSetPanelScanState(panelScan);
     }
     // #endregion linkers
 
-    getSheets(): Sheet[] {
-        return (this.state?.sheets as Sheet[]);
+    getSheets(): SheetDto[] {
+        return (this.state?.sheets as SheetDto[]);
     }
 
     getBarcodesLengt(): number {
@@ -170,7 +164,8 @@ export class Menu extends Component<any, any> {
         return (ocrLenght) ? ocrLenght.length : 0;
     }
 
-    render() {
+
+    public render(): JSX.Element {
 
         return (<div>
             <header className="App-header">
@@ -180,7 +175,7 @@ export class Menu extends Component<any, any> {
                 </div>
                 <div className="Menubar">
                     <CommandBar
-                    isSearchBoxVisible={ false }
+                        isSearchBoxVisible={false}
                         items={
                             [
                                 {
@@ -198,9 +193,11 @@ export class Menu extends Component<any, any> {
                                                 split: true,
                                                 ariaLabel: 'Desde escaner',
                                                 onClick: () => {
-                                                    this.handleSetPanelScanState({panelScan: {
-                                                        isOpen: true
-                                                    }});
+                                                    this.handleSetPanelScanState({
+                                                        panelScan: {
+                                                            isOpen: true
+                                                        }
+                                                    });
                                                     //this.addImage();
                                                 },
                                             },
@@ -244,7 +241,7 @@ export class Menu extends Component<any, any> {
                                         items: [{
                                             key: 'rotateLeftItem',
                                             name: 'Rotar a la izquierda',
-                                            iconProps: { iconName: 'Rotate90CounterClockwise' },
+                                            iconProps: { iconName: 'RevToggleKey' },
                                             split: true,
                                             ariaLabel: '',
                                             onClick: () => {
@@ -254,7 +251,7 @@ export class Menu extends Component<any, any> {
                                         {
                                             key: 'rotateRightItem',
                                             name: 'Rotar a la derecha',
-                                            iconProps: { iconName: 'Rotate90Clockwise' },
+                                            iconProps: { iconName: 'ReturnToSession' },
                                             split: true,
                                             ariaLabel: '',
                                             onClick: () => {
@@ -356,7 +353,7 @@ export class Menu extends Component<any, any> {
                                             {
                                                 key: 'trimItem',
                                                 name: 'Recortar',
-                                                iconProps: { iconName: 'Trim' },
+                                                iconProps: { iconName: 'Crop' },
                                                 split: true,
                                                 ariaLabel: '',
                                                 onClick: () => {
@@ -371,7 +368,7 @@ export class Menu extends Component<any, any> {
                                     name: 'Cod. barras (' + this.getBarcodesLengt() + ')',
                                     iconProps: {
                                         //iconName: 'GenericScanFilled'
-                                        iconName: 'QRCode'
+                                        iconName: 'GenericScan'
                                     },
                                     split: true,
                                     disabled: this.getBarcodesLengt() < 1,
@@ -387,7 +384,7 @@ export class Menu extends Component<any, any> {
                                     key: 'decodeOcrItem',
                                     name: 'Ocr (' + this.getOcrRecognizedLength() + ')',
                                     iconProps: {
-                                        iconName: 'TextOverflow'
+                                        iconName: 'TextBox'
                                     },
                                     split: true,
                                     disabled: this.getBarcodesLengt() < 1,
@@ -411,54 +408,54 @@ export class Menu extends Component<any, any> {
                                             {
                                                 key: 'downloadBmp',
                                                 iconProps: { iconName: 'FileImage' },
-                                                 name: 'BMP',
-                                                 onClick: () => {
+                                                name: 'BMP',
+                                                onClick: () => {
                                                     this.handleSaveBpm();
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadJpeg', 
-                                                iconProps: { iconName: 'FileImage' }, 
-                                                name: 'JPEG' ,
+                                            {
+                                                key: 'downloadJpeg',
+                                                iconProps: { iconName: 'FileImage' },
+                                                name: 'JPEG',
                                                 onClick: () => {
                                                     this.handleSaveJpeg();
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadPng', 
-                                                iconProps: { iconName: 'FileImage' }, 
-                                                name: 'PNG' ,
+                                            {
+                                                key: 'downloadPng',
+                                                iconProps: { iconName: 'FileImage' },
+                                                name: 'PNG',
                                                 onClick: () => {
                                                     this.handleSavePng();
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadTiffCurrent', 
-                                                iconProps: { iconName: 'FileTemplate' }, 
+                                            {
+                                                key: 'downloadTiffCurrent',
+                                                iconProps: { iconName: 'FileTemplate' },
                                                 name: 'TIFF, Página',
                                                 onClick: () => {
                                                     this.handleSaveTiff(false);
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadTiffAll', 
-                                                iconProps: { iconName: 'FileTemplate' }, 
+                                            {
+                                                key: 'downloadTiffAll',
+                                                iconProps: { iconName: 'FileTemplate' },
                                                 name: 'TIFF, Todo',
                                                 onClick: () => {
                                                     this.handleSaveTiff(true);
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadPdfCurrent', 
-                                                iconProps: { iconName: 'PDF' }, 
+                                            {
+                                                key: 'downloadPdfCurrent',
+                                                iconProps: { iconName: 'PDF' },
                                                 name: 'PDF, Página',
                                                 onClick: () => {
                                                     this.handleSavePdf(false);
                                                 },
                                             },
-                                            { 
-                                                key: 'downloadPdfAll', 
-                                                iconProps: { iconName: 'PDF' }, 
+                                            {
+                                                key: 'downloadPdfAll',
+                                                iconProps: { iconName: 'PDF' },
                                                 name: 'PDF, Todo',
                                                 onClick: () => {
                                                     this.handleSavePdf(true);

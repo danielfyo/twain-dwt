@@ -9,6 +9,7 @@
 
 .RecognizedData{
     display: flex;
+    vertical-align: middle;
 }
 
 .ms-DocumentCard {
@@ -19,8 +20,13 @@
 
 .ms-DocumentCardActivity{
     display: flex;
-    width: 50%;
+    width: 30%;
     padding: 5px;
+}
+
+.ms-DocumentCardActivityPage{
+    width: 100%;
+    vertical-align: middle;
 }
 
 .ms-DocumentCardActivity-details {
@@ -34,13 +40,16 @@
 }
 
 .ms-DocumentCardTitle {
-    font-size: 12px;
-    font-weight: bold;
-    padding: 2px;
-    height: 25px;
+    height: 0px !important;
+    padding: 0px !important;
 }
 
 .ms-DocumentCardPreview,
 .ms-DocumentCardPreview .ms-Image {
     width: 130px !important;
+}
+
+.previewPanel {
+    -webkit-box-shadow: -30px 0px 30px -30px rgba(0,0,0,0.2);
+    box-shadow: -30px 0px 30px -30px rgba(0,0,0,0.2);
 }

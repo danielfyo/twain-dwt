@@ -8,10 +8,3 @@
 .Menubar {
     float: right;
 }
-
-.App-header {
-    flex-direction: row !important;
-    /*justify-content: flex-start !important;
-    min-height: 3vh;*/
-    height: 50px !important;
-}

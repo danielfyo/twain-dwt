@@ -13,7 +13,7 @@ import DWT from './components/twain/WebTwain';
 
 // #region estilos
 
-const dark = {
+/*const dark = {
   palette: {
     themePrimary: "#0078d4",
     themeLighterAlt: "#eff6fc",
@@ -66,6 +66,11 @@ const light = {
     white: "#ffffff"
   }
 };
+
+//theme={dark}
+*/
+
+
 // #endregion estilos
 export class App extends React.Component<any, any> {
   constructor(props: any) {
@@ -89,8 +94,8 @@ export class App extends React.Component<any, any> {
     this.transactionLogReference.appendMessage(prueba);
   }
 
-  handleAddImage = () => {
-    this.dwtReference.acquireImage();
+  handleAddImage = (index) => {
+    this.dwtReference.acquireImage(index);
   }
 
   handleDownload = () => {
@@ -168,17 +173,21 @@ export class App extends React.Component<any, any> {
   handleSetPanelScanState = (panelScanIn: any) =>{
     this.panelScanState.setPanelScanState(panelScanIn);
   }
+
+  handleAddImageToPreview = (image: any) =>{
+    this.pagePreviewReference.addImageToPreview(image);
+  }
   // #endregion Eventos de conexión administrada entre componentes
 
-  render() {
+  public render() : JSX.Element {
     return (
       <div className="App">
         <ConfirmationPanel
-          ref={element => { this.panelScanState = element }}
-          handleSetPanelScanState={this.handleSetPanelScanState}
+          ref = { element => { this.panelScanState = element } }
+          handleSetPanelScanState = { this.handleSetPanelScanState }
+          handleAddImage = { this.handleAddImage}
         />
         <Menu tittle='IoIp'
-          theme={dark}
           handleAddImage={this.handleAddImage}
           handleDownload={this.handleDownload}
           handleUpload={this.handleUpload}
@@ -205,12 +214,14 @@ export class App extends React.Component<any, any> {
           <div className="ContainerBorderedRight">
             <PagePreview
               ref={element => { this.pagePreviewReference = element }}
+              handleAddImageToPreview = { this.handleAddImageToPreview }
             />
           </div>
           <div className="ContainerBorderedRight">
             <DWT
-              handleAddImage={this.handleAddImage}
+              handleAddImage = {this.handleAddImage}
               ref={element => { this.dwtReference = element }}
+              handleAddImageToPreview = { this.handleAddImageToPreview }
             />
           </div>
           <div className="">
