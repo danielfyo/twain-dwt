@@ -1,3 +1,4 @@
+import { DwtSource } from './../../model/DwtSource';
 // #region imports
 import React from 'react';
 
@@ -97,8 +98,12 @@ export default class DWT extends React.Component {
         };
     }
     
-    addImageToPreview(image) {
-        this.props.handleAddImageToPreview(image);
+    addImageToPreview(image, index) {
+        this.props.handleAddImageToPreview(image, index);
+    }
+
+    updateSourceServiceList(sourceList){
+        this.props.handleUpdateSourceServiceList(sourceList);
     }
 
     componentDidMount() {
@@ -107,12 +112,12 @@ export default class DWT extends React.Component {
             this.DWObject = Dynamsoft.WebTwainEnv.GetWebTwain(this.containerId);
             
             if (this.DWObject) {
+
                 this.DWObject.RegisterEvent("OnPostTransfer", () => {
-                    this.DWObject.SelectedImagesCount = 1;
-                    this.DWObject.SetSelectedImageIndex(0, 0);
+                    this.DWObject.SetSelectedImageIndex(this.DWObject.CurrentImageIndexInBuffer, this.DWObject.CurrentImageIndexInBuffer);
                     this.DWObject.GetSelectedImagesSize(EnumDWT_ImageType.IT_JPG);
-                    var image = this.DWObject.SaveSelectedImagesToBase64Binary();
-                    this.addImageToPreview(this.completeDataUri(image));
+                    let image = this.DWObject.SaveSelectedImagesToBase64Binary();
+                    this.addImageToPreview(this.completeDataUri(image), this.DWObject.CurrentImageIndexInBuffer + 1);
                     this.updatePageInfo();
                 });
                 this.DWObject.RegisterEvent("OnPostLoad", () => {
@@ -155,18 +160,28 @@ export default class DWT extends React.Component {
                 });
 
                 
-                var twainsource = this.props.handleGetSelectionIndex();
+                /*let twainsource = this.props.handleGetSelectionIndex();
                 
                 this.DWTSourceCount = this.DWObject.SourceCount;
-                
                 if (twainsource) {
                     twainsource.options.length = 0;
-                    for (var i = 0; i < this.DWTSourceCount; i++) {
+                    for (let i = 0; i < this.DWTSourceCount; i++) {
                         twainsource.options.add(new Option(this.DWObject.GetSourceNameItems(i), i));
                     }
                 }
+                
+                
+                console.log(twainsource);
+                */
 
-                var liNoScanner = document.getElementById("pNoScanner");
+                for (let i = 0; i < this.DWObject.SourceCount; i++) {
+                    let newSource = new DwtSource();
+                    newSource.SourceName = this.DWObject.GetSourceNameItems(i);
+                    newSource.DwtSourceId = i;
+                    this.updateSourceServiceList(newSource);
+                }
+
+                let liNoScanner = document.getElementById("pNoScanner");
 
                 if (this.DWTSourceCount === 0) {
                     if (liNoScanner) {
@@ -186,7 +201,7 @@ export default class DWT extends React.Component {
                 if (Dynamsoft.Lib.env.bWin)
                     this.DWObject.MouseShape = false;
 
-                var btnScan = document.getElementById("btnScan");
+                let btnScan = document.getElementById("btnScan");
                 if (btnScan) {
                     if (this.DWTSourceCount === 0)
                         document.getElementById("btnScan").disabled = true;
@@ -211,7 +226,7 @@ export default class DWT extends React.Component {
                         document.getElementById("ShowUI").style.display = "";
                 }
 
-                for (i = 0; i < document.links.length; i++) {
+                for (let i = 0; i < document.links.length; i++) {
                     if (document.links[i].className === "ShowtblLoadImage") {
                         document.links[i].onclick = this.showtblLoadImage_onclick;
                     }
@@ -230,7 +245,7 @@ export default class DWT extends React.Component {
                     }
                 }
                 else {
-                    var divBlank = document.getElementById("divBlank");
+                    let divBlank = document.getElementById("divBlank");
                     if (divBlank)
                         divBlank.style.display = "none";
                 }
@@ -274,7 +289,7 @@ export default class DWT extends React.Component {
 
     appendMessage(strMessage) {
         this._strTempStr += strMessage;
-        var _divMessageContainer = document.getElementById("DWTemessage");
+        let _divMessageContainer = document.getElementById("DWTemessage");
         if (_divMessageContainer) {
             _divMessageContainer.innerHTML = this._strTempStr;
             _divMessageContainer.scrollTop = _divMessageContainer.scrollHeight;
@@ -302,7 +317,7 @@ export default class DWT extends React.Component {
             return true;
         else {
             if (errorCode === -2003) {
-                var ErrorMessageWin = window.open("", "ErrorMessage", "height=500,width=750,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no");
+                let ErrorMessageWin = window.open("", "ErrorMessage", "height=500,width=750,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no");
                 ErrorMessageWin.document.writeln(responseString); 
             }
             this.appendMessage("<span style='color:#cE5E04'><b>" + errorString + "</b></span><br />");
@@ -320,7 +335,7 @@ export default class DWT extends React.Component {
         this.DWObject.OpenSource();
         this.DWObject.IfShowUI = document.getElementById("ShowUI").checked;
 
-        var i;
+        let i;
         for (i = 0; i < 3; i++) {
             if (document.getElementsByName("PixelType").item(i).checked === true)
                 this.DWObject.PixelType = i;
@@ -335,14 +350,14 @@ export default class DWT extends React.Component {
             this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
         }
 
-        var bADFChecked = document.getElementById("ADF").checked;
+        let bADFChecked = document.getElementById("ADF").checked;
         this.DWObject.IfFeederEnabled = bADFChecked;
         if (bADFChecked === true && this.DWObject.ErrorCode !== 0) {
             this.appendMessage('<b>Error definiendo el valor ADF alimentador automático: </b>');
             this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
         }
 
-        var bDuplexChecked = document.getElementById("Duplex").checked;
+        let bDuplexChecked = document.getElementById("Duplex").checked;
         this.DWObject.IfDuplexEnabled = bDuplexChecked;
         if (bDuplexChecked === true && this.DWObject.ErrorCode !== 0) {
             this.appendMessage('<b>Error definiendo el valor duplex: </b>');
@@ -368,12 +383,12 @@ export default class DWT extends React.Component {
     }
     
     uploadFileFromDisk() {
-        var OnPDFSuccess = () => {
+        let OnPDFSuccess = () => {
             this.appendMessage("Imágen cargada con éxito.<br/>");
             this.updatePageInfo();
         };
 
-        var OnPDFFailure = (errorCode, errorString) => {
+        let OnPDFFailure = (errorCode, errorString) => {
             this.checkErrorStringWithErrorCode(errorCode, errorString);
             this.appendMessage(errorString + ".<br/>");
         };
@@ -488,10 +503,10 @@ export default class DWT extends React.Component {
             showResizer: true 
         });
    
-        var iWidth = this.DWObject.GetImageWidth(this.DWObject.CurrentImageIndexInBuffer);
+        let iWidth = this.DWObject.GetImageWidth(this.DWObject.CurrentImageIndexInBuffer);
         if (iWidth !== -1)
             document.getElementById("img_width").value = iWidth;
-        var iHeight = this.DWObject.GetImageHeight(this.DWObject.CurrentImageIndexInBuffer);
+        let iHeight = this.DWObject.GetImageHeight(this.DWObject.CurrentImageIndexInBuffer);
         if (iHeight !== -1)
             document.getElementById("img_height").value = iHeight;
     }
@@ -530,29 +545,26 @@ export default class DWT extends React.Component {
         }
     }
 
-    source_onchange(bWebcam) {
-        if (document.getElementById("divTwainType"))
+    source_onchange(cIndex) {
+        /*if (document.getElementById("divTwainType"))
             document.getElementById("divTwainType").style.display = "";
 
-        if (document.getElementById("source")) {
-            var cIndex = document.getElementById("source").selectedIndex;
-            if (Dynamsoft.Lib.env.bMac) {
-                var strSourceName = this.DWObject.GetSourceNameItems(cIndex);
-                if (strSourceName.indexOf("ICA") === 0) {
-                    if (document.getElementById("lblShowUI"))
-                        document.getElementById("lblShowUI").style.display = "none";
-                    if (document.getElementById("ShowUI"))
-                        document.getElementById("ShowUI").style.display = "none";
-                } else {
-                    if (document.getElementById("lblShowUI"))
-                        document.getElementById("lblShowUI").style.display = "";
-                    if (document.getElementById("ShowUI"))
-                        document.getElementById("ShowUI").style.display = "";
-                }
+        if (Dynamsoft.Lib.env.bMac) {
+            let strSourceName = this.DWObject.GetSourceNameItems(cIndex);
+            if (strSourceName.indexOf("ICA") === 0) {
+                if (document.getElementById("lblShowUI"))
+                    document.getElementById("lblShowUI").style.display = "none";
+                if (document.getElementById("ShowUI"))
+                    document.getElementById("ShowUI").style.display = "none";
+            } else {
+                if (document.getElementById("lblShowUI"))
+                    document.getElementById("lblShowUI").style.display = "";
+                if (document.getElementById("ShowUI"))
+                    document.getElementById("ShowUI").style.display = "";
             }
-            else
-                this.DWObject.SelectSourceByIndex(cIndex);
         }
+        else
+            this.DWObject.SelectSourceByIndex(cIndex);*/
     }
 
     render() {
@@ -603,7 +615,7 @@ export default class DWT extends React.Component {
     }
 
     HideLoadImageForLinux() {
-        var o = document.getElementById("liLoadImage");
+        let o = document.getElementById("liLoadImage");
         if (o) {
             if (Dynamsoft.Lib.env.bLinux)
                 o.style.display = "none";
@@ -613,9 +625,9 @@ export default class DWT extends React.Component {
     }
 
     InitMessageBody() {
-        var MessageBody = document.getElementById("divNoteMessage");
+        let MessageBody = document.getElementById("divNoteMessage");
         if (MessageBody) {
-            var ObjString = "<div><p>Sistemas operativos y Exploradores web soportados: </p>Internet Explorer 8 o superior (32 bit/64 bit), cualquier versión de Google Chrome (32 bit/64 bit), cualquier versión de Firefox en Windows; Safari, Chrome y Firefox en Mac OS X 10.7 o superior; Chrome y Firefox v27 o superior (64 bit) en Ubuntu 16.04+, Debian 8+";
+            let ObjString = "<div><p>Sistemas operativos y Exploradores web soportados: </p>Internet Explorer 8 o superior (32 bit/64 bit), cualquier versión de Google Chrome (32 bit/64 bit), cualquier versión de Firefox en Windows; Safari, Chrome y Firefox en Mac OS X 10.7 o superior; Chrome y Firefox v27 o superior (64 bit) en Ubuntu 16.04+, Debian 8+";
             ObjString += ".</div>";
 
             MessageBody.style.display = "";
@@ -624,9 +636,9 @@ export default class DWT extends React.Component {
     }
 
     InitDWTdivMsg(bNeebBack) {
-        var DWTemessageContainer = document.getElementById("DWTemessageContainer");
+        let DWTemessageContainer = document.getElementById("DWTemessageContainer");
         if (DWTemessageContainer) {
-            var objString = "";
+            let objString = "";
             if (bNeebBack) {
                 objString += "<p className='backToDemoList'><a className='d-btn bgOrange' href =\"online_demo_list.aspx\">Back</a></p>";
             }
@@ -636,7 +648,7 @@ export default class DWT extends React.Component {
 
             DWTemessageContainer.innerHTML = objString;
 
-            var _divMessageContainer = document.getElementById("DWTemessage");
+            let _divMessageContainer = document.getElementById("DWTemessage");
             _divMessageContainer.ondblclick = () => {
                 this.innerHTML = "";
                 this._strTempStr = "";
@@ -645,8 +657,8 @@ export default class DWT extends React.Component {
     }
 
     initiateInputs() {
-        var allinputs = document.getElementsByTagName("input");
-        for (var i = 0; i < allinputs.length; i++) {
+        let allinputs = document.getElementsByTagName("input");
+        for (let i = 0; i < allinputs.length; i++) {
             if (allinputs[i].type === "checkbox") {
                 allinputs[i].checked = false;
             }
@@ -655,7 +667,7 @@ export default class DWT extends React.Component {
             }
         }
         if (Dynamsoft.Lib.env.bIE === true && Dynamsoft.Lib.env.bWin64 === true) {
-            var o = document.getElementById("samplesource64bit");
+            let o = document.getElementById("samplesource64bit");
             if (o)
                 o.style.display = "inline";
 
@@ -666,20 +678,20 @@ export default class DWT extends React.Component {
     }
 
     setDefaultValue() {
-        var vRgb = document.getElementById("RGB");
+        let vRgb = document.getElementById("RGB");
         
         if (vRgb)
             vRgb.checked = true;
 
-        var varImgTypepdf2 = document.getElementById("imgTypepdf2");
+        let varImgTypepdf2 = document.getElementById("imgTypepdf2");
         if (varImgTypepdf2)
             varImgTypepdf2.checked = true;
-        var varImgTypepdf = document.getElementById("imgTypepdf");
+        let varImgTypepdf = document.getElementById("imgTypepdf");
         if (varImgTypepdf)
             varImgTypepdf.checked = true;
 
-        var d = new Date();
-        var _strDefaultSaveImageName = 
+        let d = new Date();
+        let _strDefaultSaveImageName = 
             d.getFullYear()+""+
             d.getMonth()+""+
             d.getDate()+""+
@@ -687,39 +699,39 @@ export default class DWT extends React.Component {
             d.getMinutes()+""+
             d.getSeconds();
 
-        var _txtFileNameforSave = document.getElementById("txt_fileNameforSave");
+        let _txtFileNameforSave = document.getElementById("txt_fileNameforSave");
         if (_txtFileNameforSave)
             _txtFileNameforSave.value = _strDefaultSaveImageName;
 
-        var _txtFileName = document.getElementById("txt_fileName");
+        let _txtFileName = document.getElementById("txt_fileName");
         if (_txtFileName)
             _txtFileName.value = _strDefaultSaveImageName;
 
-        var _chkMultiPageTIFF_save = document.getElementById("MultiPageTIFF_save");
+        let _chkMultiPageTIFF_save = document.getElementById("MultiPageTIFF_save");
         if (_chkMultiPageTIFF_save)
             _chkMultiPageTIFF_save.disabled = true;
-        var _chkMultiPagePDF_save = document.getElementById("MultiPagePDF_save");
+        let _chkMultiPagePDF_save = document.getElementById("MultiPagePDF_save");
         if (_chkMultiPagePDF_save)
             _chkMultiPagePDF_save.disabled = true;
-        var _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
+        let _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
         if (_chkMultiPageTIFF)
             _chkMultiPageTIFF.disabled = true;
-        var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
+        let _chkMultiPagePDF = document.getElementById("MultiPagePDF");
         if (_chkMultiPagePDF) {
             _chkMultiPagePDF.disabled = false;
             _chkMultiPagePDF.checked = true;
         }
-        var _chkShowUI = document.getElementById("ShowUI");
+        let _chkShowUI = document.getElementById("ShowUI");
         if (_chkShowUI) {
             _chkShowUI.disabled = false;
             _chkShowUI.checked = true;
         }
-        var _chkADF = document.getElementById("ADF");
+        let _chkADF = document.getElementById("ADF");
         if (_chkADF) {
             _chkADF.disabled = false;
             _chkADF.checked = true;
         }
-        var _chkDuplex = document.getElementById("Duplex");
+        let _chkDuplex = document.getElementById("Duplex");
         if (_chkDuplex) {
             _chkDuplex.disabled = false;
             _chkDuplex.checked = true;
@@ -727,7 +739,7 @@ export default class DWT extends React.Component {
     }
 
     saveBpmImage(){
-        var _chkimgTypebmp = document.getElementById("imgTypebmp");
+        let _chkimgTypebmp = document.getElementById("imgTypebmp");
         if (_chkimgTypebmp) {
             _chkimgTypebmp.checked = true;
         }
@@ -735,7 +747,7 @@ export default class DWT extends React.Component {
     }
 
     saveJpegImage(){
-        var _chkimgTypejpeg = document.getElementById("imgTypejpeg");
+        let _chkimgTypejpeg = document.getElementById("imgTypejpeg");
         if (_chkimgTypejpeg) {
             _chkimgTypejpeg.checked = true;
         }
@@ -743,7 +755,7 @@ export default class DWT extends React.Component {
     }
 
     savePngImage(){
-        var _chkimgTypepng = document.getElementById("imgTypepng");
+        let _chkimgTypepng = document.getElementById("imgTypepng");
         if (_chkimgTypepng) {
             _chkimgTypepng.checked = true;
         }
@@ -751,7 +763,7 @@ export default class DWT extends React.Component {
     }
 
     saveJpegTiff(complete){
-        var _chkimgTypetiff = document.getElementById("imgTypetiff");
+        let _chkimgTypetiff = document.getElementById("imgTypetiff");
         
         if (_chkimgTypetiff) {
             _chkimgTypetiff.checked = true;
@@ -762,7 +774,7 @@ export default class DWT extends React.Component {
     }
 
     savePdf(complete){
-        var _chkimgTypepdf = document.getElementById("imgTypepdf");
+        let _chkimgTypepdf = document.getElementById("imgTypepdf");
         
         if (_chkimgTypepdf) {
             _chkimgTypepdf.checked = true;
@@ -784,8 +796,8 @@ export default class DWT extends React.Component {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
-        var i, strimgType_save;
-        var NM_imgType_save = document.getElementsByName("ImageType");
+        let i, strimgType_save;
+        let NM_imgType_save = document.getElementsByName("ImageType");
         for (i = 0; i < 5; i++) {
             if (NM_imgType_save.item(i).checked === true) {
                 strimgType_save = NM_imgType_save.item(i).value;
@@ -793,24 +805,24 @@ export default class DWT extends React.Component {
             }
         }
         this.DWObject.IfShowFileDialog = true;
-        var _txtFileNameforSave = document.getElementById("txt_fileName");
+        let _txtFileNameforSave = document.getElementById("txt_fileName");
         if (_txtFileNameforSave)
             _txtFileNameforSave.className = "";
-        var bSave = false;
+        let bSave = false;
 
-        var strFilePath = _txtFileNameforSave.value + "." + strimgType_save;
+        let strFilePath = _txtFileNameforSave.value + "." + strimgType_save;
 
-        var OnSuccess = () => {
+        let OnSuccess = () => {
             this.appendMessage('<b>Guardar imágen: </b>');
             this.checkErrorStringWithErrorCode(0, "Corrécto.");
         };
 
-        var OnFailure = (errorCode, errorString) => {
+        let OnFailure = (errorCode, errorString) => {
             this.checkErrorStringWithErrorCode(errorCode, errorString);
         };
 
-        var _chkMultiPageTIFF_save = document.getElementById("MultiPageTIFF");
-        var vAsyn = false;
+        let _chkMultiPageTIFF_save = document.getElementById("MultiPageTIFF");
+        let vAsyn = false;
         if (strimgType_save === "tif" && _chkMultiPageTIFF_save && _chkMultiPageTIFF_save.checked) {
             vAsyn = true;
             if ((this.DWObject.SelectedImagesCount === 1) || (this.DWObject.SelectedImagesCount === this.DWObject.HowManyImagesInBuffer)) {
@@ -853,9 +865,9 @@ export default class DWT extends React.Component {
         if (!this.checkIfImagesInBuffer()) {
             return;
         }
-        var i, strHTTPServer, strActionPage, strImageType;
+        let i, strHTTPServer, strActionPage, strImageType;
 
-        var _txtFileName = document.getElementById("txt_fileName");
+        let _txtFileName = document.getElementById("txt_fileName");
         if (_txtFileName)
             _txtFileName.className = "";
 
@@ -872,18 +884,18 @@ export default class DWT extends React.Component {
             }
         }
 
-        var fileName = _txtFileName.value;
-        var replaceStr = "<";
+        let fileName = _txtFileName.value;
+        let replaceStr = "<";
         fileName = fileName.replace(new RegExp(replaceStr, 'gm'), '&lt;');
-        var uploadfilename = fileName + "." + document.getElementsByName("ImageType").item(i).value;
+        let uploadfilename = fileName + "." + document.getElementsByName("ImageType").item(i).value;
 
-        var OnSuccess = (httpResponse) => {
+        let OnSuccess = (httpResponse) => {
             console.log(httpResponse);
             this.appendMessage('<b>Cagar: </b>');
             this.checkErrorStringWithErrorCode(0, "Corrécto.");
         };
 
-        var OnFailure = (errorCode, errorString, httpResponse) => {
+        let OnFailure = (errorCode, errorString, httpResponse) => {
             console.log(httpResponse);
             this.checkErrorStringWithErrorCode(errorCode, errorString, httpResponse);
         };
@@ -1009,10 +1021,10 @@ export default class DWT extends React.Component {
     }
 
     setlPreviewMode() {
-        var varNum = parseInt(document.getElementById("DW_PreviewMode").selectedIndex + 1);
-        var btnCrop = document.getElementById("btnCrop");
+        let varNum = parseInt(document.getElementById("DW_PreviewMode").selectedIndex + 1);
+        let btnCrop = document.getElementById("btnCrop");
         if (btnCrop) {
-            var tmpstr = btnCrop.src;
+            let tmpstr = btnCrop.src;
             if (varNum > 1) {
                 tmpstr = tmpstr.replace('Crop.', 'Crop_gray.');
                 btnCrop.src = tmpstr;
@@ -1038,32 +1050,32 @@ export default class DWT extends React.Component {
     }
 
     rdTIFF_onclick() {
-        var _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
+        let _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
         _chkMultiPageTIFF.disabled = false;
         _chkMultiPageTIFF.checked = true;
 
-        var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
+        let _chkMultiPagePDF = document.getElementById("MultiPagePDF");
         _chkMultiPagePDF.checked = false;
         _chkMultiPagePDF.disabled = true;
     }
 
     rdPDF_onclick() {
-        var _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
+        let _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
         _chkMultiPageTIFF.checked = false;
         _chkMultiPageTIFF.disabled = true;
 
-        var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
+        let _chkMultiPagePDF = document.getElementById("MultiPagePDF");
         _chkMultiPagePDF.disabled = false;
         _chkMultiPagePDF.checked = true;
 
     }
 
     rd_onclick() {
-        var _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
+        let _chkMultiPageTIFF = document.getElementById("MultiPageTIFF");
         _chkMultiPageTIFF.checked = false;
         _chkMultiPageTIFF.disabled = true;
 
-        var _chkMultiPagePDF = document.getElementById("MultiPagePDF");
+        let _chkMultiPagePDF = document.getElementById("MultiPagePDF");
         _chkMultiPagePDF.checked = false;
         _chkMultiPagePDF.disabled = true;
     }

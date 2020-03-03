@@ -21,7 +21,7 @@ export class TransactionLog extends Component<any, any> {
             strTransactionLog: newLogValue
         }, () => {
             console.log(this.state.strTransactionLog);
-            var _divMessageContainer = document.getElementById("DWTemessage");
+            let _divMessageContainer = document.getElementById("DWTemessage");
             
             if (_divMessageContainer) {
                 _divMessageContainer.innerHTML = this.state.strTransactionLog;

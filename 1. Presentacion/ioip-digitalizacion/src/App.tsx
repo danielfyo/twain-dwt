@@ -8,6 +8,7 @@ import { Menu } from './components/menu/Menu';
 import { ConfirmationPanel } from './components/confirmation-panel/ConfirmationPanel';
 import { TransactionLog } from './components/transaction-log/TransactionLog';
 import DWT from './components/twain/WebTwain';
+import { DwtSource } from './model/DwtSource';
 
 // #endregion imports
 
@@ -77,7 +78,9 @@ export class App extends React.Component<any, any> {
     super(props);
     this.state = {
       panelScan: {
-        isOpen: false
+        isOpen: false,
+        sheets: []
+      }, dwtComponent: {
       }
     }
   }
@@ -86,7 +89,7 @@ export class App extends React.Component<any, any> {
   dwtReference: any;
   menuReference: any;
   pagePreviewReference: any;
-  panelScanState: any;
+  panelScanReference: any;
   // #endregion variables globales
 
   // #region Eventos de conexión administrada entre componentes
@@ -171,11 +174,15 @@ export class App extends React.Component<any, any> {
   }
 
   handleSetPanelScanState = (panelScanIn: any) =>{
-    this.panelScanState.setPanelScanState(panelScanIn);
+    this.panelScanReference.setPanelScanState(panelScanIn);
   }
 
-  handleAddImageToPreview = (image: any) =>{
-    this.pagePreviewReference.addImageToPreview(image);
+  handleAddImageToPreview = (image: string, index: number) =>{
+    this.pagePreviewReference.addImageToPreview(image, index);
+  }
+
+  handleUpdateSourceServiceList = (sourceList: DwtSource) =>{
+    this.panelScanReference.updateSourceServiceList(sourceList);
   }
   // #endregion Eventos de conexión administrada entre componentes
 
@@ -183,8 +190,7 @@ export class App extends React.Component<any, any> {
     return (
       <div className="App">
         <ConfirmationPanel
-          ref = { element => { this.panelScanState = element } }
-          handleSetPanelScanState = { this.handleSetPanelScanState }
+          ref = { element => { this.panelScanReference = element } }
           handleAddImage = { this.handleAddImage}
         />
         <Menu tittle='IoIp'
@@ -222,6 +228,7 @@ export class App extends React.Component<any, any> {
               handleAddImage = {this.handleAddImage}
               ref={element => { this.dwtReference = element }}
               handleAddImageToPreview = { this.handleAddImageToPreview }
+              handleUpdateSourceServiceList={this.handleUpdateSourceServiceList}
             />
           </div>
           <div className="">

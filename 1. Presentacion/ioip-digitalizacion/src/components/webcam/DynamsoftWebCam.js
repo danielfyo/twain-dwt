@@ -11,7 +11,7 @@ Dynamsoft.WebTwainEnv.IfConfineMaskWithinTheViewer = false;
 
 Dynamsoft.WebTwainEnv.OnWebTwainInitMessage = function (errorString, errorCode) {
     if (errorCode !== 1) {
-        var msg = errorString;
+        let msg = errorString;
         if (errorCode === 5) {
             msg = "Por favor reinicie el explorador.";
             alert(msg);

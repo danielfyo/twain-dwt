@@ -7,7 +7,7 @@ export class SheetDto {
         this.paragraphFromOcr = undefined;
     }
 
-    sheetId?: number;
+    sheetId: number;
     sheetBase64?: string;
     barcodes?: Barcode[];
     paragraphFromOcr?: string[];

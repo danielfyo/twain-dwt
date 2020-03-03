@@ -55,7 +55,7 @@ class WebBarcode extends React.Component {
     searchBarcode(props){
         console.log(this.props.barcode);
         console.log(this.dataURItoBlob(this.props.barcode));
-        if(props.barcode) {
+        if (props.barcode) {
             this.showBarcodeDetails();
             this.onIptChange({ 
                 target: { 
@@ -66,11 +66,11 @@ class WebBarcode extends React.Component {
     }
 
     dataURItoBlob(dataURI) {
-        var byteString = atob(dataURI.split(',')[1]);
-        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        var ab = new ArrayBuffer(byteString.length);
-        var ia = new Uint8Array(ab);
-        for (var i = 0; i < byteString.length; i++) {
+        let byteString = atob(dataURI.split(',')[1]);
+        let mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+        let ab = new ArrayBuffer(byteString.length);
+        let ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
             ia[i] = byteString.charCodeAt(i);
         }
         return new Blob([ab], {type: mimeString});
@@ -214,7 +214,7 @@ class WebBarcode extends React.Component {
     updateBarcodeFormatsCheckStatus2 = (nBarcodeFormatIds) => {
         if (typeof (nBarcodeFormatIds) != "number") {
             if (nBarcodeFormatIds.target) {
-                var reg = /^\d+$/;
+                let reg = /^\d+$/;
                 let evt = nBarcodeFormatIds;
                 if (!reg.test(evt.target.value))
                     evt.target.value = evt.target.getAttribute('value');
@@ -249,7 +249,7 @@ class WebBarcode extends React.Component {
     updateIntermediateResultTypes = (intermediateResultTypes) => {
         if (typeof (intermediateResultTypes) != "number") {
             if (intermediateResultTypes.target) {
-                var reg = /^\d+$/;
+                let reg = /^\d+$/;
                 let evt = intermediateResultTypes;
                 if (!reg.test(evt.target.value))
                     evt.target.value = evt.target.getAttribute('value');
@@ -286,7 +286,7 @@ class WebBarcode extends React.Component {
     updateBarcodeFormatsCheckStatus = (nBarcodeFormatIds) => {
         if (typeof (nBarcodeFormatIds) != "number") {
             if (nBarcodeFormatIds.target) {
-                var reg = /^\d+$/;
+                let reg = /^\d+$/;
                 let evt = nBarcodeFormatIds;
                 if (!reg.test(evt.target.value))
                     evt.target.value = evt.target.getAttribute('value');
@@ -570,7 +570,7 @@ class WebBarcode extends React.Component {
     }
 
     updateRange = evt => {
-        var reg = /^\d+$/;
+        let reg = /^\d+$/;
         if (!reg.test(evt.target.value))
             evt.target.value = evt.target.getAttribute('value');
         if (evt.target.value > parseInt(evt.target.getAttribute('max')))
