@@ -21,24 +21,20 @@ export class ConfirmationPanel extends Component<any, any> {
         this.hidePanel();
     }
 
-    updateSourceServiceList(dwtSource: DwtSource){
-        let twainSources = this.state.twainSources;
-        twainSources.push(dwtSource);
-        this.setState({
-            twainSources: twainSources
-          });
-
+    updateSourceServiceList(dwtSource: DwtSource) {
         let cmbSourceOptions = this.state.cmbSourceOptions;
         const newCmbOption: IComboBoxOption = {
             key: dwtSource.DwtSourceId,
             text: dwtSource.SourceName
         };
+        if(this.state.cmbSourceOptions.length < 1) {
+            newCmbOption.selected = true;
+        }
 
         cmbSourceOptions.push(newCmbOption);
         this.setState({
-            twainSources: twainSources,
             cmbSourceOptions: cmbSourceOptions
-          });
+        });
     }
 
     source_onchange() {
@@ -65,7 +61,6 @@ export class ConfirmationPanel extends Component<any, any> {
     constructor(props: any) {
         super(props);
         this.state = {
-            twainSources: [],
             cmbSourceOptions: [],
             panelScan: {
                 isOpen: false,
@@ -90,79 +85,69 @@ export class ConfirmationPanel extends Component<any, any> {
                                     iconProps={{ iconName: 'Back' }}
                                     onClick={() => this.hidePanel()}>
                                     Volver
-                </DefaultButton>
+                                </DefaultButton>
                                 &nbsp;&nbsp;
-              <PrimaryButton
+                                <PrimaryButton
                                     iconProps={{ iconName: 'Accept' }}
-                                    onClick={() => this.addImage()}>Digitalizar</PrimaryButton>
+                                    onClick={() => this.addImage()}>
+                                    Digitalizar
+                                </PrimaryButton>
                             </div>
                         </div>
                     }
                 >
                     <p>{this.state.panelScan.panelTitle}</p>
 
+                    <ComboBox
+                        selectedKey='C'
+                        label='Seleccione la fuente de digitalización:'
+                        id='source'
+                        ariaLabel='Fuente de digitalización'
+                        allowFreeform={false}
+                        autoComplete='on'
+                        options={this.state.cmbSourceOptions}
+                        /*
+                        onRenderOption={ this._onRenderFontOption }
+                        componentRef={ this._basicComboBoxComponentRef }
+                        // tslint:disable:jsx-no-lambda
+                        onFocus={() => console.log('onFocus called')}
+                        onBlur={() => console.log('onBlur called')}
+                        onMenuOpen={() => console.log('ComboBox menu opened')}
+                        onPendingValueChanged={(option, pendingIndex, pendingValue) => console.log('Preview value was changed. Pending index: ' + pendingIndex + '. Pending value: ' + pendingValue)}
+                        */
+                    // tslint:enable:jsx-no-lambda
+                    />
 
-                    <ul id="ulScaneImageHIDE">
-                        <li>
-                            <label htmlFor="source">
-                                <p>Seleccione la fuente:</p>
-                            </label>
-                            <ComboBox
-                                defaultSelectedKey='C'
-                                label='Seleccione la fuente de digitalización'
-                                id='source'
-                                ariaLabel='Basic ComboBox example'
-                                allowFreeform={ true }
-                                autoComplete='on'
-                                options={ this.state.cmbSourceOptions}
-                                /*onRenderOption={ this._onRenderFontOption }
-                                componentRef={ this._basicComboBoxComponentRef }*/
-                                // tslint:disable:jsx-no-lambda
-                                onFocus={ () => console.log('onFocus called') }
-                                onBlur={ () => console.log('onBlur called') }
-                                onMenuOpen={ () => console.log('ComboBox menu opened') }
-                                onPendingValueChanged={ (option, pendingIndex, pendingValue) => console.log('Preview value was changed. Pending index: ' + pendingIndex + '. Pending value: ' + pendingValue) }
-                                // tslint:enable:jsx-no-lambda
-                                />
-                        </li>
-                        <li id="divProductDetail">
-                            <ul id="divTwainType">
-                                <li>
-                                    <label id="lblShowUI" htmlFor="ShowUI">
-                                        <input type="checkbox" id="ShowUI" onChange={this.props.showUi} />Avanzado
+                    <label id="lblShowUI" htmlFor="ShowUI">
+                        <input type="checkbox" id="ShowUI" onChange={this.props.showUi} />Avanzado
                                             </label>
-                                    <label htmlFor="ADF">
-                                        <input type="checkbox" id="ADF" onChange={this.props.adf} />Alim. auto.
+                    <label htmlFor="ADF">
+                        <input type="checkbox" id="ADF" onChange={this.props.adf} />Alim. auto.
                                             </label>
-                                    <label htmlFor="Duplex">
-                                        <input type="checkbox" id="Duplex" onChange={this.props.duplex} />Dob. cara
+                    <label htmlFor="Duplex">
+                        <input type="checkbox" id="Duplex" onChange={this.props.duplex} />Dob. cara
                                             </label>
-                                </li>
-                                <li>Color:
+                    Color:
                                             <label htmlFor="BW" style={{ marginLeft: "5px" }}>
-                                        <input type="radio" id="BW" name="PixelType" />B y N
+                        <input type="radio" id="BW" name="PixelType" />B y N
                                             </label>
-                                    <label htmlFor="Gray">
-                                        <input type="radio" id="Gray" name="PixelType" />Esc. Grises
+                    <label htmlFor="Gray">
+                        <input type="radio" id="Gray" name="PixelType" />Esc. Grises
                                             </label>
-                                    <label htmlFor="RGB">
-                                        <input type="radio" id="RGB" name="PixelType" />Color
+                    <label htmlFor="RGB">
+                        <input type="radio" id="RGB" name="PixelType" />Color
                                             </label>
-                                </li>
-                                <li>
-                                    <span>Resolución:</span>
-                                    <select id="Resolution">
-                                        <option value="500">500</option>
-                                        <option value="400">400</option>
-                                        <option value="300">300</option>
-                                        <option value="200">200</option>
-                                        <option value="100">100</option>
-                                        <option value="100">50</option>
-                                    </select>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+
+                    <span>Resolución:</span>
+                    <select id="Resolution">
+                        <option value="500">500</option>
+                        <option value="400">400</option>
+                        <option value="300">300</option>
+                        <option value="200">200</option>
+                        <option value="100">100</option>
+                        <option value="100">50</option>
+                    </select>
+
                     <div id="tblLoadImage" style={{ visibility: "hidden" }}>
                         <a href="return false" className="ClosetblLoadImage"><img src="Images/icon-ClosetblLoadImage.png" alt="Close tblLoadImage" /></a>
                         <p>Por favor instale un dispositivo compatible con TWAIN:</p>
@@ -171,42 +156,42 @@ export class ConfirmationPanel extends Component<any, any> {
                         </p>
                     </div>
 
-                        <ul>
-                            <li className="toggle">Guardar documentos</li>
-                            <li>
-                                <p>Nombre de archivo:</p>
-                                <input type="text" id="txt_fileName" />
-                            </li>
-                            <li style={{ paddingRight: "0" }}>
-                                <label htmlFor="imgTypebmp">
-                                    <input type="radio" value="bmp" name="ImageType" id="imgTypebmp" onClick={this.props.rd_onclick} />
-                                    BMP</label>
-                                <label htmlFor="imgTypejpeg">
-                                    <input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" onClick={this.props.rd_onclick} />
-                                    JPEG</label>
-                                <label htmlFor="imgTypetiff">
-                                    <input type="radio" value="tif" name="ImageType" id="imgTypetiff" onClick={this.props.rdTIFF_onclick} />
-                                    TIFF</label>
-                                <label htmlFor="imgTypepng">
-                                    <input type="radio" value="png" name="ImageType" id="imgTypepng" onClick={this.props.rd_onclick} />
-                                    PNG</label>
-                                <label htmlFor="imgTypepdf">
-                                    <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" onClick={this.props.rdPDF_onclick} />
-                                    PDF</label>
-                            </li>
-                            <li>
-                                <label htmlFor="MultiPageTIFF">
-                                    <input type="checkbox" id="MultiPageTIFF" />
-                                    Multi-página TIFF</label>
-                                <label htmlFor="MultiPagePDF">
-                                    <input type="checkbox" id="MultiPagePDF" />
-                                    Multi-página PDF</label>
-                            </li>
-                            <li>
-                                <button id="btnSave" className="btnOrg" onClick={() => { this.props.saveUploadImage('local') }} >Descargar</button>
-                                <button id="btnUpload" className="btnOrg" onClick={() => { this.props.saveUploadImage('server') }} >Cargar</button>
-                            </li>
-                        </ul>
+                    <ul>
+                        <li className="toggle">Guardar documentos</li>
+                        <li>
+                            <p>Nombre de archivo:</p>
+                            <input type="text" id="txt_fileName" />
+                        </li>
+                        <li style={{ paddingRight: "0" }}>
+                            <label htmlFor="imgTypebmp">
+                                <input type="radio" value="bmp" name="ImageType" id="imgTypebmp" onClick={this.props.rd_onclick} />
+                                BMP</label>
+                            <label htmlFor="imgTypejpeg">
+                                <input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" onClick={this.props.rd_onclick} />
+                                JPEG</label>
+                            <label htmlFor="imgTypetiff">
+                                <input type="radio" value="tif" name="ImageType" id="imgTypetiff" onClick={this.props.rdTIFF_onclick} />
+                                TIFF</label>
+                            <label htmlFor="imgTypepng">
+                                <input type="radio" value="png" name="ImageType" id="imgTypepng" onClick={this.props.rd_onclick} />
+                                PNG</label>
+                            <label htmlFor="imgTypepdf">
+                                <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" onClick={this.props.rdPDF_onclick} />
+                                PDF</label>
+                        </li>
+                        <li>
+                            <label htmlFor="MultiPageTIFF">
+                                <input type="checkbox" id="MultiPageTIFF" />
+                                Multi-página TIFF</label>
+                            <label htmlFor="MultiPagePDF">
+                                <input type="checkbox" id="MultiPagePDF" />
+                                Multi-página PDF</label>
+                        </li>
+                        <li>
+                            <button id="btnSave" className="btnOrg" onClick={() => { this.props.saveUploadImage('local') }} >Descargar</button>
+                            <button id="btnUpload" className="btnOrg" onClick={() => { this.props.saveUploadImage('server') }} >Cargar</button>
+                        </li>
+                    </ul>
                 </Panel>
             </div >
         );
