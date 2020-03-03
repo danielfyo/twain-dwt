@@ -1,3 +1,4 @@
+import { DigitalizationRequest } from './../../model/DigitalizationRequest';
 import { DwtSource } from './../../model/DwtSource';
 // #region imports
 import React from 'react';
@@ -106,6 +107,15 @@ export default class DWT extends React.Component {
         this.props.handleUpdateSourceServiceList(sourceList);
     }
 
+
+    updatePreview() {
+        this.DWObject.SetSelectedImageIndex(this.DWObject.CurrentImageIndexInBuffer, this.DWObject.CurrentImageIndexInBuffer);
+        this.DWObject.GetSelectedImagesSize(EnumDWT_ImageType.IT_JPG);
+        let image = this.DWObject.SaveSelectedImagesToBase64Binary();
+        this.addImageToPreview(this.completeDataUri(image), this.DWObject.CurrentImageIndexInBuffer + 1);
+        this.updatePageInfo();
+    }
+
     componentDidMount() {
 
         Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', () => {
@@ -114,14 +124,10 @@ export default class DWT extends React.Component {
             if (this.DWObject) {
 
                 this.DWObject.RegisterEvent("OnPostTransfer", () => {
-                    this.DWObject.SetSelectedImageIndex(this.DWObject.CurrentImageIndexInBuffer, this.DWObject.CurrentImageIndexInBuffer);
-                    this.DWObject.GetSelectedImagesSize(EnumDWT_ImageType.IT_JPG);
-                    let image = this.DWObject.SaveSelectedImagesToBase64Binary();
-                    this.addImageToPreview(this.completeDataUri(image), this.DWObject.CurrentImageIndexInBuffer + 1);
-                    this.updatePageInfo();
+                    this.updatePreview();
                 });
                 this.DWObject.RegisterEvent("OnPostLoad", () => {
-                    this.updatePageInfo();
+                    this.updatePreview();
                 });
                 this.DWObject.RegisterEvent("OnPostAllTransfers", () => {
                     this.DWObject.CloseSource();
@@ -154,25 +160,9 @@ export default class DWT extends React.Component {
                     this.updatePageInfo();
                 });
                 this.DWObject.RegisterEvent("OnMouseClick", () => {
-                    console.log('OnMouseClick');
                     this.DWObject.SetViewMode(1,1);
                     this.updatePageInfo();
                 });
-
-                
-                /*let twainsource = this.props.handleGetSelectionIndex();
-                
-                this.DWTSourceCount = this.DWObject.SourceCount;
-                if (twainsource) {
-                    twainsource.options.length = 0;
-                    for (let i = 0; i < this.DWTSourceCount; i++) {
-                        twainsource.options.add(new Option(this.DWObject.GetSourceNameItems(i), i));
-                    }
-                }
-                
-                
-                console.log(twainsource);
-                */
 
                 for (let i = 0; i < this.DWObject.SourceCount; i++) {
                     let newSource = new DwtSource();
@@ -326,43 +316,39 @@ export default class DWT extends React.Component {
     }
 
     // #region Metodos operativos DWT
-    acquireImage(index) {
-        if (index < 0)
+    acquireImage(digitalizationRequest) {
+        if (!digitalizationRequest)
             return;
 
-        this.DWObject.SelectSourceByIndex(index);
+        this.DWObject.SelectSourceByIndex(digitalizationRequest.sourceIndex);
         this.DWObject.CloseSource();
         this.DWObject.OpenSource();
-        this.DWObject.IfShowUI = document.getElementById("ShowUI").checked;
-
-        let i;
-        for (i = 0; i < 3; i++) {
-            if (document.getElementsByName("PixelType").item(i).checked === true)
-                this.DWObject.PixelType = i;
-        }
+        this.DWObject.IfShowUI = digitalizationRequest.showUi;
+        
+        this.DWObject.PixelType = digitalizationRequest.pixelType;
         if (this.DWObject.ErrorCode !== 0) {
             this.appendMessage('<b>Error definiendo el valor para el color: </b>');
             this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
         }
-        this.DWObject.Resolution = document.getElementById("Resolution").value;
+
+        this.DWObject.IfFeederEnabled = digitalizationRequest.adf;
+        if (digitalizationRequest.adf === true && this.DWObject.ErrorCode !== 0) {
+            this.appendMessage('<b>Error definiendo el valor ADF alimentador automático: </b>');
+            this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
+        }
+
+        this.DWObject.Resolution = digitalizationRequest.resolution;
         if (this.DWObject.ErrorCode !== 0) {
             this.appendMessage('<b>Error definiendo el valor de la resolución: </b>');
             this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
         }
 
-        let bADFChecked = document.getElementById("ADF").checked;
-        this.DWObject.IfFeederEnabled = bADFChecked;
-        if (bADFChecked === true && this.DWObject.ErrorCode !== 0) {
-            this.appendMessage('<b>Error definiendo el valor ADF alimentador automático: </b>');
-            this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
-        }
-
-        let bDuplexChecked = document.getElementById("Duplex").checked;
-        this.DWObject.IfDuplexEnabled = bDuplexChecked;
-        if (bDuplexChecked === true && this.DWObject.ErrorCode !== 0) {
+        this.DWObject.IfDuplexEnabled = digitalizationRequest.duplex;
+        if (digitalizationRequest.duplex === true && this.DWObject.ErrorCode !== 0) {
             this.appendMessage('<b>Error definiendo el valor duplex: </b>');
             this.appendMessage("<span style='color:#cE5E04'><b>" + this.DWObject.ErrorString + "</b></span><br />");
         }
+        
         if (Dynamsoft.Lib.env.bWin || (!Dynamsoft.Lib.env.bWin && this.DWObject.ImageCaptureDriverType === 0))
             this.appendMessage("Color: " + this.DWObject.PixelType + "<br />Resolución: " + this.DWObject.Resolution + "<br />");
         this.DWObject.IfDisableSourceAfterAcquire = true;
@@ -379,7 +365,7 @@ export default class DWT extends React.Component {
     }
 
     searchBarcodeInImage() {        
-        // TODO: implementar
+        //TODO: implementar
     }
     
     uploadFileFromDisk() {

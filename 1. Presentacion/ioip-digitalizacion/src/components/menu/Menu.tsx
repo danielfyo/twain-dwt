@@ -194,9 +194,7 @@ export class Menu extends Component<any, any> {
                                                 ariaLabel: 'Desde escaner',
                                                 onClick: () => {
                                                     this.handleSetPanelScanState({
-                                                        panelScan: {
-                                                            isOpen: true
-                                                        }
+                                                        isOpen: true
                                                     });
                                                     //this.addImage();
                                                 },
@@ -217,6 +215,7 @@ export class Menu extends Component<any, any> {
                                                 iconProps: { iconName: 'Camera' },
                                                 split: true,
                                                 ariaLabel: 'Desde camara',
+                                                disabled: true
                                             }
                                         ]
                                     }

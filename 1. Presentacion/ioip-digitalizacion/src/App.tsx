@@ -77,11 +77,6 @@ export class App extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
-      panelScan: {
-        isOpen: false,
-        sheets: []
-      }, dwtComponent: {
-      }
     }
   }
   // #region variables globales

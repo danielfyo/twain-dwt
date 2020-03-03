@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
-import { Panel } from 'office-ui-fabric-react/lib/Panel';
+import { Panel, PanelType } from 'office-ui-fabric-react/lib/Panel';
+import { Checkbox } from 'office-ui-fabric-react/lib/Checkbox';
+import { Toggle } from 'office-ui-fabric-react/lib/Toggle';
 import { DefaultButton, PrimaryButton, ComboBox, IComboBoxOption } from 'office-ui-fabric-react/lib';
+import { ChoiceGroup, IChoiceGroupOption } from 'office-ui-fabric-react/lib/ChoiceGroup';
 import { DigitalizationRequest } from '../../model/DigitalizationRequest';
 import { DwtSource } from '../../model/DwtSource';
 export class ConfirmationPanel extends Component<any, any> {
@@ -9,15 +12,8 @@ export class ConfirmationPanel extends Component<any, any> {
         this.setState(panelScan);
     }
 
-    addImage() {
-        let scanRequest = new DigitalizationRequest();
-        scanRequest.sourceIndex = this.props.source_onchange;
-        scanRequest.adf = this.props.source_onchange;
-        scanRequest.pixelType = this.props.source_onchange;
-        scanRequest.resolution = this.props.source_onchange;
-        scanRequest.showUi = this.props.source_onchange;
-
-        this.props.handleAddImage(this.props.source_onchange);
+    addImage(scanRequest: DigitalizationRequest) {
+        this.props.handleAddImage(scanRequest);
         this.hidePanel();
     }
 
@@ -27,7 +23,7 @@ export class ConfirmationPanel extends Component<any, any> {
             key: dwtSource.DwtSourceId,
             text: dwtSource.SourceName
         };
-        if(this.state.cmbSourceOptions.length < 1) {
+        if (this.state.cmbSourceOptions.length < 1) {
             newCmbOption.selected = true;
         }
 
@@ -37,24 +33,10 @@ export class ConfirmationPanel extends Component<any, any> {
         });
     }
 
-    source_onchange() {
-        /*console.log('source changed');
-        if (document.getElementById("divTwainType"))
-            document.getElementById("divTwainType").style.display = "";
-
-        if (document.getElementById("source")) {
-            let cIndex = (document.getElementById("source")  as HTMLSelectElement).selectedIndex;
-
-        }*/
-    }
-
     hidePanel() {
         this.setState(
             {
-                panelScan:
-                {
-                    isOpen: false
-                }
+                isOpen: false,
             });
     }
 
@@ -62,11 +44,26 @@ export class ConfirmationPanel extends Component<any, any> {
         super(props);
         this.state = {
             cmbSourceOptions: [],
-            panelScan: {
-                isOpen: false,
-                panelTitle: 'Adquirir imagen desde escaner',
+            isOpen: false,
+            panelTitle: 'Adquirir imagen desde escaner',
+            sourceIndex: 0,
+            advanceScanOptions: true,
+            cmbResolution: '50',
+            gcColor: 'RGB',
+            adf: true,
+            duplex: true
+        }
+    }
 
-            }
+    getPixelType(): number{
+        switch(this.state.gcColor)
+        {
+            case 'RGB':
+                return 0;
+            case 'BW':
+                return 1;
+            case 'Gray':
+                return 2;
         }
     }
 
@@ -74,10 +71,11 @@ export class ConfirmationPanel extends Component<any, any> {
         return (
             <div>
                 <Panel
-                    isOpen={this.state.panelScan.isOpen}
+                    type ={PanelType.medium}
+                    isOpen={this.state.isOpen}
                     hasCloseButton={true}
                     closeButtonAriaLabel="Cerrar"
-                    headerText={this.state.panelScan.panelTitle}
+                    headerText={this.state.panelTitle}
                     onRenderFooterContent={() =>
                         <div className='ms-Grid-row'>
                             <div className='ms-Grid-col'>
@@ -89,64 +87,125 @@ export class ConfirmationPanel extends Component<any, any> {
                                 &nbsp;&nbsp;
                                 <PrimaryButton
                                     iconProps={{ iconName: 'Accept' }}
-                                    onClick={() => this.addImage()}>
+                                    onClick={() => {
+                                        let scanRequest = new DigitalizationRequest();
+                                        scanRequest.sourceIndex = this.state.sourceIndex;
+                                        scanRequest.adf = this.state.adf;
+                                        scanRequest.pixelType = this.getPixelType();
+                                        scanRequest.resolution = this.state.resolution;
+                                        scanRequest.showUi = this.state.advanceScanOptions;
+                                        scanRequest.duplex = this.state.duplex;
+                                        this.addImage(scanRequest);
+                                    }}>
                                     Digitalizar
                                 </PrimaryButton>
                             </div>
                         </div>
                     }
                 >
-                    <p>{this.state.panelScan.panelTitle}</p>
-
                     <ComboBox
-                        selectedKey='C'
-                        label='Seleccione la fuente de digitalización:'
+                        useComboBoxAsMenuWidth={true}
+                        required={true}
+                        defaultSelectedKey='0'
+                        label='Fuente de digitalización'
                         id='source'
                         ariaLabel='Fuente de digitalización'
                         allowFreeform={false}
                         autoComplete='on'
                         options={this.state.cmbSourceOptions}
-                        /*
-                        onRenderOption={ this._onRenderFontOption }
-                        componentRef={ this._basicComboBoxComponentRef }
-                        // tslint:disable:jsx-no-lambda
-                        onFocus={() => console.log('onFocus called')}
-                        onBlur={() => console.log('onBlur called')}
-                        onMenuOpen={() => console.log('ComboBox menu opened')}
-                        onPendingValueChanged={(option, pendingIndex, pendingValue) => console.log('Preview value was changed. Pending index: ' + pendingIndex + '. Pending value: ' + pendingValue)}
-                        */
-                    // tslint:enable:jsx-no-lambda
+                        onChanged={(index) => {
+                            this.setState({
+                                sourceIndex: index.key
+                            });
+                        }}
+                    />
+                    <Checkbox
+                        label='Opciones avanzadas del scanner'
+                        defaultChecked={true}
+                        onChange={(state) => {
+                            this.setState({
+                                advanceScanOptions: state
+                            });
+                        }}
                     />
 
-                    <label id="lblShowUI" htmlFor="ShowUI">
-                        <input type="checkbox" id="ShowUI" onChange={this.props.showUi} />Avanzado
-                                            </label>
-                    <label htmlFor="ADF">
-                        <input type="checkbox" id="ADF" onChange={this.props.adf} />Alim. auto.
-                                            </label>
-                    <label htmlFor="Duplex">
-                        <input type="checkbox" id="Duplex" onChange={this.props.duplex} />Dob. cara
-                                            </label>
-                    Color:
-                                            <label htmlFor="BW" style={{ marginLeft: "5px" }}>
-                        <input type="radio" id="BW" name="PixelType" />B y N
-                                            </label>
-                    <label htmlFor="Gray">
-                        <input type="radio" id="Gray" name="PixelType" />Esc. Grises
-                                            </label>
-                    <label htmlFor="RGB">
-                        <input type="radio" id="RGB" name="PixelType" />Color
-                                            </label>
+                    <ComboBox
+                        useComboBoxAsMenuWidth={true}
+                        required={true}
+                        defaultSelectedKey='50'
+                        label='Resolución'
+                        id='Resolution'
+                        ariaLabel='Pixeles por pulgada cuadrada'
+                        allowFreeform={false}
+                        autoComplete='on'
+                        options={[
+                            { key: '500', text: '500' },
+                            { key: '400', text: '400' },
+                            { key: '300', text: '300' },
+                            { key: '200', text: '200' },
+                            { key: '100', text: '100' },
+                            { key: '50', text: '50' },
+                        ]}
+                        onChanged={(index) => {
+                            this.setState({
+                                cmbResolution: index.key
+                            });
+                        }}
+                    />
 
-                    <span>Resolución:</span>
-                    <select id="Resolution">
-                        <option value="500">500</option>
-                        <option value="400">400</option>
-                        <option value="300">300</option>
-                        <option value="200">200</option>
-                        <option value="100">100</option>
-                        <option value="100">50</option>
-                    </select>
+                    <ChoiceGroup
+                        defaultSelectedKey='RGB'
+                        options={[
+                            {
+                                key: 'RGB',
+                                text: 'Full Color',
+                                'data-automation-id': 'auto1',
+                                checked: true
+                            } as IChoiceGroupOption,
+                            {
+                                key: 'Gray',
+                                text: 'Escala de grises'
+                            } as IChoiceGroupOption,
+                            {
+                                key: 'BW',
+                                text: 'Blanco y negro'
+                            } as IChoiceGroupOption
+                        ]}
+                        label='Color'
+                        required={true}
+                        onChanged={(index) => {
+                            console.log(index);
+                            this.setState({
+                                gcColor: index.key
+                            });
+                        }}
+                    />
+
+                    <Toggle
+                        defaultChecked={true}
+                        label='Origen del papel'
+                        offText='Vidrio (Manual)'
+                        onText='Alimentador automático (ADF)'
+                        onChanged={(index) => {
+                            console.log(index);
+                            this.setState({
+                                adf: index
+                            });
+                        }}
+                    />
+
+                    <Toggle
+                        defaultChecked={true}
+                        label='Forma de escaneo'
+                        offText='Una cara'
+                        onText='Doble cara'
+                        onChanged={(index) => {
+                            console.log(index);
+                            this.setState({
+                                duplex: index
+                            });
+                        }}
+                    />
 
                     <div id="tblLoadImage" style={{ visibility: "hidden" }}>
                         <a href="return false" className="ClosetblLoadImage"><img src="Images/icon-ClosetblLoadImage.png" alt="Close tblLoadImage" /></a>
@@ -155,43 +214,6 @@ export class ConfirmationPanel extends Component<any, any> {
                             <a target="_blank" rel="noopener noreferrer" href="http://www.twain.org">Referencia TWG </a>
                         </p>
                     </div>
-
-                    <ul>
-                        <li className="toggle">Guardar documentos</li>
-                        <li>
-                            <p>Nombre de archivo:</p>
-                            <input type="text" id="txt_fileName" />
-                        </li>
-                        <li style={{ paddingRight: "0" }}>
-                            <label htmlFor="imgTypebmp">
-                                <input type="radio" value="bmp" name="ImageType" id="imgTypebmp" onClick={this.props.rd_onclick} />
-                                BMP</label>
-                            <label htmlFor="imgTypejpeg">
-                                <input type="radio" value="jpg" name="ImageType" id="imgTypejpeg" onClick={this.props.rd_onclick} />
-                                JPEG</label>
-                            <label htmlFor="imgTypetiff">
-                                <input type="radio" value="tif" name="ImageType" id="imgTypetiff" onClick={this.props.rdTIFF_onclick} />
-                                TIFF</label>
-                            <label htmlFor="imgTypepng">
-                                <input type="radio" value="png" name="ImageType" id="imgTypepng" onClick={this.props.rd_onclick} />
-                                PNG</label>
-                            <label htmlFor="imgTypepdf">
-                                <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" onClick={this.props.rdPDF_onclick} />
-                                PDF</label>
-                        </li>
-                        <li>
-                            <label htmlFor="MultiPageTIFF">
-                                <input type="checkbox" id="MultiPageTIFF" />
-                                Multi-página TIFF</label>
-                            <label htmlFor="MultiPagePDF">
-                                <input type="checkbox" id="MultiPagePDF" />
-                                Multi-página PDF</label>
-                        </li>
-                        <li>
-                            <button id="btnSave" className="btnOrg" onClick={() => { this.props.saveUploadImage('local') }} >Descargar</button>
-                            <button id="btnUpload" className="btnOrg" onClick={() => { this.props.saveUploadImage('server') }} >Cargar</button>
-                        </li>
-                    </ul>
                 </Panel>
             </div >
         );

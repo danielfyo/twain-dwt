@@ -14,6 +14,6 @@ export class Barcode {
     formatCode?: number;
     value?: string;
     barcodeBase64?: string;
-    xPositio?: any;
-    yPosition?: any
+    xPositio?: number;
+    yPosition?: number
 }

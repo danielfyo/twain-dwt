@@ -9,6 +9,7 @@ export class DigitalizationRequest {
 
     sourceIndex?: number;
     showUi?: boolean;
+    duplex?: boolean;
     pixelType?: number;
     resolution?: string;
     adf?: string;
