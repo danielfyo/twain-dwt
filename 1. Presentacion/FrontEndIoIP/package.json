@@ -30,7 +30,7 @@
     "@syncfusion/ej2-angular-calendars": "^16.4.55",
     "alertifyjs": "^1.11.2",
     "angular-material-time-picker": "^1.0.8",
-    "bootstrap": "^4.3.1",
+    "bootstrap": "^5.0.0",
     "chart.js": "^2.9.3",
     "chartjs-plugin-annotation": "^0.5.7",
     "chroma-js": "^2.1.0",
