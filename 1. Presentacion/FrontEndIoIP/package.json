@@ -38,7 +38,7 @@
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "jquery": "^3.4.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "luxon": "^1.21.3",
     "material-datetime-picker": "^2.4.0",
     "moment": "^2.24.0",
